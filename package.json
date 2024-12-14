@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "app": "concurrently \"(npm run start:dev --prefix server)\" \"(npm run start --prefix client)\"",
+    "npmi": "npm i && cd server && npm i && cd .. && cd client && npm i && cd ..",
+    "gitpush": "git add . && git commit -m 'home' && git push origin main",
+    "gitpull": "git pull origin main"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
