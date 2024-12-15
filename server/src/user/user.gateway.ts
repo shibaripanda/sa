@@ -1,47 +1,35 @@
 import { UseGuards } from '@nestjs/common'
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets'
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { UsersService } from './users.service'
+import { ReqestUserByEmailDto } from './dto/request-user.dto'
 
-@WebSocketGateway(
-  {
-      cors:{
-        origin:'*'
-    }
-  }
-)
+@WebSocketGateway({cors:{origin:'*'}, namespace: 'user'})
 
-export class UserGateway {
+export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
-    // private screenSevice: ScreenService,
-    // private botSevice: BotService,
     private userSevice: UsersService
   ) {}
 
-  
   @WebSocketServer() server: Server
 
-  // @SubscribeMessage('updateUserToClient')
-  // async updateUserToClient(client: Socket, payload: any): Promise<void> {
-  //   if(payload.token === process.env.SERVER_TOKEN && global['connectUsers'][payload.botId]){
-  //     const res = await this.userSevice.getUsers(payload.botId)
-  //     this.server.to(global['connectUsers'][payload.botId]).emit('getUsers', res)
-  //   }
-  // }
+  handleConnection(@ConnectedSocket() client: Socket) {
+    // client.join(room['hello'])
+    // client.join(room2)
+    console.log(client.rooms)
+  }
+  handleDisconnect(@ConnectedSocket() client: Socket) {
+    client.disconnect(true)
+  }
+
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('getUsers')
-  async getUsers(client: Socket, payload: any): Promise<void> {
-    // global['connectUsers'][payload] = client.id
-    console.log('fffffffffffff')
+  async getUsers(@ConnectedSocket() client: Socket, @MessageBody() payload: ReqestUserByEmailDto): Promise<void> {
     const user = await this.userSevice.getUserByEmail(payload.email)
-    // this.server.to(client.id).emit('getUsers', user)
+    this.server.to(client.id).emit('getUsers', user)
   }
 
 

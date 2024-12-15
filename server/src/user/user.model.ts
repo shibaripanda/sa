@@ -11,6 +11,7 @@ export const UsersSchema = new mongoose.Schema({
 }, {timestamps: true})
 
 export interface User {
+  _id: mongoose.ObjectId
   email: string
   authCode: AuthCode
 }

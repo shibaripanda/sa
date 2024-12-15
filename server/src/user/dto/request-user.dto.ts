@@ -1,4 +1,8 @@
-export class ReqestUserDto {
-    readonly id: number
-    readonly _id: string
+import { IsEmail } from 'class-validator'
+
+export class ReqestUserByEmailDto {
+    @IsEmail()
+    readonly email: string
 }
+
+

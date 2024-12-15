@@ -9,7 +9,6 @@ export class UsersService {
     constructor(
         @InjectModel('User') private userMongo: Model<User>) {}
 
-
     async newCodeCreate(email: string, code: number, time: number){
         await this.userMongo.updateOne({email: email}, {authCode: {code: code, time: time}})
     }
