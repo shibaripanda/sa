@@ -13,7 +13,7 @@ export class AppService {
     @InjectModel('App') private appMongo: Model<App>) {}
 
   async onApplicationBootstrap() {
-    await this.updateAppText()
+    global.appText = await this.updateAppText()
   }
 
   async getText(): Promise<NewLengPack>{
@@ -33,6 +33,7 @@ export class AppService {
     else{
       console.log('Текст не требует обновления')
     }
+    return this.getText()
   }
   
 }

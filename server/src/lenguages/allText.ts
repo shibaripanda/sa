@@ -44,5 +44,9 @@ export const lengs: LengDataStart[] = [
 
 export const textArray: LengData[] = [
     {rutext: 'Привет', index: 'hello', info_data: 'приветствие'},
+    {rutext: 'Пользователь не найден или произошла ошибка', index: 'userError1', info_data: 'юзер не найден'},
+    {rutext: 'Пользователь уже существует', index: 'existUser', info_data: 'юзер существует'},
+    {rutext: 'Временный пароль выслан на почту', index: 'codeSendToEmail', info_data: 'пароль на почту выслан'},
+    {rutext: 'Временный пароль', index: 'newCode', info_data: 'временный пароль'},
 ]
 
