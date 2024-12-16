@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import { Model, ObjectId } from 'mongoose'
 import { User } from './user.model'
+import { UpdateUserRole } from './dto/requestRoleToUser'
 
 @Injectable()
 export class UsersService {
@@ -19,6 +20,35 @@ export class UsersService {
 
     async getUserByEmail(email: string){
         return await this.userMongo.findOne({email: email})
+    }
+
+    async getUserById(_id: ObjectId){
+        return await this.userMongo.findOne({_id: _id})
+    }
+
+    async addRoleToUser(payload: UpdateUserRole){
+        const user = await this.userMongo.findOne({email: payload.email})
+        if(!user) await this.createUser(payload.email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
+        const roles = (await this.userMongo.findOne({email: payload.email})).services_roles.find(item => String(item.serviceId) === String(payload.serviceId))
+        if(roles){
+            if(roles.roles.includes(payload.role)){
+                await this.userMongo.updateOne(
+                    {email: payload.email}, 
+                    {$pull: {'services_roles.$[el].roles': payload.role}}, 
+                    {arrayFilters: [{'el.serviceId': payload.serviceId}]}
+                )
+            }
+            else{
+                await this.userMongo.updateOne(
+                    {email: payload.email}, 
+                    {$addToSet: {'services_roles.$[el].roles': payload.role}},
+                    {arrayFilters: [{'el.serviceId': payload.serviceId}]}
+                )
+            }
+        }
+        else{
+            await this.userMongo.updateOne({email: payload.email}, {$addToSet: {services_roles: {serviceId: payload.serviceId, roles: [payload.role]}}})
+        }
     }
 
 }

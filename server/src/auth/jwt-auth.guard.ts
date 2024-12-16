@@ -14,7 +14,6 @@ export class JwtAuthGuard implements CanActivate {
             // const authHeader = req.handshake.auth.token.Authorization
             const bearer = authHeader.split(' ')[0]
             const token = authHeader.split(' ')[1]
-            console.log('Token status:', bearer !== 'Bearer' || !token)
             if(bearer !== 'Bearer' || !token){
                 console.log('Авторизация false')
                 throw new UnauthorizedException({message: 'Нет авторизации1'})
@@ -25,9 +24,13 @@ export class JwtAuthGuard implements CanActivate {
             console.log('Авторизация true')
             return true
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         catch(e){
-            console.log('Авторизация false', e)
-            throw new UnauthorizedException({message: 'Нет авторизации2'})
+            console.log(req.handshake.headers.upgrade)
+            console.log('Авторизация false')
+            if(req.handshake.headers.upgrade !== 'websocket'){
+               throw new UnauthorizedException({message: 'Нет авторизации2'}) 
+            }
         }
     }
 

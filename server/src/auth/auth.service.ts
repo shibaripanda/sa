@@ -16,8 +16,8 @@ export class AuthService {
         console.log(data)
         const user = await this.usersService.getUserByEmail(data.email)
         // const textCode = global.appText.newCode[data.leng] ? global.appText.newCode[data.leng] : global.appText.newCode.en
-        const newCode = Math.round(Math.random() * (9999 - 1000) + 1000)
-        // const newCode = 5555
+        // const newCode = Math.round(Math.random() * (9999 - 1000) + 1000)
+        const newCode = 5555
 
         if(user && data.authCode && user.authCode && user.authCode.code === data.authCode && user.authCode.time + 300000 > Date.now()){
             return this.generateToken(user)
@@ -29,7 +29,7 @@ export class AuthService {
     }
 
     private async generateToken(user: User){
-        const payload = {email: user.email, _id: user._id}
+        const payload = {email: user.email, _id: user._id, roles: user.services_roles}
         return {
             token: this.jwtService.sign(payload)
         }

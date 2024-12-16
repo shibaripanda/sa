@@ -4,6 +4,7 @@ import { Server, Socket } from 'socket.io'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { UsersService } from './users.service'
 import { ReqestUserByEmailDto } from './dto/request-user.dto'
+import { UpdateUserRole } from './dto/requestRoleToUser'
 
 @WebSocketGateway({cors:{origin:'*'}, namespace: 'user'})
 
@@ -26,10 +27,16 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
   @UseGuards(JwtAuthGuard)
-  @SubscribeMessage('getUsers')
+  @SubscribeMessage('getUserByEmail')
   async getUsers(@ConnectedSocket() client: Socket, @MessageBody() payload: ReqestUserByEmailDto): Promise<void> {
     const user = await this.userSevice.getUserByEmail(payload.email)
-    this.server.to(client.id).emit('getUsers', user)
+    this.server.to(client.id).emit('getUserByEmail', user)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('addRoleToUser')
+  async addRoleToUser(@MessageBody() payload: UpdateUserRole): Promise<void> {
+    await this.userSevice.addRoleToUser(payload)
   }
 
 

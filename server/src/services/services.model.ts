@@ -19,14 +19,25 @@ export const ServiceSchema = new mongoose.Schema({
       type: Array,
       default: ['new', 'ready'],
       require: true
+    },
+    roles: {
+      type: Array,
+      default: [{role: 'serviceman', access: []}, {role: 'manager', access: []}, {role: 'supermanager'}],
+      require: true
     }
   }, {timestamps: true})
+
+  interface ServiceRoles {
+    role: string
+    access: string[]
+  }
   
   export interface Service {
     name: string
     owner: string
     devices: string[]
     statuses: string[]
+    roles: ServiceRoles[]
   }
   
   
