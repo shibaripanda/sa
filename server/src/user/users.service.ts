@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, ObjectId } from 'mongoose'
 import { User } from './user.model'
-import { UpdateUserRole } from './dto/requestRoleToUser'
 
 @Injectable()
 export class UsersService {
@@ -26,28 +25,28 @@ export class UsersService {
         return await this.userMongo.findOne({_id: _id})
     }
 
-    async addRoleToUser(payload: UpdateUserRole){
-        const user = await this.userMongo.findOne({email: payload.email})
-        if(!user) await this.createUser(payload.email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
-        const roles = (await this.userMongo.findOne({email: payload.email})).services_roles.find(item => String(item.serviceId) === String(payload.serviceId))
+    async addRoleToUser(email: string, serviceId: ObjectId, role: string){
+        const user = await this.userMongo.findOne({email: email})
+        if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
+        const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => String(item.serviceId) === String(serviceId))
         if(roles){
-            if(roles.roles.includes(payload.role)){
+            if(roles.roles.includes(role)){
                 await this.userMongo.updateOne(
-                    {email: payload.email}, 
-                    {$pull: {'services_roles.$[el].roles': payload.role}}, 
-                    {arrayFilters: [{'el.serviceId': payload.serviceId}]}
+                    {email: email}, 
+                    {$pull: {'services_roles.$[el].roles': role}}, 
+                    {arrayFilters: [{'el.serviceId': serviceId}]}
                 )
             }
             else{
                 await this.userMongo.updateOne(
-                    {email: payload.email}, 
-                    {$addToSet: {'services_roles.$[el].roles': payload.role}},
-                    {arrayFilters: [{'el.serviceId': payload.serviceId}]}
+                    {email: email}, 
+                    {$addToSet: {'services_roles.$[el].roles': role}},
+                    {arrayFilters: [{'el.serviceId': serviceId}]}
                 )
             }
         }
         else{
-            await this.userMongo.updateOne({email: payload.email}, {$addToSet: {services_roles: {serviceId: payload.serviceId, roles: [payload.role]}}})
+            await this.userMongo.updateOne({email: email}, {$addToSet: {services_roles: {serviceId: serviceId, roles: [role]}}})
         }
     }
 

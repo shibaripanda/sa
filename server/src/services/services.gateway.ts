@@ -3,7 +3,8 @@ import { ServicesService } from './services.service'
 import { Server, Socket } from 'socket.io'
 import { Request, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
-import { RolesGuard } from 'src/auth/roles.guard'
+// import { RolesGuard } from 'src/auth/roles.guard'
+import { CreateServiceDto } from './dto/CreateService.dto'
 
 @WebSocketGateway({cors:{origin:'*'}, namespace: 'service'})
 export class ServicesGateway {
@@ -15,10 +16,10 @@ export class ServicesGateway {
   @WebSocketServer() server: Server
 
   @UseGuards(JwtAuthGuard)
-  @UseGuards(RolesGuard)
+  // @UseGuards(RolesGuard)
     @SubscribeMessage('createNewService')
-    async createNewService(@MessageBody() payload: any, @Request() req: any): Promise<void> {
-      await this.serviceSevice.createNewService({name: payload.name, owner: req.user._id})
+    async createNewService(@MessageBody() payload: CreateServiceDto, @Request() req: any): Promise<void> {
+      await this.serviceSevice.createNewService(payload.name, req.user._id)
     }
 
   @UseGuards(JwtAuthGuard)

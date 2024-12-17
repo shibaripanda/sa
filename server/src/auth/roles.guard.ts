@@ -35,9 +35,6 @@ export class RolesGuard implements CanActivate {
     console.log(serviceRoles)
 
 
-
-
-
     
     // console.log(req.getData())
     // console.log(req.getPattern())

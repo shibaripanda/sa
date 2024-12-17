@@ -1,10 +1,11 @@
-import { UseGuards } from '@nestjs/common'
+import { UseGuards, UsePipes } from '@nestjs/common'
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { UsersService } from './users.service'
 import { ReqestUserByEmailDto } from './dto/request-user.dto'
-import { UpdateUserRole } from './dto/requestRoleToUser'
+import { UpdateUserRoleDto } from './dto/updateUserRole.dto'
+import { WSValidationPipe } from 'src/modules/wsPipeValid'
 
 @WebSocketGateway({cors:{origin:'*'}, namespace: 'user'})
 
@@ -28,15 +29,17 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('getUserByEmail')
-  async getUsers(@ConnectedSocket() client: Socket, @MessageBody() payload: ReqestUserByEmailDto): Promise<void> {
-    const user = await this.userSevice.getUserByEmail(payload.email)
+  async getUsers(@ConnectedSocket() client: Socket, @MessageBody() reqestUserByEmailDto: ReqestUserByEmailDto): Promise<void> {
+    const user = await this.userSevice.getUserByEmail(reqestUserByEmailDto.email)
     this.server.to(client.id).emit('getUserByEmail', user)
   }
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('addRoleToUser')
-  async addRoleToUser(@MessageBody() payload: UpdateUserRole): Promise<void> {
-    await this.userSevice.addRoleToUser(payload)
+  @UsePipes(new WSValidationPipe())
+  async addRoleToUser(@MessageBody() updateUserRoleDto: UpdateUserRoleDto): Promise<void> {
+    console.log(updateUserRoleDto)
+    await this.userSevice.addRoleToUser(updateUserRoleDto.email, updateUserRoleDto.serviceId, updateUserRoleDto.role)
   }
 
 

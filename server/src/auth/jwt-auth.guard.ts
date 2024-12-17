@@ -26,8 +26,7 @@ export class JwtAuthGuard implements CanActivate {
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         catch(e){
-            console.log(req.handshake.headers.upgrade)
-            console.log('Авторизация false')
+            console.log('Авторизация (JwtAuthGuard) false')
             if(req.handshake.headers.upgrade !== 'websocket'){
                throw new UnauthorizedException({message: 'Нет авторизации2'}) 
             }

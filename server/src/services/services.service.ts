@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
-import { Service } from './services.model';
-import { CreateServiceDto } from './dto/CreateService.dto';
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model, ObjectId } from 'mongoose'
+import { Service } from './services.model'
 
 @Injectable()
 export class ServicesService {
@@ -11,8 +10,8 @@ constructor(
     @InjectModel('Service') private serviceMongo: Model<Service>) {}
 
 
-    async createNewService(data: CreateServiceDto){
-        await this.serviceMongo.create({owner: data.owner, name: data.name})
+    async createNewService(name: string, ownerId: ObjectId){
+        await this.serviceMongo.create({owner: ownerId, name: name})
     }
 
     async getServicesByOwnerId(userId: ObjectId){
