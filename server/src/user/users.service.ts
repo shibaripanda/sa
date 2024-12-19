@@ -25,10 +25,10 @@ export class UsersService {
         return await this.userMongo.findOne({_id: _id})
     }
 
-    async addRoleToUser(email: string, serviceId: ObjectId, role: string){
+    async addRoleToUser(email: string, serviceId: string, role: string){
         const user = await this.userMongo.findOne({email: email})
         if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
-        const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => String(item.serviceId) === String(serviceId))
+        const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === serviceId)
         if(roles){
             if(roles.roles.includes(role)){
                 await this.userMongo.updateOne(

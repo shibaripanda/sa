@@ -6,6 +6,7 @@ import { UsersService } from './users.service'
 import { ReqestUserByEmailDto } from './dto/request-user.dto'
 import { UpdateUserRoleDto } from './dto/updateUserRole.dto'
 import { WSValidationPipe } from 'src/modules/wsPipeValid'
+import { RolesGuard } from 'src/auth/roles.guard'
 
 @WebSocketGateway({cors:{origin:'*'}, namespace: 'user'})
 
@@ -28,19 +29,20 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
   @UseGuards(JwtAuthGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('getUserByEmail')
   async getUsers(@ConnectedSocket() client: Socket, @MessageBody() reqestUserByEmailDto: ReqestUserByEmailDto): Promise<void> {
     const user = await this.userSevice.getUserByEmail(reqestUserByEmailDto.email)
-    this.server.to(client.id).emit('getUserByEmail', user)
+    client.emit('getUserByEmail', user)
+    // this.server.to(client.id).emit('getUserByEmail', user)
   }
 
   @UseGuards(JwtAuthGuard)
-  @SubscribeMessage('addRoleToUser')
+  @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('addRoleToUser')
   async addRoleToUser(@MessageBody() updateUserRoleDto: UpdateUserRoleDto): Promise<void> {
-    console.log(updateUserRoleDto)
     await this.userSevice.addRoleToUser(updateUserRoleDto.email, updateUserRoleDto.serviceId, updateUserRoleDto.role)
   }
-
 
 }

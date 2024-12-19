@@ -1,10 +1,15 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { ServicesService } from './services.service'
 import { Server, Socket } from 'socket.io'
-import { Request, UseGuards } from '@nestjs/common'
+import { Request, UseGuards, UsePipes } from '@nestjs/common'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 // import { RolesGuard } from 'src/auth/roles.guard'
-import { CreateServiceDto } from './dto/CreateService.dto'
+import { CreateServiceDto } from './dto/CreateServiceDto.dto'
+import { WSValidationPipe } from 'src/modules/wsPipeValid'
+import { RolesGuard } from 'src/auth/roles.guard'
+import { EditStatusServiceDto } from './dto/EditStatusServiceDto.dto'
+import { EditDeviceServiceDto } from './dto/EditDeviceServiceDto.dto'
+import { GetServiceByIdDto } from './dto/GetServiceByIdDto.dto'
 
 @WebSocketGateway({cors:{origin:'*'}, namespace: 'service'})
 export class ServicesGateway {
@@ -15,12 +20,21 @@ export class ServicesGateway {
 
   @WebSocketServer() server: Server
 
+  handleConnection(@ConnectedSocket() client: Socket) {
+    // client.join(room['hello'])
+    // client.join(room2)
+    console.log(client.rooms)
+  }
+  handleDisconnect(@ConnectedSocket() client: Socket) {
+    client.disconnect(true)
+  }
+
   @UseGuards(JwtAuthGuard)
-  // @UseGuards(RolesGuard)
-    @SubscribeMessage('createNewService')
-    async createNewService(@MessageBody() payload: CreateServiceDto, @Request() req: any): Promise<void> {
-      await this.serviceSevice.createNewService(payload.name, req.user._id)
-    }
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('createNewService')
+  async createNewService(@MessageBody() payload: CreateServiceDto, @Request() req: any): Promise<void> {
+    await this.serviceSevice.createNewService(payload.name, req.user._id, req.user.email)
+  }
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('getServicesByOwnerId')
@@ -31,20 +45,24 @@ export class ServicesGateway {
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('getServiceById')
-  async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: any,): Promise<any> {
+  async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto): Promise<any> {
     const service = await this.serviceSevice.getServiceById(payload.serviceId)
     this.server.to(client.id).emit('getServiceById', service)
   }
 
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('editDevicesList')
-  async editDevicesList(@MessageBody() payload: any): Promise<any> {
+  async editDevicesList(@MessageBody() payload: EditDeviceServiceDto): Promise<any> {
     await this.serviceSevice.editDevicesList(payload.serviceId, payload.device)
   }
 
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('editStatusList')
-  async editStatusList(@MessageBody() payload: any): Promise<any> {
+  async editStatusList(@MessageBody() payload: EditStatusServiceDto): Promise<any> {
     await this.serviceSevice.editStatusList(payload.serviceId, payload.status)
   }
 }

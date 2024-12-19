@@ -19,9 +19,9 @@ export class JwtAuthGuard implements CanActivate {
                 throw new UnauthorizedException({message: 'Нет авторизации1'})
             }
             const user = this.jwtService.verify(token)
-            console.log(user)
+            // console.log(user)
             req.user = user
-            console.log('Авторизация true')
+            // console.log('Авторизация true')
             return true
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

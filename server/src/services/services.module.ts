@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { ServicesService } from './services.service'
 import { ServicesGateway } from './services.gateway'
 import { MongooseModule } from '@nestjs/mongoose'
@@ -9,7 +9,8 @@ import { UsersModule } from 'src/user/users.module'
 @Module({
   imports: [
       MongooseModule.forFeature([{ name: 'Service', schema: ServiceSchema }]),
-      AuthModule, UsersModule
+      forwardRef(() => UsersModule),
+      forwardRef(() => AuthModule)
     ],
   providers: [ServicesService, ServicesGateway],
   exports: [ServicesService]

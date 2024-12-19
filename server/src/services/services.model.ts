@@ -17,12 +17,12 @@ export const ServiceSchema = new mongoose.Schema({
     },
     statuses: {
       type: Array,
-      default: ['new', 'ready'],
+      default: ['New', 'Ready'],
       require: true
     },
     roles: {
       type: Array,
-      default: [{role: 'serviceman', access: []}, {role: 'manager', access: []}, {role: 'supermanager'}],
+      default: [{role: 'Serviceman', access: []}, {role: 'Manager', access: []}, {role: 'Supermanager', access: []}],
       require: true
     }
   }, {timestamps: true})

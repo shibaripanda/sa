@@ -14,7 +14,8 @@ export const AppSchema = new mongoose.Schema({
     },
     mainServerAppSettings: {
       type: String, 
-      default: 'mainServerAppSettings', unique: true
+      default: 'mainServerAppSettings',
+      unique: true
     },
     restartCount: {
       type: Number, 
