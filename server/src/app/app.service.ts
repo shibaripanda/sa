@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { App, NewLengPack } from './app.model'
-import { getLenguagesFromAI } from 'src/lenguages/lengPackUpdate'
-import { lengs, textArray } from 'src/lenguages/allText'
+import { getLenguagesFromAI } from 'src/modules/lenguages/lengPackUpdate'
+import { lengs, textArray } from 'src/modules/lenguages/allText'
 
 @Injectable()
 

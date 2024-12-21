@@ -11,9 +11,18 @@ interface ServicesRoles {
 }
 
 export const UsersSchema = new mongoose.Schema({
-  email: {type: String, unique: true},
-  authCode: {type: Object},
-  services_roles: {type: Array, require: true, default: []},
+  email: {
+    type: String, 
+    unique: true
+  },
+  authCode: {
+    type: Object
+  },
+  services_roles: {
+    type: Array, 
+    require: true, 
+    default: []
+  },
 }, {timestamps: true})
 
 export interface User {

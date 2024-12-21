@@ -1,5 +1,5 @@
 import { UseGuards, UsePipes } from '@nestjs/common'
-import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { UsersService } from './users.service'
@@ -10,7 +10,8 @@ import { RolesGuard } from 'src/auth/roles.guard'
 
 @WebSocketGateway({cors:{origin:'*'}, namespace: 'user'})
 
-export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
+// export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  export class UserGateway  {
 
   constructor(
     private userSevice: UsersService
@@ -18,14 +19,14 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer() server: Server
 
-  handleConnection(@ConnectedSocket() client: Socket) {
-    // client.join(room['hello'])
-    // client.join(room2)
-    console.log(client.rooms)
-  }
-  handleDisconnect(@ConnectedSocket() client: Socket) {
-    client.disconnect(true)
-  }
+  // handleConnection(@ConnectedSocket() client: Socket) {
+  //   // client.join(room['hello'])
+  //   // client.join(room2)
+  //   console.log(client.rooms)
+  // }
+  // handleDisconnect(@ConnectedSocket() client: Socket) {
+  //   client.disconnect(true)
+  // }
 
 
   @UseGuards(JwtAuthGuard)

@@ -21,11 +21,13 @@ export class ServicesGateway {
   @WebSocketServer() server: Server
 
   handleConnection(@ConnectedSocket() client: Socket) {
+    console.log('connect', client.id)
     // client.join(room['hello'])
     // client.join(room2)
-    console.log(client.rooms)
+    // console.log(client.rooms)
   }
   handleDisconnect(@ConnectedSocket() client: Socket) {
+    console.log('disconnect', client.id)
     client.disconnect(true)
   }
 

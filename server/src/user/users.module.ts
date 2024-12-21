@@ -4,7 +4,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { UsersSchema } from './user.model';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserGateway } from './user.gateway';
-import { ServicesModule } from 'src/services/services.module';
+import { ServicesModule } from 'src/service/services.module';
 
 @Module({
   imports: [
