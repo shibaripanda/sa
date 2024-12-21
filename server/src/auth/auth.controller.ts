@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { ReqestAuthDto } from './dto/request-auth.dto'
 
@@ -11,6 +11,12 @@ export class AuthController {
     login(@Body() data: ReqestAuthDto){
         console.log('/auth/login', data)
         return this.authService.login(data)
+    }
+
+    @Get('/text')
+    getTextPackFromServer(){
+        console.log('/auth/text')
+        return this.authService.getTextPackFromServer()
     }
 
 }

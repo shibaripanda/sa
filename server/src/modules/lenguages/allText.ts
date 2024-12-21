@@ -48,5 +48,9 @@ export const textArray: LengData[] = [
     {rutext: 'Пользователь уже существует', index: 'existUser', info_data: 'юзер существует'},
     {rutext: 'Временный пароль выслан на почту', index: 'codeSendToEmail', info_data: 'пароль на почту выслан'},
     {rutext: 'Временный пароль', index: 'newCode', info_data: 'временный пароль'},
+    {rutext: 'Добро пожаловать!', index: 'welcome', info_data: 'добро пожаловать'},
+    {rutext: 'Войти', index: 'login', info_data: 'войти'},
+    {rutext: 'Отправить сеансовый пароль на почту', index: 'sendPasswordToEmail', info_data: 'отправить парол на почту'},
+    {rutext: 'Невалидный емейл', index: 'badEmail', info_data: 'невалидный емейл'},
 ]
 

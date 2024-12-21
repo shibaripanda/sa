@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt'
 import { UsersService } from 'src/user/users.service'
 import { ReqestAuthDto } from './dto/request-auth.dto'
 import { User } from 'src/user/user.model'
+import { lengs } from 'src/modules/lenguages/allText'
+import { LengDataStart } from 'src/modules/lenguages/lengPackUpdate'
 // import { sendEmail } from 'src/modules/sendMail'
 
 @Injectable()
@@ -26,6 +28,13 @@ export class AuthService {
         else await this.usersService.newCodeCreate(data.email, newCode, Date.now())
         // await sendEmail(data.email, textCode, newCode)
         throw new UnauthorizedException({message: global.appText.codeSendToEmail[data.leng] ? global.appText.codeSendToEmail[data.leng] : global.appText.codeSendToEmail.en})
+    }
+
+    async getTextPackFromServer(): Promise<{
+        text: any;
+        lengPack: LengDataStart[];
+    }>{
+        return {text: global.appText, lengPack: lengs}
     }
 
     private async generateToken(user: User){

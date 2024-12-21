@@ -6,7 +6,7 @@ interface LengData {
     index: string
     info_data: string
 }
-interface LengDataStart {
+export interface LengDataStart {
     title: string
     index: string
     info: string
@@ -30,6 +30,7 @@ export const getLenguagesFromAI = async (updateAll: boolean, indata: LengData[],
 
     const newLengPack: NewLengPack = {}
     let time: number = 0
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     const timer = setInterval(() => {console.log('UPDATING LENGUAGES...'), time++}, 1000)
     for(const i of indata){
         if(typeof existLengPack[i.index] === 'undefined' || updateAll){

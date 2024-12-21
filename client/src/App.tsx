@@ -11,7 +11,7 @@ const theme = createTheme({
 
 function App() {
   return (
-    <div className='App'>
+    // <div className='App'>
       <MantineProvider theme={theme}>
         <BrowserRouter>
             <Routes>
@@ -20,7 +20,7 @@ function App() {
             </Routes>
           </BrowserRouter>
       </MantineProvider>
-    </div>
+    // </div>
   )
 }
 
