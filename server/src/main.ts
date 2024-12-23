@@ -1,8 +1,7 @@
 import 'dotenv/config'
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
-import { ValidationPipe } from '@nestjs/common';
-// import { v4 as uuidv4 } from 'uuid'
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app/app.module'
+import { ValidationPipe } from '@nestjs/common'
 
 async function bootstrap() {
   const PORT = process.env.PORT || 5050

@@ -5,7 +5,10 @@ import { AuthForm } from './authForm/AuthForm.tsx'
 import { TextClass } from '../../classes/TextClass.ts'
 import { useNavigate } from 'react-router-dom'
 
+
 function AuthPage() {
+  
+  const authClass = new AuthClass()
 
   const navigate = useNavigate()
   const [email, setEmail] = useState<string>('')
@@ -13,8 +16,9 @@ function AuthPage() {
   const [authCode, setAuthCode] = useState<number>()
   const [text, setText] = useState<object | false>(false)
   const [avLeng, setAvLeng] = useState<[] | false>(false)
+  const [usersThisSession, setUsersThisSession] = useState<[]>(authClass.getServiceAppUsers())
 
-  const authClass = new AuthClass()
+  
   const textClass = new TextClass()
 
   useEffect(() => {
@@ -46,6 +50,8 @@ function AuthPage() {
       leng={leng}
       authClass={authClass}
       avLeng={avLeng}
+      setUsersThisSession={setUsersThisSession}
+      usersThisSession={usersThisSession}
       />
     )
   }

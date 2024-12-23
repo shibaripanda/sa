@@ -14,7 +14,7 @@ export function LanguagePicker(props) {
     >
       {item.title}
     </Menu.Item>
-  ));
+  ))
 
   return (
     <Menu
@@ -36,5 +36,5 @@ export function LanguagePicker(props) {
       </Menu.Target>
       <Menu.Dropdown>{items}</Menu.Dropdown>
     </Menu>
-  );
+  )
 }

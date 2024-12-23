@@ -23,9 +23,11 @@ export class TextClass {
             timeout: 10000
         })
         .then((res) => {
+            console.log(res.data)
             return res.data
         })
         .catch((e) => {
+            console.log(false)
             return false
         })
 

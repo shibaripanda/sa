@@ -16,16 +16,19 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
 
     const [errorMessageEmail, setErrorMessageEmail] = useState<string>('')
     const [clickEmailSend, setClickEmailSend] = useState<boolean>(false)
+    const [descriptionText, setDescriptionText] = useState<string>('')
     
     const authBlok = () => {
         if(clickEmailSend){
             return (
                 <div> 
-                    <PasswordInput 
+                    <PasswordInput
+                    description={descriptionText} 
                     label="Password" 
                     placeholder="xxxx" 
                     mt="md" 
                     size="md"
+                    withAsterisk
                     value={props.authCode}
                     onChange={(event) => {
                         props.setAuthCode(event.currentTarget.value)
@@ -38,9 +41,9 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
                     size="md"
                     disabled={!props.authCode || props.authCode.length < 4 || props.authCode.length > 4}
                     onClick={async () => {
-                        await props.authClass.startRequest(props.email, props.leng, Number(props.authCode))
-                        console.log(props.authCode)
-                        console.log(props.email)
+                        await props.authClass.startRequest(props.email, props.leng, Number(props.authCode), setDescriptionText, props.setUsersThisSession, props.usersThisSession, props.setAuthCode, props.setEmail, setClickEmailSend)
+                        // console.log(props.authCode)
+                        // console.log(props.email)
                     }}
                     >
                     {props.text.login[props.leng]}
@@ -48,6 +51,56 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
                 </div>
             )
         }
+    }
+    const sendButBlok = () => {
+      if(!clickEmailSend)
+        return <Button
+            fullWidth
+            mt="xl"
+            size="md"
+            disabled={!validEmail.test(props.email) || clickEmailSend}
+            onClick={async () => {
+                await props.authClass.startRequest(props.email, props.leng, undefined, setDescriptionText)
+                setClickEmailSend(true)
+            }}
+            >
+            {props.text.sendPasswordToEmail[props.leng]}
+            </Button>
+    }
+    const usersBlock = () => {
+      if(props.usersThisSession.length)
+        return (
+          <div>
+            <hr></hr>
+          {props.usersThisSession.map((item, index) => <Button
+            key={index}
+            color='green'
+            fullWidth
+            mt="xl"
+            size="md"
+            onClick={async () => {
+            }}
+            >
+            {item.name ? item.name : item.email}
+          </Button>)}
+          <Button
+            color='red'
+            fullWidth
+            mt="xl"
+            size="md"
+            onClick={async () => {
+              props.setUsersThisSession([])
+              setClickEmailSend(false)
+              props.setAuthCode()
+              props.setEmail('')
+              sessionStorage.removeItem('serviceAppUsers')
+            }}
+            >
+            {'EXIT ALL USERS'}
+          </Button>
+          </div>
+
+          )
     }
 
     return (
@@ -57,7 +110,6 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
           <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
             {props.text.welcome[props.leng]}
           </Title>
-
             <TextInput 
             label="Email" 
             placeholder="hello@gmail.com" 
@@ -80,18 +132,9 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
                 props.setEmail(event.currentTarget.value)
             }} 
             />
-            <Button
-            fullWidth
-            mt="xl"
-            size="md"
-            disabled={!validEmail.test(props.email) || clickEmailSend}
-            onClick={() => {
-                setClickEmailSend(true)
-            }}
-            >
-            {props.text.sendPasswordToEmail[props.leng]}
-            </Button>
+            {sendButBlok()}
             {authBlok()}
+            {usersBlock()}
         </Paper>
       </div>
     )

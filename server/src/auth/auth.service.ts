@@ -16,7 +16,7 @@ export class AuthService {
 
     async login(data: ReqestAuthDto){
         console.log(data)
-        const user = await this.usersService.getUserByEmail(data.email)
+        const user = await this.usersService.getUserByEmail(data.email.toLowerCase())
         // const textCode = global.appText.newCode[data.leng] ? global.appText.newCode[data.leng] : global.appText.newCode.en
         // const newCode = Math.round(Math.random() * (9999 - 1000) + 1000)
         const newCode = 5555
@@ -24,16 +24,13 @@ export class AuthService {
         if(user && data.authCode && user.authCode && user.authCode.code === data.authCode && user.authCode.time + 300000 > Date.now()){
             return this.generateToken(user)
         }
-        if(!user) await this.usersService.createUser(data.email, newCode, Date.now())
-        else await this.usersService.newCodeCreate(data.email, newCode, Date.now())
-        // await sendEmail(data.email, textCode, newCode)
+        if(!user) await this.usersService.createUser(data.email.toLowerCase(), newCode, Date.now())
+        else await this.usersService.newCodeCreate(data.email.toLowerCase(), newCode, Date.now())
+        // await sendEmail(data.email.toLowerCase(), textCode, newCode)
         throw new UnauthorizedException({message: global.appText.codeSendToEmail[data.leng] ? global.appText.codeSendToEmail[data.leng] : global.appText.codeSendToEmail.en})
     }
 
-    async getTextPackFromServer(): Promise<{
-        text: any;
-        lengPack: LengDataStart[];
-    }>{
+    async getTextPackFromServer(): Promise<{text: any ; lengPack: LengDataStart[]}>{
         return {text: global.appText, lengPack: lengs}
     }
 
