@@ -17,7 +17,7 @@ export class AuthClass {
 
     async startRequest(email, leng, authCode, setDescriptionText, setUsersThisSession, usersThisSession, setAuthCode, setEmail, setClickEmailSend){
         
-        await axios({
+        return await axios({
             method: 'POST',
             url: this.link + '/auth/login',
             data: {email: email, leng: leng, authCode: authCode},
@@ -38,26 +38,19 @@ export class AuthClass {
                 }
             }
             setDescriptionText(undefined)
-            // setAuthCode()
-            // setEmail('')
-            // setClickEmailSend(false)
+            setAuthCode()
+            setEmail('')
+            setClickEmailSend(false)
             // console.log(usersThisSession)
-            console.log(this.getServiceAppUsers())
+            // console.log(this.getServiceAppUsers())
+            return true
         })
         .catch((e) => {
             setDescriptionText(e.response.data.message ? e.response.data.message : 'error')
             console.log(e.response.data.message ? e.response.data.message : 'error')
+            return false
         })
 
     }
-
-
-    // async startPasswordRequest(obj){
-    //     return await axiosCall('POST', `${this.link}/auth/authemailcode`, obj)
-    // }
-
-    // async createNewCamp(obj){
-    //     return await axiosCall('POST', `${this.link}/auth/registration`, obj)
-    // }
 
 }

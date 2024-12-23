@@ -9,6 +9,8 @@ import {
   // @ts-ignore
 import classes from './AuthForm.module.css';
 import { LanguagePicker } from '../../../components/LanguagePicker/LanguagePicker.tsx'
+import { useDisclosure } from '@mantine/hooks';
+import { ServiceModal } from '../serviceForm/ServiceModal.tsx';
 
 const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   
@@ -17,7 +19,24 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
     const [errorMessageEmail, setErrorMessageEmail] = useState<string>('')
     const [clickEmailSend, setClickEmailSend] = useState<boolean>(false)
     const [descriptionText, setDescriptionText] = useState<string>('')
-    
+    const [opened, { close, open }] = useDisclosure(false)
+    const [timer, setTimer] = useState<number>()
+    let [time, setTime] = useState<number>(60)
+
+    function timerSet(){
+      // console.log('time', time)
+      if(time === 0){
+        // console.log('clear', time)
+        clearInterval(timer)
+        setClickEmailSend(false)
+        props.setAuthCode()
+      }
+      else{
+        // console.log('step', time)
+        setTime(time--)
+      }
+    }
+
     const authBlok = () => {
         if(clickEmailSend){
             return (
@@ -41,12 +60,19 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
                     size="md"
                     disabled={!props.authCode || props.authCode.length < 4 || props.authCode.length > 4}
                     onClick={async () => {
-                        await props.authClass.startRequest(props.email, props.leng, Number(props.authCode), setDescriptionText, props.setUsersThisSession, props.usersThisSession, props.setAuthCode, props.setEmail, setClickEmailSend)
-                        // console.log(props.authCode)
-                        // console.log(props.email)
+                        const res = await props.authClass.startRequest(props.email, props.leng, Number(props.authCode), setDescriptionText, props.setUsersThisSession, props.usersThisSession, props.setAuthCode, props.setEmail, setClickEmailSend)
+                        clearInterval(timer)
+                        if(!res){
+                          props.setAuthCode()
+                          setTime(60)
+                          time = 60
+                          const int = setInterval(timerSet, 1000)
+                          setTimer(int)
+                          // console.log(timer)
+                        }
                     }}
                     >
-                    {props.text.login[props.leng]}
+                    {props.text.login[props.leng] + ' ' + time}
                     </Button>
                 </div>
             )
@@ -62,6 +88,11 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
             onClick={async () => {
                 await props.authClass.startRequest(props.email, props.leng, undefined, setDescriptionText)
                 setClickEmailSend(true)
+                setTime(60)
+                time = 60
+                const int = setInterval(timerSet, 1000)
+                setTimer(int)
+                // console.log(timer)
             }}
             >
             {props.text.sendPasswordToEmail[props.leng]}
@@ -72,13 +103,16 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
         return (
           <div>
             <hr></hr>
-          {props.usersThisSession.map((item, index) => <Button
-            key={index}
+          {props.usersThisSession.map(item => <Button
+            key={item._id}
             color='green'
             fullWidth
             mt="xl"
             size="md"
             onClick={async () => {
+              sessionStorage.setItem('currentUser', JSON.stringify(item))
+              clearInterval(timer)
+              open()
             }}
             >
             {item.name ? item.name : item.email}
@@ -94,13 +128,21 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
               props.setAuthCode()
               props.setEmail('')
               sessionStorage.removeItem('serviceAppUsers')
+              sessionStorage.removeItem('currentUser')
+              clearInterval(timer)
             }}
             >
-            {'EXIT ALL USERS'}
+            {props.text.exit[props.leng]}
           </Button>
           </div>
 
           )
+    }
+    const modalBlock = () => {
+      if(sessionStorage.getItem('currentUser')){
+        // @ts-ignore
+        return <ServiceModal opened={opened} close={close} user={JSON.parse(sessionStorage.getItem('currentUser'))}/>
+      }
     }
 
     return (
@@ -130,12 +172,19 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
                 setClickEmailSend(false)
                 props.setAuthCode()
                 props.setEmail(event.currentTarget.value)
+                if(timer){
+                  console.log(timer)
+                  clearInterval(timer)
+                  setTimer(undefined)
+                  console.log(timer)  
+                }    
             }} 
             />
             {sendButBlok()}
             {authBlok()}
             {usersBlock()}
         </Paper>
+        {modalBlock()}
       </div>
     )
   }
