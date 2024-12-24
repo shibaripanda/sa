@@ -72,6 +72,7 @@ export const ServiceSchema = new mongoose.Schema({
 
   
   export interface Service {
+    // _id: string
     name: string
     owner: string
     devices: string[]

@@ -23,6 +23,7 @@ function AuthPage() {
 
   useEffect(() => {
     authClass.deleteCurrentUser()
+    authClass.deleteCurrentService()
     getLeguagePack()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

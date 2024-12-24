@@ -38,7 +38,7 @@ export class ServicesGateway {
   @SubscribeMessage('getServiceById')
   async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto): Promise<any> {
     const service = await this.serviceSevice.getServiceById(payload.serviceId)
-    console.log('SEND')
+    // console.log('SEND')
     this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
   }
 

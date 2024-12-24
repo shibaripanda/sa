@@ -54,5 +54,6 @@ export const textArray: LengData[] = [
     {rutext: 'Невалидный емейл', index: 'badEmail', info_data: 'невалидный емейл'},
     {rutext: 'Выход', index: 'exit', info_data: 'выход'},
     {rutext: 'Авторизоваться', index: 'auth', info_data: 'авторизоваться'},
+    {rutext: 'Мы создаем новый сервис для вас. Пожалуйста подождите...', index: 'newServiceCreating', info_data: 'создаем сервис ожидание'},
 ]
 

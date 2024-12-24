@@ -9,6 +9,11 @@ export class AuthClass {
         this.link = process.env.REACT_APP_LINK
     }
 
+    getServiceId(){
+        if(!sessionStorage.getItem('serviceId')) return false
+        return sessionStorage.getItem('serviceId')
+    }
+
     getCurrentUser(){
         if(!sessionStorage.getItem('currentUser')) return false
          // @ts-ignore
@@ -17,6 +22,9 @@ export class AuthClass {
 
     deleteCurrentUser(){
         sessionStorage.removeItem('currentUser')
+    }
+    deleteCurrentService(){
+        sessionStorage.removeItem('serviceId')
     }
 
     getServiceAppUsers(){

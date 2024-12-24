@@ -124,6 +124,7 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
               props.setEmail('')
               sessionStorage.removeItem('serviceAppUsers')
               sessionStorage.removeItem('currentUser')
+              sessionStorage.removeItem('serviceId')
               clearInterval(timer)
             }}
             >
@@ -136,7 +137,7 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
     const modalBlock = () => {
       if(sessionStorage.getItem('currentUser')){
         // @ts-ignore
-        return <ServiceModal opened={opened} close={close} user={JSON.parse(sessionStorage.getItem('currentUser'))}/>
+        return <ServiceModal text={props.text} leng={props.leng} opened={opened} close={close} user={JSON.parse(sessionStorage.getItem('currentUser'))}/>
       }
     }
 
