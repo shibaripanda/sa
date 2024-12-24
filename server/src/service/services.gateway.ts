@@ -11,7 +11,7 @@ import { EditStatusServiceDto } from './dto/EditStatusServiceDto.dto'
 import { EditDeviceServiceDto } from './dto/EditDeviceServiceDto.dto'
 import { GetServiceByIdDto } from './dto/GetServiceByIdDto.dto'
 
-@WebSocketGateway({cors:{origin:'*'}, namespace: 'service'})
+@WebSocketGateway({cors:{origin:'*'}})
 export class ServicesGateway {
 
   constructor(
@@ -19,17 +19,6 @@ export class ServicesGateway {
     ) {}
 
   @WebSocketServer() server: Server
-
-  handleConnection(@ConnectedSocket() client: Socket) {
-    console.log('connect', client.id)
-    // client.join(room['hello'])
-    // client.join(room2)
-    // console.log(client.rooms)
-  }
-  handleDisconnect(@ConnectedSocket() client: Socket) {
-    console.log('disconnect', client.id)
-    client.disconnect(true)
-  }
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new WSValidationPipe())
@@ -49,7 +38,8 @@ export class ServicesGateway {
   @SubscribeMessage('getServiceById')
   async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto): Promise<any> {
     const service = await this.serviceSevice.getServiceById(payload.serviceId)
-    this.server.to(client.id).emit('getServiceById', service)
+    console.log('SEND')
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)

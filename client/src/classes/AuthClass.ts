@@ -9,6 +9,16 @@ export class AuthClass {
         this.link = process.env.REACT_APP_LINK
     }
 
+    getCurrentUser(){
+        if(!sessionStorage.getItem('currentUser')) return false
+         // @ts-ignore
+        return JSON.parse(sessionStorage.getItem('currentUser'))
+    }
+
+    deleteCurrentUser(){
+        sessionStorage.removeItem('currentUser')
+    }
+
     getServiceAppUsers(){
         if(!sessionStorage.getItem('serviceAppUsers')) return []
         // @ts-ignore
@@ -41,8 +51,6 @@ export class AuthClass {
             setAuthCode()
             setEmail('')
             setClickEmailSend(false)
-            // console.log(usersThisSession)
-            // console.log(this.getServiceAppUsers())
             return true
         })
         .catch((e) => {

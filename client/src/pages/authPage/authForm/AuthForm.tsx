@@ -7,14 +7,14 @@ import {
     Title,
   } from '@mantine/core';
   // @ts-ignore
-import classes from './AuthForm.module.css';
+import classes from './AuthForm.module.css'
 import { LanguagePicker } from '../../../components/LanguagePicker/LanguagePicker.tsx'
-import { useDisclosure } from '@mantine/hooks';
-import { ServiceModal } from '../serviceForm/ServiceModal.tsx';
+import { useDisclosure } from '@mantine/hooks'
+import { ServiceModal } from '../serviceForm/ServiceModal.tsx'
 
 const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   
-  export function AuthForm(props) {
+  export function AuthForm(props: any) {
 
     const [errorMessageEmail, setErrorMessageEmail] = useState<string>('')
     const [clickEmailSend, setClickEmailSend] = useState<boolean>(false)
@@ -24,15 +24,12 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
     let [time, setTime] = useState<number>(60)
 
     function timerSet(){
-      // console.log('time', time)
       if(time === 0){
-        // console.log('clear', time)
         clearInterval(timer)
         setClickEmailSend(false)
         props.setAuthCode()
       }
       else{
-        // console.log('step', time)
         setTime(time--)
       }
     }
@@ -68,11 +65,10 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
                           time = 60
                           const int = setInterval(timerSet, 1000)
                           setTimer(int)
-                          // console.log(timer)
                         }
                     }}
                     >
-                    {props.text.login[props.leng] + ' ' + time}
+                    {props.text.auth[props.leng] + ' ' + time}
                     </Button>
                 </div>
             )
@@ -92,7 +88,6 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
                 time = 60
                 const int = setInterval(timerSet, 1000)
                 setTimer(int)
-                // console.log(timer)
             }}
             >
             {props.text.sendPasswordToEmail[props.leng]}

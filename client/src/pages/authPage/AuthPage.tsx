@@ -22,6 +22,7 @@ function AuthPage() {
   const textClass = new TextClass()
 
   useEffect(() => {
+    authClass.deleteCurrentUser()
     getLeguagePack()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -32,6 +33,8 @@ function AuthPage() {
       setAvLeng(res.lengPack)
       setLeng(res.lengPack.map((item: { index: string }) => item.index).includes(leng) ? leng : 'en')
       setText(res.text)
+      sessionStorage.setItem('leng', res.lengPack.map((item: { index: string }) => item.index).includes(leng) ? leng : 'en')
+      sessionStorage.setItem('text', JSON.stringify(res.text))
     }
     else{
       navigate('/')

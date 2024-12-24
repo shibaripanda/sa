@@ -9,6 +9,11 @@ export class UsersService {
     constructor(
         @InjectModel('User') private userMongo: Model<User>) {}
 
+
+    async getUserRolesByUserId(_id: string){
+        return (await this.userMongo.findOne({_id: _id}, {services_roles: 1}))
+    }
+
     async newCodeCreate(email: string, code: number, time: number){
         await this.userMongo.updateOne({email: email}, {authCode: {code: code, time: time}})
     }

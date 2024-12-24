@@ -16,7 +16,6 @@ constructor(
 
     async createNewService(name: string, ownerId: ObjectId, email: string){
         const newService = await this.serviceMongo.create({owner: ownerId, name: name})
-        console.log(newService._id.toHexString())
         await this.userService.addRoleToUser(email, newService._id.toHexString(), 'owner')
     }
 

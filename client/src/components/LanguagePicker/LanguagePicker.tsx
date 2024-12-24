@@ -9,7 +9,11 @@ export function LanguagePicker(props) {
   const [opened, setOpened] = useState(false)
   const items = props.avLeng.map((item) => (
     <Menu.Item
-      onClick={() => props.setLeng(item.index)}
+      onClick={() => {
+          props.setLeng(item.index)
+          sessionStorage.setItem('leng', item.index)
+        }
+      }
       key={item.index}
     >
       {item.title}

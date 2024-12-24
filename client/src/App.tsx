@@ -4,6 +4,7 @@ import './styles/App.css'
 import '@mantine/core/styles.css'
 import { createTheme, MantineProvider } from '@mantine/core'
 import AuthPage from './pages/authPage/AuthPage.tsx'
+import ServicePage from './pages/servicePage/ServicePage.tsx'
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -15,7 +16,7 @@ function App() {
       <MantineProvider theme={theme}>
         <BrowserRouter>
             <Routes>
-              {/* <Route path="/main" element={<MainPage/>} /> */}
+              <Route path="/service" element={<ServicePage/>} />
               <Route path="/" element={<AuthPage/>} />
             </Routes>
           </BrowserRouter>

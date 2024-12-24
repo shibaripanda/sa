@@ -13,6 +13,7 @@ export class RolesGuard implements CanActivate {
   async canActivate(context: ExecutionContextHost): Promise<boolean> {
 
     const req = context.switchToWs()
+    // const authHeader = req.handshake.auth.token.Authorization
     const token = req.getClient().handshake.headers.token.split(' ')[1]
     const user = this.jwtService.verify(token)
     const roles = user.roles.find(item => item.serviceId === req.getData().serviceId).roles

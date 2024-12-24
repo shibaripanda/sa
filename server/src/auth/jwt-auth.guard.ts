@@ -10,8 +10,8 @@ export class JwtAuthGuard implements CanActivate {
         const req = context.switchToHttp().getRequest()
         // console.log(req.handshake.headers.token)
         try{
-            const authHeader = req.handshake.headers.token
-            // const authHeader = req.handshake.auth.token.Authorization
+            // const authHeader = req.handshake.headers.token
+            const authHeader = req.handshake.auth.token.Authorization
             const bearer = authHeader.split(' ')[0]
             const token = authHeader.split(' ')[1]
             if(bearer !== 'Bearer' || !token){

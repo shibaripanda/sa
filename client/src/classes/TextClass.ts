@@ -13,6 +13,18 @@ export class TextClass {
         this.link = process.env.REACT_APP_LINK
     }
 
+    async getLeng(){
+        if(!sessionStorage.getItem('leng')) return false
+        // @ts-ignore
+        return sessionStorage.getItem('leng')
+    }
+
+    async getText(){
+        if(!sessionStorage.getItem('text')) return false
+        // @ts-ignore
+        return JSON.parse(sessionStorage.getItem('text'))
+    }
+
     async getTextPackFromServer(): Promise<Leng | false>{
 
         return await axios({

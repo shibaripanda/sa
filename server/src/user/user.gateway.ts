@@ -1,4 +1,4 @@
-import { UseGuards, UsePipes } from '@nestjs/common'
+import { Request, UseGuards, UsePipes } from '@nestjs/common'
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
@@ -7,8 +7,9 @@ import { ReqestUserByEmailDto } from './dto/request-user.dto'
 import { UpdateUserRoleDto } from './dto/updateUserRole.dto'
 import { WSValidationPipe } from 'src/modules/wsPipeValid'
 import { RolesGuard } from 'src/auth/roles.guard'
+// import { RolesByUserIdDto } from './dto/getRolesById.dto'
 
-@WebSocketGateway({cors:{origin:'*'}, namespace: 'user'})
+@WebSocketGateway({cors:{origin:'*'}})
 
 // export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   export class UserGateway  {
@@ -19,15 +20,13 @@ import { RolesGuard } from 'src/auth/roles.guard'
 
   @WebSocketServer() server: Server
 
-  // handleConnection(@ConnectedSocket() client: Socket) {
-  //   // client.join(room['hello'])
-  //   // client.join(room2)
-  //   console.log(client.rooms)
-  // }
-  // handleDisconnect(@ConnectedSocket() client: Socket) {
-  //   client.disconnect(true)
-  // }
-
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('getUserRolesByUserId')
+  async getUserRolesByUserId(@ConnectedSocket() client: Socket, @Request() req: any): Promise<void> {
+    const roles = await this.userSevice.getUserRolesByUserId(req.user._id)
+    client.emit('getUserRolesByUserId', roles.services_roles)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new WSValidationPipe())
