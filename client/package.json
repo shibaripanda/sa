@@ -6,6 +6,7 @@
     "@mantine/core": "^7.15.1",
     "@mantine/form": "^7.15.1",
     "@mantine/hooks": "^7.15.1",
+    "@mantinex/mantine-logo": "^1.1.0",
     "@tabler/icons-react": "^3.26.0",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",

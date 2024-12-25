@@ -4,7 +4,8 @@ import { AuthClass } from '../../classes/AuthClass.ts'
 import { TextClass } from '../../classes/TextClass.ts'
 import { useNavigate } from 'react-router-dom'
 import { useConnectSocket } from '../../modules/socket/hooks/useConnectSocket.ts'
-
+import { Header1 } from './header/Header1.tsx'
+import { ScreenLine } from './screens/screensLine.ts'
 
 function ServicePage() {
 
@@ -16,9 +17,11 @@ function ServicePage() {
   const [text, setText] = useState<any | false>(false)
   const [user, setUser] = useState<object | false>(false)
   const [serviceId, setServiceId] = useState<string | false>(false)
+  const [activeScreen, setActiveScreen] = useState(0)
 
   useEffect(() => {
     getTexLengUserService()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getTexLengUserService = async () => {
@@ -41,8 +44,12 @@ function ServicePage() {
 
 
   if(text && leng && user && serviceId){
+    const screen = new ScreenLine({text, leng, user, serviceId})
     return (
-      <div>{text.hello[leng]} {serviceId}</div>
+      <div>
+        <Header1 menu={screen.getMenuItems()} text={text} leng={leng} user={user} activeScreen={activeScreen} setActiveScreen={setActiveScreen}/>
+        {screen.getScreen(activeScreen)}
+      </div>
     )
   }
   return (
