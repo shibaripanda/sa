@@ -15,6 +15,11 @@ export class UpdateUserRoleDto {
     @IsString()
     @Length(1, 50)
     readonly role: string
+
+    @IsNotEmpty()
+    @IsString()
+    @Length(1, 50)
+    readonly subServiceId: string
 }
 
 

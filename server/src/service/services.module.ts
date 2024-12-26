@@ -10,7 +10,7 @@ import { UsersModule } from 'src/user/users.module'
   imports: [
       MongooseModule.forFeature([{ name: 'Service', schema: ServiceSchema }]),
       forwardRef(() => UsersModule),
-      forwardRef(() => AuthModule)
+      forwardRef(() => AuthModule),
     ],
   providers: [ServicesService, ServicesGateway],
   exports: [ServicesService]

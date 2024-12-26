@@ -42,7 +42,7 @@ import { RolesGuard } from 'src/auth/roles.guard'
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('addRoleToUser')
   async addRoleToUser(@MessageBody() updateUserRoleDto: UpdateUserRoleDto): Promise<void> {
-    await this.userSevice.addRoleToUser(updateUserRoleDto.email, updateUserRoleDto.serviceId, updateUserRoleDto.role)
+    await this.userSevice.addRoleToUser(updateUserRoleDto.email, updateUserRoleDto.serviceId, updateUserRoleDto.role, updateUserRoleDto.subServiceId)
   }
 
 }

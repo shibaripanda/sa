@@ -14,6 +14,11 @@ export class AuthClass {
         return sessionStorage.getItem('serviceId')
     }
 
+    getSubServiceId(){
+        if(!sessionStorage.getItem('subServiceId')) return false
+        return sessionStorage.getItem('subServiceId')
+    }
+
     getCurrentUser(){
         if(!sessionStorage.getItem('currentUser')) return false
          // @ts-ignore

@@ -1,7 +1,6 @@
 import React from 'react'
-import { Anchor, Box, Burger, Container, Grid, Group, Modal } from '@mantine/core'
+import { Anchor, Box, Burger, Container, Grid, Group, Modal, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { MantineLogo } from '@mantinex/mantine-logo'
 // @ts-ignore
 import classes from './Header1.module.css'
 
@@ -72,10 +71,24 @@ export function Header1(props) {
   return (
     <header className={classes.header}>
       <Container className={classes.inner}>
-        <MantineLogo size={34} />
+        
+        <Grid gutter="xs">
+          <Grid.Col span={12}>
+            <Text size='xs'>
+              {`${props.service.name} (${props.service.subName})`}
+            </Text>
+          </Grid.Col>
+          <Grid.Col span={12}>
+            <Text size='xs'>
+              {props.user.name ? props.user.name : props.user.email}
+            </Text>
+          </Grid.Col>
+        </Grid>
+      
+        
         {props.text[props.menu[props.activeScreen]][props.leng]}
         <Box className={classes.links} visibleFrom="sm">
-          <Group justify="flex-end">{secondaryItems}</Group>
+          {/* <Group justify="flex-end">{secondaryItems}</Group> */}
           <Group gap={0} justify="flex-end" className={classes.mainLinks}>
             {mainItems}
           </Group>

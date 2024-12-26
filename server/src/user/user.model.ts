@@ -5,10 +5,23 @@ interface AuthCode {
   time: number
 }
 
+interface SubRoles {
+  subServicesId: string,
+  roles: string[],
+  statuses: string[],
+  devices: string[]
+}
+
+// interface ServicesRoles {
+//   serviceId: mongoose.ObjectId,
+//   roles: string[],
+//   subServiceId: string[]
+// }
+
 interface ServicesRoles {
   serviceId: mongoose.ObjectId,
-  roles: string[],
-  subServiceId: string[]
+  // roles: string[],
+  subServices: SubRoles[]
 }
 
 export const UsersSchema = new mongoose.Schema({

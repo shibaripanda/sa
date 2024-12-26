@@ -8,6 +8,7 @@ interface ServiceRoles {
 interface SubService {
   name: string,
   options: {address: string, workTime: string, contact: string}
+  subServiсeId: string
 }
 
 interface Price {
@@ -78,7 +79,7 @@ export const ServiceSchema = new mongoose.Schema({
     devices: string[]
     statuses: string[]
     roles: ServiceRoles[]
-    subServises: SubService[]
+    subServiсes: SubService[]
     serviceInfo: string
     serviceDocuments: ServiceDocuments[]
     price: Price[]

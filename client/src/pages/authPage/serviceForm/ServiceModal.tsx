@@ -9,18 +9,19 @@ import { useNavigate } from 'react-router-dom'
 
 interface Role {
     serviceId: string
-    access: string[]
+    subServices: {subServiceId: string}[]
 }
 
 interface Service {
     _id: string
     name: string[]
+    subServiсes: {subServiсeId: string, name: string}[]
 }
 
 export function ServiceModal(props: any) {
 
     useConnectSocket(props.user.token)
-
+// console.log(props.user)
     const navigate = useNavigate()
     const [roles, setRoles] = useState<Role[]>(props.user.roles)
     const [services, setServices] = useState<Service[]>([])
@@ -48,6 +49,8 @@ export function ServiceModal(props: any) {
             getFromSocket([{message: `getServiceById${serviceId}`, handler: addService}])
             sendToSocket('getServiceById', {serviceId: serviceId})
         }
+        console.log(roles)
+        console.log(services)
     }, [roles])
 
     const createNewService = () => {
@@ -59,24 +62,35 @@ export function ServiceModal(props: any) {
 
     return (
         <>
-            <Modal centered opened={props.opened} size="50%" title={props.user.name ? props.user.name : props.user.email}
+            <Modal opened={props.opened} size="50%" title={props.user.name ? props.user.name : props.user.email}
                 onClose={() => {
                     sessionStorage.removeItem('currentUser')
                     props.close()
                 }}>
             
             <Grid>
-                {services.map(item => 
-                        <Grid.Col key={item._id} span={12}>
-                            <Button 
-                            onClick={() => {
-                                sessionStorage.setItem('serviceId', item._id)
-                                navigate('/service')
-                            }} 
-                            fullWidth
-                            >
-                            {item.name}
-                            </Button>
+                {services.map(item1 => 
+                        <Grid.Col key={item1._id} span={12}>
+                            <>
+                                {item1.name}
+                                <Grid>
+                                  {item1.subServiсes.filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiсeId))).map(item =>
+                                  <Grid.Col key={item.subServiсeId} span={12}> 
+                                    <Button 
+                                    onClick={() => {
+                                        sessionStorage.setItem('serviceId', item1._id)
+                                        sessionStorage.setItem('subServiceId', item.subServiсeId)
+                                        navigate('/service')
+                                    }} 
+                                    fullWidth
+                                    >
+                                    {item.name}
+                                    </Button>
+                                </Grid.Col>
+                                  )}  
+                                </Grid>
+                                <hr></hr>          
+                            </>
                         </Grid.Col>)}
 
                 <Grid.Col span={12}>

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, ObjectId } from 'mongoose'
 import { Service } from './services.model'
@@ -10,13 +10,15 @@ export class ServicesService {
 constructor(
     @InjectModel('Service') 
     private serviceMongo: Model<Service>,
+    @Inject(forwardRef(() => UsersService))
     private userService: UsersService
 ) {}
 
 
     async createNewService(name: string, ownerId: ObjectId, email: string){
         const newService = await this.serviceMongo.create({owner: ownerId, name: name})
-        await this.userService.addRoleToUser(email, newService._id.toHexString(), 'owner')
+        // await this.userService.addRoleToUser(email, newService._id.toHexString(), 'owner')
+        await this.userService.addRoleToUser(email, newService._id.toHexString(), 'owner', newService.subServiсes[0].subServiсeId)
     }
 
     async getServicesByOwnerId(userId: ObjectId){
