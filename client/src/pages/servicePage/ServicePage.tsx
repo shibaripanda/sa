@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom'
 import { useConnectSocket } from '../../modules/socket/hooks/useConnectSocket.ts'
 import { Header1 } from './header/Header1.tsx'
 import { ScreenLine } from './screens/screensLine.ts'
+import { getFromSocket } from '../../modules/socket/pipGetSocket.ts'
+import { sendToSocket } from '../../modules/socket/pipSendSocket.ts'
 
 function ServicePage() {
 
@@ -18,6 +20,7 @@ function ServicePage() {
   const [user, setUser] = useState<object | false>(false)
   const [serviceId, setServiceId] = useState<string | false>(false)
   const [activeScreen, setActiveScreen] = useState(0)
+  const [service, setService] = useState<object | false>(false)
 
   useEffect(() => {
     getTexLengUserService()
@@ -36,6 +39,10 @@ function ServicePage() {
       setLeng(t2)
       setText(t3)
       setUser(t4)
+      getFromSocket([
+                  {message: `getServiceById${authClass.getServiceId()}`, handler: setService}
+              ])
+      sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
     }
     else{
       navigate('/')
@@ -43,8 +50,8 @@ function ServicePage() {
   }
 
 
-  if(text && leng && user && serviceId){
-    const screen = new ScreenLine({text, leng, user, serviceId})
+  if(text && leng && user && serviceId && service){
+    const screen = new ScreenLine({text, leng, user, serviceId, service})
     return (
       <div>
         <Header1 menu={screen.getMenuItems()} text={text} leng={leng} user={user} activeScreen={activeScreen} setActiveScreen={setActiveScreen}/>

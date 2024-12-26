@@ -7,7 +7,8 @@ interface AuthCode {
 
 interface ServicesRoles {
   serviceId: mongoose.ObjectId,
-  roles: string[]
+  roles: string[],
+  subServiceId: string[]
 }
 
 export const UsersSchema = new mongoose.Schema({

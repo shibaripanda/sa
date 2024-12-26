@@ -34,11 +34,6 @@ export function ServiceModal(props: any) {
         sendToSocket('getUserRolesByUserId', {})
     }, [])
 
-    // useEffect(() => {
-    //     console.log('uEf 3')
-    //     setTimeout(() => close(), 1500)
-    // }, [services])
-
     useEffect(() => {
         console.log('uEf 2')
         const addService = (data: any) => {
@@ -48,11 +43,6 @@ export function ServiceModal(props: any) {
                 setServices([...services])
                 close()
             }
-            // else{
-            //     services.splice(index, 1, data)
-            //     setServices(services)
-            // }
-            // setServices([...services]) 
         }
         for(const serviceId of roles.map(item => item.serviceId)){
             getFromSocket([{message: `getServiceById${serviceId}`, handler: addService}])

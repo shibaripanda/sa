@@ -46,9 +46,9 @@ export const ServiceSchema = new mongoose.Schema({
       default: [{role: 'Serviceman', access: []}, {role: 'Manager', access: []}, {role: 'Supermanager', access: []}],
       require: true
     },
-    subServises: {
+    subServiсes: {
       type: Array,
-      default: [{name: 'Main Service', options: {address: '', workTime: '', contact: ''}}],
+      default: [{name: 'Main Service', subServiсeId: 'subServiсeId' + Date.now(), options: {address: '', workTime: '', contact: ''}}],
       require: true
     },
     serviceInfo: {
