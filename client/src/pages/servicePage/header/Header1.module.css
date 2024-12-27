@@ -1,5 +1,5 @@
 .header {
-  height: 40px;
+  height: 77px;
   /* margin-bottom: 120px; */
   background-color: var(--mantine-color-body);
   border-bottom: 3px solid
@@ -7,7 +7,7 @@
 }
 
 .inner {
-  height: 42px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -31,6 +31,15 @@
   color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
   padding: 7px var(--mantine-spacing-sm);
   font-weight: 700;
+}
+
+.mainLinkExit {
+  text-transform: uppercase;
+  font-size: var(--mantine-font-size-xs);
+  color: light-dark(var(--mantine-color-red-6), var(--mantine-color-red-1));
+  padding: 7px var(--mantine-spacing-sm);
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .mainLink {

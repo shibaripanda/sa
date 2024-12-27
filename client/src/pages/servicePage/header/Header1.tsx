@@ -1,13 +1,103 @@
 import React from 'react'
-import { Anchor, Box, Burger, Button, Container, Grid, Group, Modal, Text } from '@mantine/core'
+import { Anchor, Box, Burger, Button, Container, Grid, Group, Modal, Text, TextInput } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 // @ts-ignore
 import classes from './Header1.module.css'
+import { IconBackspace } from '@tabler/icons-react'
 
 export function Header1(props) {
   const [openedModal, { open, close }] = useDisclosure(false)
   const [opened, { toggle }] = useDisclosure(false, {onOpen: () => open()})
   
+  const topMenuArray = 
+    [
+      {name: 'EXIT', action: () => props.navigate('/'), color: 'red', class: classes.mainLinkExit},
+      {name: `${props.service.name} (${props.service.subName})`, action: () => {}, class: classes.mainLink},
+      {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink},
+    ]
+  const topMenuMobileArray = 
+    [
+      {name: `${props.service.name} (${props.service.subName})`, action: () => {}, class: classes.mainLink}
+    ]
+  const mobileMenuArray = 
+    [
+      {name: 'EXIT', action: () => props.navigate('/'), color: 'red', class: classes.mainLinkExit},
+      {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink}
+    ]
+
+  const mobileMenu = mobileMenuArray.map((item, index) => (
+    <div
+      key={index}
+      className={item.class}
+      onClick={//(event) => {
+        item.action
+        // event.preventDefault()
+        // if(opened){
+        //     toggle()
+        //     close()
+        // }
+      //}}
+      }
+    >
+      {item.name}
+    </div>
+  ))
+  const topMenu = topMenuArray.map((item, index) => (
+    <div
+      key={index}
+      className={item.class}
+      onClick={//(event) => {
+        item.action
+        // event.preventDefault()
+        // if(opened){
+        //     toggle()
+        //     close()
+        // }
+      //}}
+      }
+    >
+      {item.name}
+    </div>
+  ))
+  const topMenuMobile = topMenuMobileArray.map((item, index) => (
+    <div
+      key={index}
+      className={item.class}
+      onClick={//(event) => {
+        item.action
+        // event.preventDefault()
+        // if(opened){
+        //     toggle()
+        //     close()
+        // }
+      //}}
+      }
+    >
+      {item.name}
+    </div>
+  ))
+
+  function BurgerMenuModal() {
+      return (
+      <>
+          <Modal
+          opened={openedModal}
+          onClose={() => {
+              close()
+              toggle()
+          }}
+          title={mobileMenu}
+          fullScreen
+          radius={0}
+          transitionProps={{ transition: 'fade', duration: 200 }}
+          >
+              <Grid>
+                  {mainItems.map((item, index) => <Grid.Col key={index} span={12}>{item}</Grid.Col>)}
+              </Grid>
+          </Modal>
+      </>
+      )
+  }
 
   const mainItems = props.menu.map((item, index) => (
     <Anchor<'a'>
@@ -28,108 +118,56 @@ export function Header1(props) {
     </Anchor>
   ))
 
-  function BurgerMenuModal() {
-      return (
-      <>
-          <Modal
-          opened={openedModal}
-          onClose={() => {
-              close()
-              toggle()
-          }}
-          title={props.user.name ? props.user.name : props.user.email}
-          fullScreen
-          radius={0}
-          transitionProps={{ transition: 'fade', duration: 200 }}
-          >
-              <Grid>
-                  {mainItems.map((item, index) => <Grid.Col key={index} span={12}>{item}</Grid.Col>)}
-              </Grid>
-          </Modal>
-      </>
-      )
-  }
-
   return (
-    // <header className={classes.header}>
-    //   <Container className={classes.inner}>
-        
-    //     <Grid gutter="xs">
-    //       <Grid.Col span={12}>
-    //         <Text size='xs'>
-    //           {`${props.service.name} (${props.service.subName})`}
-    //         </Text>
-    //       </Grid.Col>
-    //       <Grid.Col span={12}>
-    //         <Text size='xs'>
-    //           {props.user.name ? props.user.name : props.user.email}
-    //         </Text>
-    //       </Grid.Col>
-    //     </Grid>
+      <header className={classes.header}>
+        {/* <Group visibleFrom="sm" gap={0} justify="start">
+          {[...topMenu, <TextInput size='sx'key={39}/>]}
+        </Group> */}
 
-        
-    //     {props.text[props.menu[props.activeScreen]][props.leng]}
-    //     <Box className={classes.links} visibleFrom="sm">
-    //       <Group gap={0} justify="flex-end" className={classes.mainLinks}>
-    //         {mainItems}
-    //       </Group>
-    //     </Box>
-        
-    //     <Burger
-    //       opened={opened}
-    //       onClick={toggle}
-    //       className={classes.burger}
-    //       size="sm"
-    //       hiddenFrom="sm"
-    //     />
-    //   </Container>
-      
-    //   <BurgerMenuModal/>
-    // </header>
-        <header className={classes.header}>
-        {/* <Container> */}
-        <Grid  className={classes.inner}>
-          <Grid.Col span={6} hiddenFrom="sm">
-            {props.text[props.menu[props.activeScreen]][props.leng]}
-          </Grid.Col>
-          <Grid.Col span={6} hiddenFrom="sm">
-            <Burger opened={opened}
-              onClick={toggle}
-              className={classes.burger}
-              size="sm"
-              hiddenFrom="sm"
-            />
-          </Grid.Col>
-
-          
-          <Grid.Col span={1}>
-            <div className={classes.mainLinkData}>
-              <Anchor<'a'> href={'/'}>Выйти</Anchor>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={2}>
-            <div className={classes.mainLinkData}>
-              {`${props.service.name} (${props.service.subName})`}
-            </div>
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <div className={classes.mainLinkData}>
-              {props.user.name ? props.user.name : props.user.email}
-            </div>
-          </Grid.Col>
-          <Grid.Col span={8}>
-            <Group  visibleFrom="sm" gap={0} justify="center">
-              {mainItems}
+        <Group visibleFrom="sm" gap={0} justify="space-around">
+          {[
+            <Group key={1}>
+              {topMenu}
+            </Group>, 
+            <Group key={2}>
+              <TextInput rightSectionPointerEvents="none"
+                inputSize={'30'}
+                placeholder=' find'
+                rightSection={<IconBackspace stroke={1.5}/>} 
+                radius="sm" 
+                // size='sx' 
+                key={49}/>
             </Group>
-          </Grid.Col>
+            ]}
+        </Group>
 
-        </Grid>
-        
-          
-            
-          
-          
-        {/* </Container> */}
+        <Group visibleFrom="sm" gap={0} justify="center">
+          {mainItems}
+        </Group>
+
+        <Group hiddenFrom="sm" gap={0} justify="space-around">
+          {[...topMenuMobile, <Burger
+          key={19}
+          opened={opened}
+          onClick={toggle}
+          className={classes.burger}
+          size="sm"
+          hiddenFrom="sm"
+          />]}
+        </Group>
+        <Group hiddenFrom="sm" gap={0} justify="space-around">
+          {[
+            <Anchor<'a'>
+            key={29}
+            href={'#'}
+            className={classes.mainLink}
+            data-active={true}
+            >
+              {props.text[props.menu[props.activeScreen]][props.leng]}
+            </Anchor>,
+            <TextInput size='sx'key={39}/>
+          ]}
+        </Group>
         
         <BurgerMenuModal/>
       </header>

@@ -57,7 +57,7 @@ function ServicePage() {
     const screen = new ScreenLine({text, leng, user})
     return (
       <div>
-        <Header1 service={service} menu={screen.getMenuItems()} text={text} leng={leng} user={user} activeScreen={activeScreen} setActiveScreen={setActiveScreen}/>
+        <Header1 navigate={navigate} service={service} menu={screen.getMenuItems()} text={text} leng={leng} user={user} activeScreen={activeScreen} setActiveScreen={setActiveScreen}/>
         {screen.getScreen(activeScreen)}
       </div>
     )
