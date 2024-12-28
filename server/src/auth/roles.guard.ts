@@ -14,10 +14,16 @@ export class RolesGuard implements CanActivate {
 
     const req = context.switchToWs()
     // const authHeader = req.handshake.auth.token.Authorization
-    const token = req.getClient().handshake.headers.token.split(' ')[1]
+    // const token = req.getClient().handshake.headers.token.split(' ')[1]
+    const token = req.getClient().handshake.auth.token.Authorization.split(' ')[1]
     const user = this.jwtService.verify(token)
-    const roles = user.roles.find(item => item.serviceId === req.getData().serviceId).roles
+    // const roles = user.roles.find(item => item.serviceId === req.getData().serviceId).roles
+    // const service = await this.serviceSevice.getServiceById(req.getData().serviceId)
+    // console.log(req.getData())
+    const roles = (user.roles.filter(item => item.serviceId === req.getData().serviceId))[0].subServices.filter(item => item.subServicesId === req.getData().subServiceId)[0].roles
+    // console.log(roles)
     const service = await this.serviceSevice.getServiceById(req.getData().serviceId)
+    // console.log(service.roles)
     if(roles.includes('owner') && service.owner.toString() === user._id.toString()){
       return true
     }

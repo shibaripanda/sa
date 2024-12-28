@@ -2,7 +2,7 @@ import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
-export function ChangeNameMainService(props) {
+export function ChangeNameSubService(props) {
 
     console.log('ChangeNameMainService')
 
@@ -13,7 +13,7 @@ export function ChangeNameMainService(props) {
         <TextInput placeholder={props.text.newNameForService[props.leng]}/>
         <Button style={{marginTop: 10}}
         onClick={() => {
-          sendToSocket('changeNameMainService', {
+          sendToSocket('changeNameSubService', {
             serviceId: sessionStorage.getItem('serviceId'), 
             subServiceId: sessionStorage.getItem('subServiceId'), 
             newName: 'Супер сервис 9'

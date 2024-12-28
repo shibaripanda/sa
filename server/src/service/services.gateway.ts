@@ -22,10 +22,19 @@ export class ServicesGateway {
   @WebSocketServer() server: Server
 
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeNameSubService')
+  async changeNameSubService(@MessageBody() payload: ChangeServiceNameDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeNameSubService(payload.serviceId, payload.subServiceId, payload.newName)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeNameMainService')
   async changeNameMainService(@MessageBody() payload: ChangeServiceNameDto, @ConnectedSocket() client: Socket,): Promise<void> {
-    console.log(payload)
     const service = await this.serviceSevice.changeNameMainService(payload.serviceId, payload.newName)
     this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
   }

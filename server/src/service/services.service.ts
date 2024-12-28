@@ -15,6 +15,9 @@ constructor(
 ) {}
 
 
+    async changeNameSubService(serviceId: string, subServiceId: string, newName: string){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {'subServiсes.$[el].name': newName}, {arrayFilters: [{'el.subServiсeId': subServiceId}], returnDocument: 'after'})
+    }
     async changeNameMainService(serviceId: string, newName: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {name: newName}, {returnDocument: 'after'})
     }

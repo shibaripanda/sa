@@ -3,6 +3,7 @@ import { UserClass } from "../../../classes/UserClass.ts";
 import { NewOrderScreen } from "./newOrderScreen/NewOrderScreen.tsx";
 import { OrderScreen } from "./ordersScreen/OrderScreen.tsx";
 import { ChangeNameMainService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNameMainService.tsx";
+import { ChangeNameSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNameSubService.tsx";
 import { SeviceSettingsScreen } from "./serviceSettingsScreen/SeviceSettingsScreen.tsx";
 
 const line = [
@@ -19,7 +20,7 @@ const line = [
     {
         name: 'serviceSettings',
         screen: SeviceSettingsScreen,
-        items: [{message: 'changeNameMainService', screenItem: ChangeNameMainService}]
+        items: [{message: 'changeNameMainService', screenItem: ChangeNameMainService}, {message: 'changeNameSubService', screenItem: ChangeNameSubService}]
     }
 ]
 

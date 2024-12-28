@@ -10,6 +10,11 @@ export class ChangeServiceNameDto {
     @IsString()
     @Length(1, 50)
     readonly serviceId: string
+
+    @IsNotEmpty()
+    @IsString()
+    @Length(1, 50)
+    readonly subServiceId: string
 }
 
 
