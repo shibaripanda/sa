@@ -28,6 +28,6 @@ export function NewOrderScreen(props) {
 
 
   return (
-    <>dgdgdgdgdgdgdgdgd</>
+    <>NewOrderScreen</>
   )
 }

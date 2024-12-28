@@ -2,9 +2,9 @@ import React from 'react'
 
 export function OrderScreen(props) {
 
-    console.log('OrderScreen')
+    // console.log('OrderScreen')
 
-    console.log(props)
+    // console.log(props)
 
   
 //   const mainItems = mainLinks.map((item, index) => (
@@ -28,6 +28,6 @@ export function OrderScreen(props) {
 
 
   return (
-    <>dfddfdf</>
+    <>OrderScreen</>
   )
 }

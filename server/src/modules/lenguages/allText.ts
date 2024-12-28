@@ -55,5 +55,12 @@ export const textArray: LengData[] = [
     {rutext: 'Выход', index: 'exit', info_data: 'выход'},
     {rutext: 'Авторизоваться', index: 'auth', info_data: 'авторизоваться'},
     {rutext: 'Мы создаем новый сервис для вас. Пожалуйста подождите...', index: 'newServiceCreating', info_data: 'создаем сервис ожидание'},
+    {rutext: 'Настройка сервиса', index: 'serviceSettings', info_data: 'настройки сервиса'},
+    {rutext: 'Создать заказ', index: 'createOrder', info_data: 'создать заказ'},
+    {rutext: 'Заказы', index: 'orders', info_data: 'заказы'},
+    {rutext: 'Сохранить', index: 'save', info_data: 'сохранить'},
+    {rutext: 'Новое имя для сервиса', index: 'newNameForService', info_data: 'новое имя для сервиса'},
+    {rutext: 'Изменение имени сервиса', index: 'editingNameService', info_data: 'изменение имени сервиса'},
+    
 ]
 

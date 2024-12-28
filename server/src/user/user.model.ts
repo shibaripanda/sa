@@ -12,15 +12,8 @@ interface SubRoles {
   devices: string[]
 }
 
-// interface ServicesRoles {
-//   serviceId: mongoose.ObjectId,
-//   roles: string[],
-//   subServiceId: string[]
-// }
-
 interface ServicesRoles {
   serviceId: mongoose.ObjectId,
-  // roles: string[],
   subServices: SubRoles[]
 }
 

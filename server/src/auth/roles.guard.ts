@@ -25,6 +25,7 @@ export class RolesGuard implements CanActivate {
     if(activPatterns.includes(req.getPattern())){
       return true
     }
+    console.log('Авторизация (RolesGuard) false')
     // throw new UnauthorizedException({message: 'Нет авторизации3'})
     return false
   }

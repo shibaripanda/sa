@@ -19,6 +19,15 @@ export class AuthClass {
         return sessionStorage.getItem('subServiceId')
     }
 
+    getCurrentUserForCurrentService(){
+        if(!sessionStorage.getItem('currentUser')) return false
+         // @ts-ignore
+        const user = JSON.parse(sessionStorage.getItem('currentUser'))
+        user.roles = user.roles.filter(item => item.serviceId === this.getServiceId())[0].subServices.filter(item => item.subServicesId === this.getSubServiceId())[0]
+        user.serviceId = this.getServiceId()
+        return user
+    }
+
     getCurrentUser(){
         if(!sessionStorage.getItem('currentUser')) return false
          // @ts-ignore

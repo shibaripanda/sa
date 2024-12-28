@@ -1,5 +1,5 @@
 import React from 'react'
-import { Anchor, Box, Burger, Button, Container, Grid, Group, Modal, Text, TextInput } from '@mantine/core'
+import { Anchor, Burger, Grid, Group, Modal, TextInput } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 // @ts-ignore
 import classes from './Header1.module.css'
@@ -11,7 +11,14 @@ export function Header1(props) {
   
   const topMenuArray = 
     [
-      {name: 'EXIT', action: () => props.navigate('/'), color: 'red', class: classes.mainLinkExit},
+      {
+        name: props.text.exit[props.leng],
+        color: 'red', class: classes.mainLinkExit,
+        action: () => {
+          sessionStorage.removeItem('activescreen')
+          props.navigate('/')
+        }
+      },
       {name: `${props.service.name} (${props.service.subName})`, action: () => {}, class: classes.mainLink},
       {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink},
     ]
@@ -21,7 +28,14 @@ export function Header1(props) {
     ]
   const mobileMenuArray = 
     [
-      {name: 'EXIT', action: () => props.navigate('/'), color: 'red', class: classes.mainLinkExit},
+      {
+        name: props.text.exit[props.leng],
+        color: 'red', class: classes.mainLinkExit,
+        action: () => {
+          sessionStorage.removeItem('activescreen')
+          props.navigate('/')
+        }
+      },
       {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink}
     ]
 
@@ -29,14 +43,8 @@ export function Header1(props) {
     <div
       key={index}
       className={item.class}
-      onClick={//(event) => {
+      onClick={
         item.action
-        // event.preventDefault()
-        // if(opened){
-        //     toggle()
-        //     close()
-        // }
-      //}}
       }
     >
       {item.name}
@@ -46,14 +54,8 @@ export function Header1(props) {
     <div
       key={index}
       className={item.class}
-      onClick={//(event) => {
+      onClick={
         item.action
-        // event.preventDefault()
-        // if(opened){
-        //     toggle()
-        //     close()
-        // }
-      //}}
       }
     >
       {item.name}
@@ -63,14 +65,8 @@ export function Header1(props) {
     <div
       key={index}
       className={item.class}
-      onClick={//(event) => {
+      onClick={
         item.action
-        // event.preventDefault()
-        // if(opened){
-        //     toggle()
-        //     close()
-        // }
-      //}}
       }
     >
       {item.name}
@@ -108,6 +104,7 @@ export function Header1(props) {
       onClick={(event) => {
         event.preventDefault()
         props.setActiveScreen(index)
+        sessionStorage.setItem('activescreen', index)
         if(opened){
             toggle()
             close()
@@ -120,9 +117,6 @@ export function Header1(props) {
 
   return (
       <header className={classes.header}>
-        {/* <Group visibleFrom="sm" gap={0} justify="start">
-          {[...topMenu, <TextInput size='sx'key={39}/>]}
-        </Group> */}
 
         <Group visibleFrom="sm" gap={0} justify="space-around">
           {[
@@ -134,8 +128,7 @@ export function Header1(props) {
                 inputSize={'30'}
                 placeholder=' find'
                 rightSection={<IconBackspace stroke={1.5}/>} 
-                radius="sm" 
-                // size='sx' 
+                radius="sm"
                 key={49}/>
             </Group>
             ]}
