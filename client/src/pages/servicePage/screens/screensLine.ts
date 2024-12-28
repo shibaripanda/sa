@@ -1,4 +1,3 @@
-import React from "react";
 import { ServiceClass } from "../../../classes/ServiceClass.ts";
 import { UserClass } from "../../../classes/UserClass.ts";
 import { NewOrderScreen } from "./newOrderScreen/NewOrderScreen.tsx";
@@ -20,7 +19,7 @@ const line = [
     {
         name: 'serviceSettings',
         screen: SeviceSettingsScreen,
-        items: [{message: 'changeNameMainService', screenItem: ChangeNameMainService}, {message: 'changeNameMainService', screenItem: ChangeNameMainService}, {message: 'changeNameMainService', screenItem: ChangeNameMainService}]
+        items: [{message: 'changeNameMainService', screenItem: ChangeNameMainService}]
     }
 ]
 

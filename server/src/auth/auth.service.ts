@@ -19,7 +19,7 @@ export class AuthService {
         const user = await this.usersService.getUserByEmail(data.email.toLowerCase())
         let newCode: number
         let textCode: string
-        if(process.env.PRODMODE){
+        if(process.env.MODE === 'prod'){
             textCode = global.appText.newCode[data.leng] ? global.appText.newCode[data.leng] : global.appText.newCode.en
             newCode = Math.round(Math.random() * (9999 - 1000) + 1000)
         }
@@ -27,13 +27,16 @@ export class AuthService {
             newCode = Number(process.env.DEVMODEPASSWORD)
         }
 
+        console.log(Number(process.env.TIMEFORAUTH))
+
         if(user && data.authCode && user.authCode && user.authCode.code === data.authCode && user.authCode.time + Number(process.env.TIMEFORAUTH) > Date.now()){
             return this.generateToken(user)
         }
         if(!user) await this.usersService.createUser(data.email.toLowerCase(), newCode, Date.now())
         else await this.usersService.newCodeCreate(data.email.toLowerCase(), newCode, Date.now())
-        if(process.env.PRODMODE){
-            await sendEmail(data.email.toLowerCase(), textCode, newCode)
+        if(process.env.MODE === 'prod'){
+            console.log('sd')
+            await sendEmail(data.email.toLowerCase(), textCode, newCode.toString())
         }
         throw new UnauthorizedException({message: global.appText.codeSendToEmail[data.leng] ? global.appText.codeSendToEmail[data.leng] : global.appText.codeSendToEmail.en})
     }

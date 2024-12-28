@@ -15,6 +15,10 @@ constructor(
 ) {}
 
 
+    async changeNameMainService(serviceId: string, newName: string){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {name: newName}, {returnDocument: 'after'})
+    }
+
     async createNewService(name: string, ownerId: ObjectId, email: string){
         const newService = await this.serviceMongo.create({owner: ownerId, name: name})
         // await this.userService.addRoleToUser(email, newService._id.toHexString(), 'owner')
