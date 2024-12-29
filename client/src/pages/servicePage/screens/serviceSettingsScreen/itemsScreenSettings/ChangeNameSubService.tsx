@@ -16,7 +16,7 @@ export function ChangeNameSubService(props) {
           sendToSocket('changeNameSubService', {
             serviceId: sessionStorage.getItem('serviceId'), 
             subServiceId: sessionStorage.getItem('subServiceId'), 
-            newName: 'Супер сервис 9'
+            newName: 'Супер сервис 999'
           })
         }}
         >{props.text.save[props.leng]}
