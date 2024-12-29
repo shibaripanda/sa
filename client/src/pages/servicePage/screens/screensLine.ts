@@ -20,7 +20,10 @@ const line = [
     {
         name: 'serviceSettings',
         screen: SeviceSettingsScreen,
-        items: [{message: 'changeNameMainService', screenItem: ChangeNameMainService}, {message: 'changeNameSubService', screenItem: ChangeNameSubService}]
+        items: [
+            {message: 'changeNameMainService', screenItem: ChangeNameMainService}, 
+            {message: 'changeNameSubService', screenItem: ChangeNameSubService}
+        ]
     }
 ]
 
@@ -29,17 +32,21 @@ export class ScreenLine {
     data: {text: {}, leng: string, user: UserClass, service: ServiceClass}
     service: ServiceClass
     user: UserClass
+    text: any
+    leng: string
 
     constructor(data){
         this.line = line
         this.data = data
         this.service = data.service
         this.user = data.user
+        this.text = data.text
+        this.leng = data.leng
     }
 
     getMessagesForUser(){
         const messages = this.service.roles.filter(item => this.user.userRoles.includes(item.role)).map(item => item.access)
-        console.log(messages.length ? [...new Set(messages.flat())] : [])
+        // console.log(messages.length ? [...new Set(messages.flat())] : [])
         return messages.length ? [...new Set(messages.flat())] : []
     }
 
@@ -47,13 +54,19 @@ export class ScreenLine {
         return this.line.map(item => item.name)
     }
 
-    getScreen(activeScreen: number){
-        console.log(this.user)
-        console.log(this.service)
+    getScreen(activeScreen: number, props: any){
+        console.log('screenLine', this.user, this.service)
+        // console.log(this.service)
         const items = this.line[activeScreen].items.filter(item => this.getMessagesForUser().includes(item.message) || this.user.userRoles.includes('owner'))
-        console.log(items)
+        // console.log(items)
         if(items.length){
-          return this.line[activeScreen].screen({...this.data, items: items})  
+          return this.line[activeScreen].screen(
+            {
+                ...this.data, 
+                items: items.filter(item => this.text[item.message][this.leng].toLowerCase().includes(props.settingsFilter.toLowerCase())), 
+                props: props
+            }
+        )  
         }
         // return <>ChangeNameMainService</>
         

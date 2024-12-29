@@ -2,6 +2,7 @@ interface LengData {
     rutext: string
     index: string
     info_data: string
+    update?: boolean
 }
 
 interface LengDataStart {
@@ -60,7 +61,10 @@ export const textArray: LengData[] = [
     {rutext: 'Заказы', index: 'orders', info_data: 'заказы'},
     {rutext: 'Сохранить', index: 'save', info_data: 'сохранить'},
     {rutext: 'Новое имя для сервиса', index: 'newNameForService', info_data: 'новое имя для сервиса'},
+    {rutext: 'Новое имя для локального сервиса', index: 'newNameForSubService', info_data: 'новое имя для локального сервиса'},
     {rutext: 'Изменение имени сервиса', index: 'editingNameService', info_data: 'изменение имени сервиса'},
+    {rutext: 'Название сервиса', index: 'changeNameMainService', info_data: 'изменение имени сервиса', update: false},
+    {rutext: 'Название локального сервиса', index: 'changeNameSubService', info_data: 'изменение имени локального сервиса', update: false},
     
 ]
 

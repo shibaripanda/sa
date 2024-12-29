@@ -5,6 +5,7 @@ interface LengData {
     rutext: string
     index: string
     info_data: string
+    update?: boolean
 }
 export interface LengDataStart {
     title: string
@@ -24,7 +25,7 @@ export const getLenguagesFromAI = async (updateAll: boolean, indata: LengData[],
     }
 
     if(dublicateIndexControl()){
-        console.log('Дубликаты текстовых индексов')
+        console.log('!!! WARNING !!! Дубликаты текстовых индексов')
         return existLengPack
     }
 
@@ -33,7 +34,7 @@ export const getLenguagesFromAI = async (updateAll: boolean, indata: LengData[],
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     const timer = setInterval(() => {console.log('UPDATING LENGUAGES...'), time++}, 1000)
     for(const i of indata){
-        if(typeof existLengPack[i.index] === 'undefined' || updateAll){
+        if(typeof existLengPack[i.index] === 'undefined' || updateAll || i.update){
             console.log('new', i.index)
             const newRes: LengResult = {info_data: i.info_data, ru: i.rutext}
             for(const l of lenguages.filter(item => item.index !== 'ru')){

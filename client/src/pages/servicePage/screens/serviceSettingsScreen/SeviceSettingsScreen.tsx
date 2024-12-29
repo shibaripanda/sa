@@ -1,35 +1,29 @@
 import { Grid, Group, Paper, TextInput } from '@mantine/core'
 import { IconBackspace } from '@tabler/icons-react'
-import React, { useMemo, useState } from 'react'
+import React from 'react'
 
 export function SeviceSettingsScreen(props) {
 
-  // const [filter, setFilter] = useState('')
-
-    console.log('SeviceSettingsScreen')
-
-    console.log(props)
-
-
-  // const filterItems = useMemo(() => {
-  //   return props.items.filter(item => item)
-  // }, [])
+  console.log('SeviceSettingsScreen', props)
   
-
-
   return (
     <>
       <div style={{margin: 15}}>
         <Group gap={0} justify="center">
-          <TextInput inputSize={'45'} rightSection={<IconBackspace  stroke={2}/>}/>
+          <TextInput inputSize={'45'} rightSection={<IconBackspace onClick={() => props.props.setSettingsFilter('')} stroke={2}/>}
+          value={props.props.settingsFilter}
+          placeholder='filter'
+          onChange={(event) => {
+            props.props.setSettingsFilter(event.target.value)
+          }}/>
         </Group>
       </div>
       <div style={{margin: 15}}>
         <Grid>
           {props.items.map((item, index) => 
-          <Grid.Col key={item.message + index} span={4}>
+          <Grid.Col key={item.message + index} span={props.props.screenSize}>
             <Paper shadow="xl" radius="md" withBorder p="xl">
-              {item.screenItem(props)}
+              {item.screenItem(props, item.message)}
             </Paper>
           </Grid.Col>)}
         </Grid>

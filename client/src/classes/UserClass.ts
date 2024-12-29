@@ -18,7 +18,7 @@ export class UserClass {
     userDevices: string[]
     userStatuses: string[]
     userRoles: string[]
-    subServicesId: string
+    subServiceId: string
     serviceId: string
     
     constructor(data: User){
@@ -30,7 +30,7 @@ export class UserClass {
         this.userDevices = data.roles.devices
         this.userStatuses = data.roles.statuses
         this.userRoles = data.roles.roles
-        this.subServicesId = data.roles.subServicesId
+        this.subServiceId = data.roles.subServicesId
         this.serviceId = data.serviceId
 
     }

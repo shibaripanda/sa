@@ -10,6 +10,7 @@ import { getFromSocket } from '../../modules/socket/pipGetSocket.ts'
 import { sendToSocket } from '../../modules/socket/pipSendSocket.ts'
 import { ServiceClass } from '../../classes/ServiceClass.ts'
 import { UserClass } from '../../classes/UserClass.ts'
+import { useMatches } from '@mantine/core'
 
 function ServicePage() {
 
@@ -23,6 +24,12 @@ function ServicePage() {
   const [activeScreen, setActiveScreen] = useState(sessionStorage.getItem('activescreen') ? Number(sessionStorage.getItem('activescreen')) : 0)
   const [service, setService] = useState<object | false>(false)
 
+  const screenSize = useMatches({base: 12, sm: 12, md: 4, lg: 3})
+
+  const [newServiceName, setNewSeviceName] = useState('')
+  const [newSubServiceName, setSubNewSeviceName] = useState('')
+  const [settingsFilter, setSettingsFilter] = useState('')
+
   useEffect(() => {
     getTexLengUserService()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -34,6 +41,8 @@ function ServicePage() {
     const t2 = await textClass.getLeng()
     const t3 = await textClass.getText()
     const t4 = await authClass.getCurrentUser()
+
+    
 
     if(t2 && t3 && t4){
       setLeng(t2)
@@ -61,7 +70,18 @@ function ServicePage() {
     return (
       <div>
         <Header1 navigate={navigate} service={service} menu={screen.getMenuItems()} text={text} leng={leng} user={user} activeScreen={activeScreen} setActiveScreen={setActiveScreen}/>
-        {screen.getScreen(activeScreen)}
+        {screen.getScreen(
+          activeScreen,
+          {
+          newServiceName: newServiceName,
+          setNewSeviceName: setNewSeviceName,
+          newSubServiceName:newSubServiceName, 
+          setSubNewSeviceName: setSubNewSeviceName,
+          settingsFilter: settingsFilter,
+          setSettingsFilter: setSettingsFilter,
+          screenSize: screenSize
+          }
+        )}
       </div>
     )
   }

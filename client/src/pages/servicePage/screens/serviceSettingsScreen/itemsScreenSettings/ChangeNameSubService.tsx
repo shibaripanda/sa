@@ -2,22 +2,28 @@ import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
-export function ChangeNameSubService(props) {
+export function ChangeNameSubService(props, message) {
 
-    console.log('ChangeNameMainService')
+    console.log('ChangeNameSubService', props, message)
 
   return (
     <div>
-        <Text fw={700} style={{marginBottom: 10}}>{props.text.editingNameService[props.leng]}</Text>
-        <Text>{props.service.name}</Text>
-        <TextInput placeholder={props.text.newNameForService[props.leng]}/>
+        <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>
+        <Text>{props.service.subName}</Text>
+        <TextInput placeholder={props.text.newNameForSubService[props.leng]}
+        value={props.props.newSubServiceName}
+        onChange={(event) => {
+          props.props.setSubNewSeviceName(event.target.value)
+        }}/>
         <Button style={{marginTop: 10}}
+        disabled={!props.props.newSubServiceName}
         onClick={() => {
-          sendToSocket('changeNameSubService', {
-            serviceId: sessionStorage.getItem('serviceId'), 
-            subServiceId: sessionStorage.getItem('subServiceId'), 
-            newName: 'Супер сервис 999'
+          sendToSocket(message, {
+            serviceId: props.user.serviceId, 
+            subServiceId: props.user.subServiceId, 
+            newName: props.props.newSubServiceName.toString()
           })
+          props.props.setSubNewSeviceName('')
         }}
         >{props.text.save[props.leng]}
         </Button>
