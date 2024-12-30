@@ -11,6 +11,9 @@ import { EditStatusServiceDto } from './dto/EditStatusServiceDto.dto'
 import { EditDeviceServiceDto } from './dto/EditDeviceServiceDto.dto'
 import { GetServiceByIdDto } from './dto/GetServiceByIdDto.dto'
 import { ChangeServiceNameDto } from './dto/ChangeServiceNameDto.dto'
+import { ChangeServiceDeviceDto } from './dto/ChangeServiceDeviceDto.dto'
+import { ChangeServiceStatusDto } from './dto/ChangeServiceStatusDto.dto'
+import { ChangeServiceRoleDto } from './dto/ChangeServiceRoleDto.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 export class ServicesGateway {
@@ -19,7 +22,34 @@ export class ServicesGateway {
       private serviceSevice: ServicesService
     ) {}
 
-  @WebSocketServer() server: Server
+  @WebSocketServer() server: Server 
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeServiceRole')
+  async changeServiceRole(@MessageBody() payload: ChangeServiceRoleDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeServiceRole(payload.serviceId, payload.role, payload.access)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeServiceStatusList')
+  async changeServiceStatusList(@MessageBody() payload: ChangeServiceStatusDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeServiceStatusList(payload.serviceId, payload.status[0].toUpperCase() + payload.status.slice(1, payload.status.length).toLowerCase())
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeServiceDeviceList')
+  async changeServiceDeviceList(@MessageBody() payload: ChangeServiceDeviceDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeServiceDeviceList(payload.serviceId, payload.device[0].toUpperCase() + payload.device.slice(1, payload.device.length).toLowerCase())
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)

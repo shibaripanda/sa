@@ -4,9 +4,12 @@ import { NewOrderScreen } from "./newOrderScreen/NewOrderScreen.tsx";
 import { OrderScreen } from "./ordersScreen/OrderScreen.tsx";
 import { ChangeNameMainService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNameMainService.tsx";
 import { ChangeNameSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNameSubService.tsx";
+import { ChangeServiceDeviceList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceDeviceList.tsx";
+import { ChangeServiceRole } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceRole.tsx";
+import { ChangeServiceStatusList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceStatusList.tsx";
 import { SeviceSettingsScreen } from "./serviceSettingsScreen/SeviceSettingsScreen.tsx";
 
-const line = [
+export const line = [
     {
         name: 'orders',
         screen: OrderScreen,
@@ -22,7 +25,10 @@ const line = [
         screen: SeviceSettingsScreen,
         items: [
             {message: 'changeNameMainService', screenItem: ChangeNameMainService}, 
-            {message: 'changeNameSubService', screenItem: ChangeNameSubService}
+            {message: 'changeNameSubService', screenItem: ChangeNameSubService},
+            {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
+            {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
+            {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12}
         ]
     }
 ]

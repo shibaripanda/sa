@@ -19,9 +19,9 @@ export function SeviceSettingsScreen(props) {
         </Group>
       </div>
       <div style={{margin: 15}}>
-        <Grid>
+        <Grid grow align="stretch">
           {props.items.map((item, index) => 
-          <Grid.Col key={item.message + index} span={props.props.screenSize}>
+          <Grid.Col key={item.message + index} span={item.size ? item.size : props.props.screenSize}>
             <Paper shadow="xl" radius="md" withBorder p="xl">
               {item.screenItem(props, item.message)}
             </Paper>

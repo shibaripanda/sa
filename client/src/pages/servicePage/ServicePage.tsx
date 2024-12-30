@@ -28,6 +28,9 @@ function ServicePage() {
 
   const [newServiceName, setNewSeviceName] = useState('')
   const [newSubServiceName, setSubNewSeviceName] = useState('')
+  const [device, setDevice] = useState('')
+  const [status, setStatus] = useState('')
+  const [checkedAccess, setCheckedAccess] = useState<any>({})
   const [settingsFilter, setSettingsFilter] = useState('')
 
   useEffect(() => {
@@ -58,13 +61,14 @@ function ServicePage() {
                   {message: `getServiceById${authClass.getServiceId()}`, handler: filterService}
               ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
+      
     }
     else{
       navigate('/')
     }
   }
 
-
+ 
   if(text && leng && user && service){
     const screen = new ScreenLine({text, leng, user, service})
     return (
@@ -79,7 +83,13 @@ function ServicePage() {
           setSubNewSeviceName: setSubNewSeviceName,
           settingsFilter: settingsFilter,
           setSettingsFilter: setSettingsFilter,
-          screenSize: screenSize
+          screenSize: screenSize,
+          device: device, 
+          setDevice: setDevice,
+          status: status, 
+          setStatus: setStatus,
+          checkedAccess: checkedAccess, 
+          setCheckedAccess: setCheckedAccess
           }
         )}
       </div>
