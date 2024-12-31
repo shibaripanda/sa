@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString, Length } from 'class-validator'
+import { IsNotEmpty, IsString, Length } from 'class-validator'
 
 export class ChangeServiceRoleDto {
     @IsNotEmpty()
@@ -6,8 +6,8 @@ export class ChangeServiceRoleDto {
     readonly role: string
 
     @IsNotEmpty()
-    @IsArray()
-    readonly access: string[]
+    @IsString()
+    readonly access: string
 
     @IsNotEmpty()
     @IsString()

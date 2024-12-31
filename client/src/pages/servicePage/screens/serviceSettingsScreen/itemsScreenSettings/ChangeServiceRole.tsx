@@ -5,6 +5,9 @@ import { upFirstString } from '../../../../../modules/upFirstString.ts'
 import { line } from '../../screensLine.ts'
 
 export function ChangeServiceRole(props, message) {
+
+  console.log('ChangeServiceRole', props, message)
+
   const accessItems = (roles) => {
       if(!roles){
         accessItems(roles)
@@ -12,8 +15,9 @@ export function ChangeServiceRole(props, message) {
       else{
         let res: any = {}
         for(const i of roles){
+          res[i.role] = {}
           for(const a of line.map(item => item.items).flat().map(item => item.message)){
-            res[i.role] = {[a]: i.access.includes(a)}
+            res[i.role][a] = i.access.includes(a)
           }
         }
         return res
@@ -21,42 +25,24 @@ export function ChangeServiceRole(props, message) {
     }
   props.props.checkedAccess = accessItems(props.service.roles)
 
-  console.log('ChangeServiceRole', props, message)
+  
 
   const linesAccess = () => {
-    console.log(line.map(item => item.items).flat().map(item => item.message))
     return line.map(item => item.items).flat().map(item => item.message)
   }
 
-  const accessStatus = (itemAccess, access, role) => {
-    if(access.includes(itemAccess)){
-      return <Checkbox
-              checked={props.props.checkedAccess[role][itemAccess]}
-              onChange={(event) => {
-                props.props.setCheckedAccess({...props.props.checkedAccess, [role]: {...props.props.checkedAccess[role], [itemAccess]: event.currentTarget.checked}})
-                
-                sendToSocket(message, {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  role: role,
-                  access: access.filter(item => item !== itemAccess)
-                })
-                console.log(access)
-              }}
-            />
-    }
+  const accessStatus = (itemAccess, role) => {
     return <Checkbox
             checked={props.props.checkedAccess[role][itemAccess]}
             onChange={(event) => {
               props.props.setCheckedAccess({...props.props.checkedAccess, [role]: {...props.props.checkedAccess[role], [itemAccess]: event.currentTarget.checked}})
-              console.log(access)
+              
               sendToSocket(message, {
                 serviceId: props.user.serviceId, 
                 subServiceId: props.user.subServiceId, 
                 role: role,
-                access: access.push(itemAccess)
+                access: itemAccess
               })
-              console.log(access)
             }}
           />
   }
@@ -76,7 +62,7 @@ export function ChangeServiceRole(props, message) {
                                             <Table.Td>
                                               {props.text[item][props.leng]}
                                             </Table.Td>
-                                            {props.service.roles.map((role, index) => <Table.Td key={index}>{accessStatus(item, role.access, role.role)}</Table.Td>)}
+                                            {props.service.roles.map((role, index) => <Table.Td key={index}>{accessStatus(item, role.role)}</Table.Td>)}
                                         </Table.Tr>)}
             </Table.Tbody>
           </Table>

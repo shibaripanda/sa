@@ -14,15 +14,18 @@ constructor(
     private userService: UsersService
 ) {}
 
-    async changeServiceRole(serviceId: string, role: string, activeScreen: string[]){
-        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {'roles.$[el].access': activeScreen}, {arrayFilters: [{'el.role': role}], returnDocument: 'after'})
+   
+    async changeServiceRole(serviceId: string, role: string, access: string){
+        const roles = (await this.serviceMongo.findOne({_id: serviceId}, {roles: 1, _id: 0})).roles
+        if(roles.find(item => item.role === role).access.includes(access)){
+            return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {'roles.$[el].access': access}}, {arrayFilters: [{'el.role': role}], returnDocument: 'after'})
+        }
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {'roles.$[el].access': access}}, {arrayFilters: [{'el.role': role}], returnDocument: 'after'})
     }
 
     async changeServiceStatusList(serviceId: string, status: string){
         if(!['New', 'Ready'].includes(status)){
-            console.log(serviceId)
             const statuses = (await this.serviceMongo.findOne({_id: serviceId}, {statuses: 1, _id: 0})).statuses
-            console.log(statuses)
             if(statuses.includes(status)){
                 return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {statuses: status}}, {returnDocument: 'after'})
             }
@@ -31,9 +34,7 @@ constructor(
     }
 
     async changeServiceDeviceList(serviceId: string, device: string){
-        console.log(serviceId)
         const devices = (await this.serviceMongo.findOne({_id: serviceId}, {devices: 1, _id: 0})).devices
-        console.log(devices)
         if(devices.includes(device)){
             return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {devices: device}}, {returnDocument: 'after'})
         }
