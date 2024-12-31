@@ -14,6 +14,11 @@ export class UsersService {
     ) {}
 
 
+    async getServiceUsers(serviceId: string){
+        console.log(await this.userMongo.find({'services_roles.$.serviceId': serviceId}))
+        await this.userMongo.find({'services_roles.$.serviceId': serviceId})
+    }
+
     async getUserRolesByUserId(_id: string){
         return (await this.userMongo.findOne({_id: _id}, {services_roles: 1}))
     }

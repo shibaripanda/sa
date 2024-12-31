@@ -7,6 +7,7 @@ import { ChangeNameSubService } from "./serviceSettingsScreen/itemsScreenSetting
 import { ChangeServiceDeviceList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceDeviceList.tsx";
 import { ChangeServiceRole } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceRole.tsx";
 import { ChangeServiceStatusList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceStatusList.tsx";
+import { ChangeServiceUser } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceUser.tsx";
 import { SeviceSettingsScreen } from "./serviceSettingsScreen/SeviceSettingsScreen.tsx";
 
 export const line = [
@@ -28,7 +29,15 @@ export const line = [
             {message: 'changeNameSubService', screenItem: ChangeNameSubService},
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
-            {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12}
+            {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12},
+            
+        ]
+    },
+    {
+        name: 'changeServiceUser',
+        screen: SeviceSettingsScreen,
+        items: [
+            {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12}
         ]
     }
 ]

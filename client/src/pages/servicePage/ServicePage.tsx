@@ -29,7 +29,9 @@ function ServicePage() {
   const [newServiceName, setNewSeviceName] = useState('')
   const [newSubServiceName, setSubNewSeviceName] = useState('')
   const [device, setDevice] = useState('')
+  const [newRole, setNewRole] = useState('')
   const [status, setStatus] = useState('')
+  const [users, setUsers] = useState([])
   const [checkedAccess, setCheckedAccess] = useState<any>({})
   const [settingsFilter, setSettingsFilter] = useState('')
 
@@ -58,7 +60,8 @@ function ServicePage() {
         setService(new ServiceClass(data))
       }
       getFromSocket([
-                  {message: `getServiceById${authClass.getServiceId()}`, handler: filterService}
+                  {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
+                  {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers}
               ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
       
@@ -89,7 +92,11 @@ function ServicePage() {
           status: status, 
           setStatus: setStatus,
           checkedAccess: checkedAccess, 
-          setCheckedAccess: setCheckedAccess
+          setCheckedAccess: setCheckedAccess,
+          newRole: newRole, 
+          setNewRole: setNewRole,
+          users: users, 
+          setUsers: setUsers
           }
         )}
       </div>

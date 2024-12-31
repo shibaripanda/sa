@@ -13,7 +13,7 @@ interface SubRoles {
 }
 
 interface ServicesRoles {
-  serviceId: mongoose.ObjectId,
+  serviceId: string,
   subServices: SubRoles[]
 }
 

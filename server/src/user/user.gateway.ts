@@ -7,6 +7,7 @@ import { ReqestUserByEmailDto } from './dto/request-user.dto'
 import { UpdateUserRoleDto } from './dto/updateUserRole.dto'
 import { WSValidationPipe } from 'src/modules/wsPipeValid'
 import { RolesGuard } from 'src/auth/roles.guard'
+import { GetServiceUsersDto } from './dto/GetServiceUsers.dto'
 // import { RolesByUserIdDto } from './dto/getRolesById.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
@@ -19,6 +20,14 @@ import { RolesGuard } from 'src/auth/roles.guard'
   ) {}
 
   @WebSocketServer() server: Server
+
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('getServiceUsers')
+  async getServiceUsers(@MessageBody() payload: GetServiceUsersDto, @ConnectedSocket() client: Socket): Promise<void> {
+    const users = await this.userSevice.getServiceUsers(payload.serviceId)
+    this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new WSValidationPipe())

@@ -9,7 +9,7 @@ export const getFromSocket = (messages: Pip[]) => {
     for(const i of messages){
         SocketApt.socket?.on(i.message, (data) => {
             i.handler(data)
-            // console.log(data)
+            console.log(data)
         })
     }
     

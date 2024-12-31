@@ -14,6 +14,20 @@ constructor(
     private userService: UsersService
 ) {}
 
+
+    // async addNewServiceRole(serviceId: string, newRole: string){
+    //     return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {'subServiсes.$[el].name': newName}, {arrayFilters: [{'el.subServiсeId': subServiceId}], returnDocument: 'after'})
+    // }
+
+    async addNewServiceRole(serviceId: string, newRole: string){
+        if(!['Owner', 'owner'].includes(newRole)){
+            const roles = (await this.serviceMongo.findOne({_id: serviceId}, {roles: 1, _id: 0})).roles
+            if(roles.find(item => item.role === newRole)){
+                return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {roles: roles.find(item => item.role === newRole)}}, {returnDocument: 'after'})
+            }
+            return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {roles: {role: newRole, access: []}}}, {returnDocument: 'after'})
+        }
+    }
    
     async changeServiceRole(serviceId: string, role: string, access: string){
         const roles = (await this.serviceMongo.findOne({_id: serviceId}, {roles: 1, _id: 0})).roles

@@ -14,6 +14,7 @@ import { ChangeServiceNameDto } from './dto/ChangeServiceNameDto.dto'
 import { ChangeServiceDeviceDto } from './dto/ChangeServiceDeviceDto.dto'
 import { ChangeServiceStatusDto } from './dto/ChangeServiceStatusDto.dto'
 import { ChangeServiceRoleDto } from './dto/ChangeServiceRoleDto.dto'
+import { AddServiceRoleDto } from './dto/AddServiceRoleDto.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 export class ServicesGateway {
@@ -23,6 +24,15 @@ export class ServicesGateway {
     ) {}
 
   @WebSocketServer() server: Server 
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('addNewServiceRole')
+  async addNewServiceRole(@MessageBody() payload: AddServiceRoleDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.addNewServiceRole(payload.serviceId, payload.newRole)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
