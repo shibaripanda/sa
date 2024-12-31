@@ -23,6 +23,7 @@ export class AuthClass {
         if(!sessionStorage.getItem('currentUser')) return false
          // @ts-ignore
         const user = JSON.parse(sessionStorage.getItem('currentUser'))
+        console.log(user.roles)
         user.roles = user.roles.filter(item => item.serviceId === this.getServiceId())[0].subServices.filter(item => item.subServicesId === this.getSubServiceId())[0]
         user.serviceId = this.getServiceId()
         return user

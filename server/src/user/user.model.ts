@@ -6,7 +6,7 @@ interface AuthCode {
 }
 
 interface SubRoles {
-  subServicesId: string,
+  subServiceId: string,
   roles: string[],
   statuses: string[],
   devices: string[]

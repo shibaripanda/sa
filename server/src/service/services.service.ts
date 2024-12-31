@@ -62,10 +62,10 @@ constructor(
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {name: newName}, {returnDocument: 'after'})
     }
 
-    async createNewService(name: string, ownerId: ObjectId, email: string){
+    async createNewService(name: string, ownerId: string, email: string){
         const newService = await this.serviceMongo.create({owner: ownerId, name: name})
         // await this.userService.addRoleToUser(email, newService._id.toHexString(), 'owner')
-        await this.userService.addRoleToUser(email, newService._id.toHexString(), 'owner', newService.subServiсes[0].subServiсeId)
+        await this.userService.addRoleToUser(email, newService._id.toString(), 'owner', newService.subServiсes[0].subServiсeId)
     }
 
     async getServicesByOwnerId(userId: ObjectId){

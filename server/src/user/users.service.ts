@@ -15,8 +15,9 @@ export class UsersService {
 
 
     async getServiceUsers(serviceId: string){
-        console.log(await this.userMongo.find({'services_roles.$.serviceId': serviceId}))
-        await this.userMongo.find({'services_roles.$.serviceId': serviceId})
+        console.log('s', serviceId)
+        console.log(await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}))
+        return await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}})
     }
 
     async getUserRolesByUserId(_id: string){
@@ -44,20 +45,20 @@ export class UsersService {
         const newService = await this.serviceMongo.getServiceById(serviceId)
 
         if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
-        const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === newService._id.toHexString())
+        const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === newService._id.toString())
         if(roles){
-            if(roles.subServices.find(item => item.subServicesId === subServiceId).roles.includes(role)){
+            if(roles.subServices.find(item => item.subServiceId === subServiceId).roles.includes(role)){
                 await this.userMongo.updateOne(
                     {email: email}, 
                     {$pull: {'services_roles.$[el].subServices.$[al]': role}}, 
-                    {arrayFilters: [{'el.serviceId': newService._id}, {'al.subServicesId': subServiceId}]}
+                    {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServicesId': subServiceId}]}
                 )
             }
             else{
                 await this.userMongo.updateOne(
                     {email: email}, 
                     {$addToSet: {'services_roles.$[el].subServices.$[al]': role}},
-                    {arrayFilters: [{'el.serviceId': newService._id}, {'al.subServicesId': subServiceId}]}
+                    {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServicesId': subServiceId}]}
                 )
             }
         }
@@ -66,7 +67,7 @@ export class UsersService {
                 {email: email}, 
                 {$addToSet: 
                     {services_roles: 
-                        {serviceId: newService._id, subServices: [{
+                        {serviceId: newService._id.toString(), subServices: [{
                             roles: [role], 
                             subServicesId: subServiceId,
                             statuses: [newService.statuses],

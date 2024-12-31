@@ -31,7 +31,8 @@ function ServicePage() {
   const [device, setDevice] = useState('')
   const [newRole, setNewRole] = useState('')
   const [status, setStatus] = useState('')
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState(false)
+  const [emailForNewUser, setEmailForNewUser] = useState('')
   const [checkedAccess, setCheckedAccess] = useState<any>({})
   const [settingsFilter, setSettingsFilter] = useState('')
 
@@ -96,7 +97,9 @@ function ServicePage() {
           newRole: newRole, 
           setNewRole: setNewRole,
           users: users, 
-          setUsers: setUsers
+          setUsers: setUsers,
+          emailForNewUser: emailForNewUser, 
+          setEmailForNewUser: setEmailForNewUser
           }
         )}
       </div>
