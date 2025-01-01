@@ -72,6 +72,9 @@ export const textArray: LengData[] = [
     {rutext: 'Статус (примеры: Готов, Ожидает запчасти, На согласовании)', index: 'statusName', info_data: 'название статуса', update: false},
     {rutext: 'Роли', index: 'changeServiceRole', info_data: 'роли', update: false},
     {rutext: 'Новая роль', index: 'newRole', info_data: 'новая роль', update: false},
-    {rutext: 'Пользователи', index: 'changeServiceUser', info_data: 'юзеры', update: false}
+    {rutext: 'Пользователи', index: 'changeServiceUser', info_data: 'юзеры', update: false},
+    {rutext: 'Локальные сервисы', index: 'changeLocalService', info_data: 'Локальные сервисы', update: false},
+    {rutext: 'Настройки локального сервиса', index: 'serviceLocalSettings', info_data: 'настройки локального сервиса', update: false},
+    {rutext: 'Имя для нового локального сервиса', index: 'newNameForLocalService', info_data: 'новое имя для локального сервиса'},
     
 ]

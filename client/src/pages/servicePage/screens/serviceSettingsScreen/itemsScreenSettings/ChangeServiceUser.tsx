@@ -1,7 +1,6 @@
 import { Button, Center, Checkbox, Table, Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
-import { upFirstString } from '../../../../../modules/upFirstString.ts'
 import { IconSquareX } from '@tabler/icons-react'
 
 export function ChangeServiceUser(props, message) {
@@ -18,7 +17,8 @@ export function ChangeServiceUser(props, message) {
   console.log(props.props.users)
 
   const usersList = () => {
-    if(props.props.user && props.props.user.length){
+    if(props.props.users && props.props.users.length){
+      console.log('ffffffff')
         return <Table.ScrollContainer minWidth={500}>
                 <Table stickyHeader>
                   <Table.Thead>
@@ -30,13 +30,13 @@ export function ChangeServiceUser(props, message) {
                   </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {/* {props.props.users.map(item => <Table.Tr key={item._id}>
+                    {props.props.users.map(item => <Table.Tr key={item._id}>
                                                   <Table.Td>
                                                     {item.name ? item.name + ' ' + item.email : item.email}
                                                   </Table.Td>
                                                   <Table.Td>
                                                   </Table.Td>
-                                              </Table.Tr>)} */}
+                                              </Table.Tr>)}
                   </Table.Tbody>
                   <Table.Thead>
                   <Table.Tr>

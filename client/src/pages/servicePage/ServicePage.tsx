@@ -28,6 +28,7 @@ function ServicePage() {
 
   const [newServiceName, setNewSeviceName] = useState('')
   const [newSubServiceName, setSubNewSeviceName] = useState('')
+  const [newSubService, setSubNewSevice] = useState('')
   const [device, setDevice] = useState('')
   const [newRole, setNewRole] = useState('')
   const [status, setStatus] = useState('')
@@ -56,8 +57,6 @@ function ServicePage() {
       setUser(new UserClass(authClass.getCurrentUserForCurrentService()))
 
       const filterService = (data: any) => {
-        data.subServiсes = data.subServiсes.filter(item => item.subServiceId !== authClass.getSubServiceId())
-        // console.log(data)
         setService(new ServiceClass(data))
       }
       getFromSocket([
@@ -99,7 +98,9 @@ function ServicePage() {
           users: users, 
           setUsers: setUsers,
           emailForNewUser: emailForNewUser, 
-          setEmailForNewUser: setEmailForNewUser
+          setEmailForNewUser: setEmailForNewUser,
+          newSubService: newSubService,
+          setSubNewSevice: setSubNewSevice
           }
         )}
       </div>

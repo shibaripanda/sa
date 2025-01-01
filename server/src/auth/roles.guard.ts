@@ -20,7 +20,7 @@ export class RolesGuard implements CanActivate {
     // const roles = user.roles.find(item => item.serviceId === req.getData().serviceId).roles
     // const service = await this.serviceSevice.getServiceById(req.getData().serviceId)
     // console.log(req.getData())
-    const roles = (user.roles.filter(item => item.serviceId === req.getData().serviceId))[0].subServices.filter(item => item.subServicesId === req.getData().subServiceId)[0].roles
+    const roles = (user.roles.filter(item => item.serviceId === req.getData().serviceId))[0].subServices.filter(item => item.subServiceId === req.getData().subServiceId)[0].roles
     // console.log(roles)
     const service = await this.serviceSevice.getServiceById(req.getData().serviceId)
     // console.log(service.roles)

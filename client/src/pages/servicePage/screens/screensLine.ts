@@ -2,6 +2,7 @@ import { ServiceClass } from "../../../classes/ServiceClass.ts";
 import { UserClass } from "../../../classes/UserClass.ts";
 import { NewOrderScreen } from "./newOrderScreen/NewOrderScreen.tsx";
 import { OrderScreen } from "./ordersScreen/OrderScreen.tsx";
+import { ChangeLocalService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeLocalService.tsx";
 import { ChangeNameMainService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNameMainService.tsx";
 import { ChangeNameSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNameSubService.tsx";
 import { ChangeServiceDeviceList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceDeviceList.tsx";
@@ -26,18 +27,24 @@ export const line = [
         screen: SeviceSettingsScreen,
         items: [
             {message: 'changeNameMainService', screenItem: ChangeNameMainService}, 
-            {message: 'changeNameSubService', screenItem: ChangeNameSubService},
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
             {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12},
-            
+            {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12}
+        ]
+    },
+    {
+        name: 'serviceLocalSettings',
+        screen: SeviceSettingsScreen,
+        items: [
+            {message: 'changeNameSubService', screenItem: ChangeNameSubService},
         ]
     },
     {
         name: 'changeServiceUser',
         screen: SeviceSettingsScreen,
         items: [
-            {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12}
+            {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12},
         ]
     }
 ]
@@ -71,19 +78,17 @@ export class ScreenLine {
 
     getScreen(activeScreen: number, props: any){
         console.log('screenLine', this.user, this.service)
-        // console.log(this.service)
         const items = this.line[activeScreen].items.filter(item => this.getMessagesForUser().includes(item.message) || this.user.userRoles.includes('owner'))
-        // console.log(items)
         if(items.length){
-          return this.line[activeScreen].screen(
-            {
-                ...this.data, 
-                items: items.filter(item => this.text[item.message][this.leng].toLowerCase().includes(props.settingsFilter.toLowerCase())), 
-                props: props
-            }
-        )  
+            return this.line[activeScreen].screen(
+                {
+                    ...this.data, 
+                    items: items.filter(item => this.text[item.message][this.leng].toLowerCase().includes(props.settingsFilter.toLowerCase())), 
+                    props: props
+                }
+            )  
         }
-        // return <>ChangeNameMainService</>
+        // return (<div>)
         
         
     }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model, ObjectId } from 'mongoose'
+import { Model } from 'mongoose'
 import { User } from './user.model'
 import { ServicesService } from 'src/service/services.service'
 
@@ -15,9 +15,14 @@ export class UsersService {
 
 
     async getServiceUsers(serviceId: string){
-        console.log('s', serviceId)
-        console.log(await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}))
-        return await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}})
+        const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
+        if(users){
+            for(const i of users){
+                i.services_roles = i.services_roles.filter(item => item.serviceId === serviceId)
+            }
+            return users
+        }
+        return []
     }
 
     async getUserRolesByUserId(_id: string){
@@ -36,7 +41,7 @@ export class UsersService {
         return await this.userMongo.findOne({email: email})
     }
 
-    async getUserById(_id: ObjectId){
+    async getUserById(_id){
         return await this.userMongo.findOne({_id: _id})
     }
 
@@ -46,19 +51,19 @@ export class UsersService {
 
         if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
         const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === newService._id.toString())
-        if(roles){
+        if(roles && roles.subServices.find(item => item.subServiceId === subServiceId)){
             if(roles.subServices.find(item => item.subServiceId === subServiceId).roles.includes(role)){
                 await this.userMongo.updateOne(
                     {email: email}, 
-                    {$pull: {'services_roles.$[el].subServices.$[al]': role}}, 
-                    {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServicesId': subServiceId}]}
+                    {$pull: {'services_roles.$[el].subServices.$[al].roles': role}}, 
+                    {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServiceId': subServiceId}]}
                 )
             }
             else{
                 await this.userMongo.updateOne(
                     {email: email}, 
-                    {$addToSet: {'services_roles.$[el].subServices.$[al]': role}},
-                    {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServicesId': subServiceId}]}
+                    {$addToSet: {'services_roles.$[el].subServices.$[al].roles': role}},
+                    {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServiceId': subServiceId}]}
                 )
             }
         }
@@ -69,9 +74,9 @@ export class UsersService {
                     {services_roles: 
                         {serviceId: newService._id.toString(), subServices: [{
                             roles: [role], 
-                            subServicesId: subServiceId,
-                            statuses: [newService.statuses],
-                            devices: [newService.devices] 
+                            subServiceId: subServiceId,
+                            statuses: newService.statuses,
+                            devices: newService.devices 
                         }]}}})
         }
     }

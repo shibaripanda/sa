@@ -15,7 +15,7 @@ interface Role {
 interface Service {
     _id: string
     name: string[]
-    subServiсes: {subServiсeId: string, name: string}[]
+    subServices: {subServiceId: string, name: string}[]
 }
 
 export function ServiceModal(props: any) {
@@ -74,12 +74,12 @@ export function ServiceModal(props: any) {
                             <>
                                 {item1.name}
                                 <Grid>
-                                  {item1.subServiсes.filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiсeId))).map(item =>
-                                  <Grid.Col key={item.subServiсeId} span={12}> 
+                                  {item1.subServices.filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiceId))).map(item =>
+                                  <Grid.Col key={item.subServiceId} span={12}> 
                                     <Button 
                                     onClick={() => {
                                         sessionStorage.setItem('serviceId', item1._id)
-                                        sessionStorage.setItem('subServiceId', item.subServiсeId)
+                                        sessionStorage.setItem('subServiceId', item.subServiceId)
                                         navigate('/service')
                                     }} 
                                     fullWidth

@@ -3,7 +3,7 @@ export interface User {
     email: string
     exp: number
     iat: number
-    roles: {subServicesId: string, statuses: string[], devices: string[], roles: string[]}
+    roles: {subServiceId: string, statuses: string[], devices: string[], roles: string[]}
     token: string
     _id: string
     serviceId: string
@@ -30,7 +30,7 @@ export class UserClass {
         this.userDevices = data.roles.devices
         this.userStatuses = data.roles.statuses
         this.userRoles = data.roles.roles
-        this.subServiceId = data.roles.subServicesId
+        this.subServiceId = data.roles.subServiceId
         this.serviceId = data.serviceId
 
     }

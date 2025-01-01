@@ -22,6 +22,10 @@ export const UsersSchema = new mongoose.Schema({
     type: String, 
     unique: true
   },
+  name: {
+    type: String,
+    require: false, 
+  },
   authCode: {
     type: Object
   },
@@ -37,4 +41,5 @@ export interface User {
   email: string
   authCode: AuthCode
   services_roles: ServicesRoles[]
+  name?: string 
 }

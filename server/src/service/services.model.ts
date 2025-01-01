@@ -8,7 +8,7 @@ interface ServiceRoles {
 interface SubService {
   name: string,
   options: {address: string, workTime: string, contact: string}
-  subServiсeId: string
+  subServiceId: string
 }
 
 interface Price {
@@ -47,9 +47,9 @@ export const ServiceSchema = new mongoose.Schema({
       default: [{role: 'Serviceman', access: []}, {role: 'Manager', access: []}, {role: 'Supermanager', access: []}],
       require: true
     },
-    subServiсes: {
+    subServices: {
       type: Array,
-      default: [{name: 'Main Service', subServiсeId: 'subServiсeId' + Date.now(), options: {address: '', workTime: '', contact: ''}}],
+      default: [{name: 'Main Service', subServiceId: 'subServiceId' + Date.now(), options: {address: '', workTime: '', contact: ''}}],
       require: true
     },
     serviceInfo: {
@@ -79,7 +79,7 @@ export const ServiceSchema = new mongoose.Schema({
     devices: string[]
     statuses: string[]
     roles: ServiceRoles[]
-    subServiсes: SubService[]
+    subServices: SubService[]
     serviceInfo: string
     serviceDocuments: ServiceDocuments[]
     price: Price[]
