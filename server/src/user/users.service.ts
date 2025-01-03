@@ -51,8 +51,10 @@ export class UsersService {
 
         if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
         const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === newService._id.toString())
-        if(roles && roles.subServices.find(item => item.subServiceId === subServiceId)){
-            if(roles.subServices.find(item => item.subServiceId === subServiceId).roles.includes(role)){
+        if(roles){
+            
+            const subServ = roles.subServices.find(item => item.subServiceId === subServiceId)
+            if(subServ && subServ.roles.includes(role)){
                 await this.userMongo.updateOne(
                     {email: email}, 
                     {$pull: {'services_roles.$[el].subServices.$[al].roles': role}}, 
@@ -62,8 +64,13 @@ export class UsersService {
             else{
                 await this.userMongo.updateOne(
                     {email: email}, 
-                    {$addToSet: {'services_roles.$[el].subServices.$[al].roles': role}},
-                    {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServiceId': subServiceId}]}
+                    {$addToSet: {'services_roles.$[el].subServices': {
+                        roles: [role], 
+                        subServiceId: subServiceId,
+                        statuses: newService.statuses,
+                        devices: newService.devices 
+                    }}},
+                    {arrayFilters: [{'el.serviceId': newService._id.toString()}]}
                 )
             }
         }
@@ -80,30 +87,5 @@ export class UsersService {
                         }]}}})
         }
     }
-
-    // async addRoleToUser(email: string, serviceId: string, role: string){
-    //     const user = await this.userMongo.findOne({email: email})
-    //     if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
-    //     const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === serviceId)
-    //     if(roles){
-    //         if(roles.roles.includes(role)){
-    //             await this.userMongo.updateOne(
-    //                 {email: email}, 
-    //                 {$pull: {'services_roles.$[el].roles': role}}, 
-    //                 {arrayFilters: [{'el.serviceId': serviceId}]}
-    //             )
-    //         }
-    //         else{
-    //             await this.userMongo.updateOne(
-    //                 {email: email}, 
-    //                 {$addToSet: {'services_roles.$[el].roles': role}},
-    //                 {arrayFilters: [{'el.serviceId': serviceId}]}
-    //             )
-    //         }
-    //     }
-    //     else{
-    //         await this.userMongo.updateOne({email: email}, {$addToSet: {services_roles: {serviceId: serviceId, roles: [role]}}})
-    //     }
-    // }
 
 }

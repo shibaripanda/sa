@@ -1,4 +1,5 @@
 .header {
+  /* position: fixed; */
   height: 77px;
   /* margin-bottom: 120px; */
   background-color: var(--mantine-color-body);

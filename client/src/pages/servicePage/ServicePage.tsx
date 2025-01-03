@@ -10,7 +10,7 @@ import { getFromSocket } from '../../modules/socket/pipGetSocket.ts'
 import { sendToSocket } from '../../modules/socket/pipSendSocket.ts'
 import { ServiceClass } from '../../classes/ServiceClass.ts'
 import { UserClass } from '../../classes/UserClass.ts'
-import { useMatches } from '@mantine/core'
+import { AppShell, useMatches } from '@mantine/core'
 
 function ServicePage() {
 
@@ -33,6 +33,9 @@ function ServicePage() {
   const [newRole, setNewRole] = useState('')
   const [status, setStatus] = useState('')
   const [users, setUsers] = useState(false)
+  const [workTime, setWorkTime] = useState('')
+  const [contact, setContact] = useState('')
+  const [address, setAddress] = useState('')
   const [emailForNewUser, setEmailForNewUser] = useState('')
   const [checkedAccess, setCheckedAccess] = useState<any>({})
   const [settingsFilter, setSettingsFilter] = useState('')
@@ -75,35 +78,46 @@ function ServicePage() {
   if(text && leng && user && service){
     const screen = new ScreenLine({text, leng, user, service})
     return (
-      <div>
-        <Header1 navigate={navigate} service={service} menu={screen.getMenuItems()} text={text} leng={leng} user={user} activeScreen={activeScreen} setActiveScreen={setActiveScreen}/>
-        {screen.getScreen(
-          activeScreen,
-          {
-          newServiceName: newServiceName,
-          setNewSeviceName: setNewSeviceName,
-          newSubServiceName:newSubServiceName, 
-          setSubNewSeviceName: setSubNewSeviceName,
-          settingsFilter: settingsFilter,
-          setSettingsFilter: setSettingsFilter,
-          screenSize: screenSize,
-          device: device, 
-          setDevice: setDevice,
-          status: status, 
-          setStatus: setStatus,
-          checkedAccess: checkedAccess, 
-          setCheckedAccess: setCheckedAccess,
-          newRole: newRole, 
-          setNewRole: setNewRole,
-          users: users, 
-          setUsers: setUsers,
-          emailForNewUser: emailForNewUser, 
-          setEmailForNewUser: setEmailForNewUser,
-          newSubService: newSubService,
-          setSubNewSevice: setSubNewSevice
-          }
-        )}
-      </div>
+        <AppShell header={{ height: 77 }}>
+          <AppShell.Header>
+            <Header1 navigate={navigate} service={service} menu={screen.getMenuItems()} text={text} leng={leng} user={user} activeScreen={activeScreen} setActiveScreen={setActiveScreen}/>
+          </AppShell.Header>
+        
+          <AppShell.Main>
+            {screen.getScreen(
+              activeScreen,
+              {
+              newServiceName: newServiceName,
+              setNewSeviceName: setNewSeviceName,
+              newSubServiceName:newSubServiceName, 
+              setSubNewSeviceName: setSubNewSeviceName,
+              settingsFilter: settingsFilter,
+              setSettingsFilter: setSettingsFilter,
+              screenSize: screenSize,
+              device: device, 
+              setDevice: setDevice,
+              status: status, 
+              setStatus: setStatus,
+              checkedAccess: checkedAccess, 
+              setCheckedAccess: setCheckedAccess,
+              newRole: newRole, 
+              setNewRole: setNewRole,
+              users: users, 
+              setUsers: setUsers,
+              emailForNewUser: emailForNewUser, 
+              setEmailForNewUser: setEmailForNewUser,
+              newSubService: newSubService,
+              setSubNewSevice: setSubNewSevice,
+              workTime: workTime,
+              setWorkTime: setWorkTime,
+              contact: contact,
+              setContact: setContact,
+              address: address,
+              setAddress: setAddress
+              }
+            )}
+          </AppShell.Main>
+        </AppShell>
     )
   }
   return (

@@ -15,8 +15,12 @@ constructor(
 ) {}
 
 
+    async changeSubServiceData(serviceId: string, subServiceId: string, data: string, field: string){
+        const link = `subServices.$[el].options.${field}`
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {[link]: data}, {arrayFilters: [{'el.subServiceId': subServiceId}], returnDocument: 'after'})
+    }
+
     async changeLocalService(serviceId: string, subServiceIdDeleteOrNew: string){
-        // if(!['Owner', 'owner'].includes(newRole)){
             const subServices = (await this.serviceMongo.findOne({_id: serviceId}, {subServices: 1, _id: 0})).subServices
             if(subServices.find(item => item.subServiceId === subServiceIdDeleteOrNew)){
                 return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {subServices: subServices.find(item => item.subServiceId === subServiceIdDeleteOrNew)}}, {returnDocument: 'after'})
@@ -24,10 +28,8 @@ constructor(
             const sId = 'subServiceId' + Date.now()
             const owner = (await this.serviceMongo.findOne({_id: serviceId}, {owner: 1, _id: 0})).owner
             const ownerEmail = await this.userService.getUserById(owner)
-            console.log(ownerEmail)
             await this.userService.addRoleToUser(ownerEmail.email, serviceId, 'owner', sId)
             return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {subServices: {name: subServiceIdDeleteOrNew, subServiceId: sId, options: {address: '', workTime: '', contact: ''}}}}, {returnDocument: 'after'})
-        // }
     }
 
     async addNewServiceRole(serviceId: string, newRole: string){

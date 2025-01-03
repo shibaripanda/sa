@@ -49,7 +49,7 @@ export const ServiceSchema = new mongoose.Schema({
     },
     subServices: {
       type: Array,
-      default: [{name: 'Main Service', subServiceId: 'subServiceId' + Date.now(), options: {address: '', workTime: '', contact: ''}}],
+      default: [{name: 'Local Service', subServiceId: 'subServiceId' + Date.now(), options: {address: '', workTime: '', contact: ''}}],
       require: true
     },
     serviceInfo: {

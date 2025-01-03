@@ -59,7 +59,14 @@ export function ServiceModal(props: any) {
         setTimeout(() => sendToSocket('getUserRolesByUserId', {}), 2500)
     }
 
+    const loginOutForEnter = (status, name) => {
+        if(!status){
+            return name
+        }
+        return name + ' (' + props.text.outLoginForEnter[props.leng] + ')'
+    }
 
+console.log('SM', props)
     return (
         <>
             <Modal opened={props.opened} size="50%" title={props.user.name ? props.user.name : props.user.email}
@@ -70,28 +77,29 @@ export function ServiceModal(props: any) {
             
             <Grid>
                 {services.map(item1 => 
-                        <Grid.Col key={item1._id} span={12}>
-                            <>
-                                {item1.name}
-                                <Grid>
-                                  {item1.subServices.filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiceId))).map(item =>
-                                  <Grid.Col key={item.subServiceId} span={12}> 
-                                    <Button 
-                                    onClick={() => {
-                                        sessionStorage.setItem('serviceId', item1._id)
-                                        sessionStorage.setItem('subServiceId', item.subServiceId)
-                                        navigate('/service')
-                                    }} 
-                                    fullWidth
-                                    >
-                                    {item.name}
-                                    </Button>
-                                </Grid.Col>
-                                  )}  
-                                </Grid>
-                                <hr></hr>          
-                            </>
-                        </Grid.Col>)}
+                <Grid.Col key={item1._id} span={12}>
+                    <>
+                        {item1.name}
+                        <Grid>
+                            {item1.subServices.filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiceId))).map(item =>
+                            <Grid.Col key={item.subServiceId} span={12}> 
+                            <Button
+                            disabled={!props.user.roles.find(item => item.serviceId === item1._id) || !props.user.roles.find(item => item.serviceId === item1._id).subServices.map(item => item.subServiceId).includes(item.subServiceId)} 
+                            onClick={() => {
+                                sessionStorage.setItem('serviceId', item1._id)
+                                sessionStorage.setItem('subServiceId', item.subServiceId)
+                                navigate('/service')
+                            }} 
+                            fullWidth
+                            >
+                            {loginOutForEnter(!props.user.roles.find(item => item.serviceId === item1._id) || !props.user.roles.find(item => item.serviceId === item1._id).subServices.map(item => item.subServiceId).includes(item.subServiceId), item.name)}
+                            </Button>
+                        </Grid.Col>
+                            )}  
+                        </Grid>
+                        <hr></hr>          
+                    </>
+                </Grid.Col>)}
 
                 <Grid.Col span={12}>
 

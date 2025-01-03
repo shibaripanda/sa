@@ -2,6 +2,8 @@ import { ServiceClass } from "../../../classes/ServiceClass.ts";
 import { UserClass } from "../../../classes/UserClass.ts";
 import { NewOrderScreen } from "./newOrderScreen/NewOrderScreen.tsx";
 import { OrderScreen } from "./ordersScreen/OrderScreen.tsx";
+import { ChangeAddressSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeAddressSubService.tsx";
+import { ChangeContactSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeContactSubService.tsx";
 import { ChangeLocalService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeLocalService.tsx";
 import { ChangeNameMainService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNameMainService.tsx";
 import { ChangeNameSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNameSubService.tsx";
@@ -9,19 +11,20 @@ import { ChangeServiceDeviceList } from "./serviceSettingsScreen/itemsScreenSett
 import { ChangeServiceRole } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceRole.tsx";
 import { ChangeServiceStatusList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceStatusList.tsx";
 import { ChangeServiceUser } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceUser.tsx";
+import { ChangeTimeSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeTimeSubService.tsx";
 import { SeviceSettingsScreen } from "./serviceSettingsScreen/SeviceSettingsScreen.tsx";
 
 export const line = [
-    {
-        name: 'orders',
-        screen: OrderScreen,
-        items: []
-    },
-    {
-        name: 'createOrder',
-        screen: NewOrderScreen,
-        items: []
-    },
+    // {
+    //     name: 'orders',
+    //     screen: OrderScreen,
+    //     items: []
+    // },
+    // {
+    //     name: 'createOrder',
+    //     screen: NewOrderScreen,
+    //     items: []
+    // },
     {
         name: 'serviceSettings',
         screen: SeviceSettingsScreen,
@@ -38,15 +41,18 @@ export const line = [
         screen: SeviceSettingsScreen,
         items: [
             {message: 'changeNameSubService', screenItem: ChangeNameSubService},
+            {message: 'changeTimeSubService', screenItem: ChangeTimeSubService},
+            {message: 'changeContactSubService', screenItem: ChangeContactSubService},
+            {message: 'changeAddressSubService', screenItem: ChangeAddressSubService},
         ]
     },
-    {
-        name: 'changeServiceUser',
-        screen: SeviceSettingsScreen,
-        items: [
-            {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12},
-        ]
-    }
+    // {
+    //     name: 'changeServiceUser',
+    //     screen: SeviceSettingsScreen,
+    //     items: [
+    //         {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12},
+    //     ]
+    // }
 ]
 
 export class ScreenLine {

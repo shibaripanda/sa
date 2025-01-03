@@ -76,5 +76,13 @@ export const textArray: LengData[] = [
     {rutext: 'Локальные сервисы', index: 'changeLocalService', info_data: 'Локальные сервисы', update: false},
     {rutext: 'Настройки локального сервиса', index: 'serviceLocalSettings', info_data: 'настройки локального сервиса', update: false},
     {rutext: 'Имя для нового локального сервиса', index: 'newNameForLocalService', info_data: 'новое имя для локального сервиса'},
+    {rutext: 'Для входа перелогиниться!', index: 'outLoginForEnter', info_data: 'перелогиниться для входа'},
+    {rutext: 'Рабочее время', index: 'changeTimeSubService', info_data: 'рабочее время'},
+    {rutext: 'Неустановлено', index: 'notSet', info_data: 'неустановлено'},
+    {rutext: 'Время работы (пример: с 10:00 до 12:00, понедельник - пятница, выходной: воскресенье)', index: 'workTime', info_data: 'установка время работы', update: false},
+    {rutext: 'Контакты', index: 'changeContactSubService', info_data: 'контакты'},
+    {rutext: 'Контакты (пример: +334 355 6464646)', index: 'workContact', info_data: 'установка контактов'},
+    {rutext: 'Адрес', index: 'changeAddressSubService', info_data: 'адрес'},
+    {rutext: 'Адрес (пример: Северный полюс, Берлога №7, комната 5)', index: 'workAddress', info_data: 'установка адреса'},
     
 ]

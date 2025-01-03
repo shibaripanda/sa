@@ -16,6 +16,7 @@ import { ChangeServiceStatusDto } from './dto/ChangeServiceStatusDto.dto'
 import { ChangeServiceRoleDto } from './dto/ChangeServiceRoleDto.dto'
 import { AddServiceRoleDto } from './dto/AddServiceRoleDto.dto'
 import { ChangeServiceLocalDto } from './dto/ChangeServiceLocalDto.dto'
+import { ChangeSubServiceDataDto } from './dto/ChangeSubServiceDataDto.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 export class ServicesGateway {
@@ -26,6 +27,38 @@ export class ServicesGateway {
 
   @WebSocketServer() server: Server 
 
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeTimeSubService')
+  async changeSubServiceTime(@MessageBody() payload: ChangeSubServiceDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeSubServiceData(
+      payload.serviceId, 
+      payload.subServiceId, 
+      payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
+      payload.data) 
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
+
+  @SubscribeMessage('changeContactSubService')
+  async changeSubServiceContact(@MessageBody() payload: ChangeSubServiceDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeSubServiceData(
+      payload.serviceId, 
+      payload.subServiceId, 
+      payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
+      payload.data)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
+
+  @SubscribeMessage('changeAddressSubService')
+  async changeSubServiceAddress(@MessageBody() payload: ChangeSubServiceDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeSubServiceData(
+      payload.serviceId, 
+      payload.subServiceId, 
+      payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
+      payload.data)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
