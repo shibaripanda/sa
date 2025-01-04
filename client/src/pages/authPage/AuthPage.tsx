@@ -4,6 +4,7 @@ import { AuthClass } from '../../classes/AuthClass.ts'
 import { AuthForm } from './authForm/AuthForm.tsx'
 import { TextClass } from '../../classes/TextClass.ts'
 import { useNavigate } from 'react-router-dom'
+import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 
 
 function AuthPage() {
@@ -60,7 +61,7 @@ function AuthPage() {
     )
   }
   return (
-    <div>Loading</div>
+    <LoaderShow/>
   )
   
 }

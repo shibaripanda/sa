@@ -7,7 +7,8 @@ import { IconSquareX } from '@tabler/icons-react'
 
 export function ChangeServiceRole(props, message) {
 
-  console.log('ChangeServiceRole', props, message)
+  // console.log('ChangeServiceRole', props, message)
+  console.log('ChangeServiceRole')
 
   const accessItems = (roles) => {
       if(!roles){

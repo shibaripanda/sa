@@ -123,14 +123,14 @@ export function Header1(props) {
             <Group key={1}>
               {topMenu}
             </Group>, 
-            <Group key={2}>
-              <TextInput rightSectionPointerEvents="none"
-                inputSize={'30'}
-                placeholder=' find'
-                rightSection={<IconBackspace stroke={1.5}/>} 
-                radius="sm"
-                key={49}/>
-            </Group>
+            // <Group key={2}>
+            //   <TextInput rightSectionPointerEvents="none"
+            //     inputSize={'30'}
+            //     placeholder=' find'
+            //     rightSection={<IconBackspace stroke={1.5}/>} 
+            //     radius="sm"
+            //     key={49}/>
+            // </Group>
             ]}
         </Group>
 
@@ -158,7 +158,7 @@ export function Header1(props) {
             >
               {props.text[props.menu[props.activeScreen]][props.leng]}
             </Anchor>,
-            <TextInput size='sx'key={39}/>
+            // <TextInput size='sx'key={39}/>
           ]}
         </Group>
         

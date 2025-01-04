@@ -6,7 +6,8 @@ import { upFirstString } from '../../../../../modules/upFirstString.ts'
 
 export function ChangeServiceDeviceList(props, message) {
 
-    console.log('ChangeServiceDeviceList', props, message)
+    // console.log('ChangeServiceDeviceList', props, message)
+    console.log('ChangeServiceDeviceList')
 
   return (
     <div>

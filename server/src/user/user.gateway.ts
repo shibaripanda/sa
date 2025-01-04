@@ -8,6 +8,7 @@ import { UpdateUserRoleDto } from './dto/updateUserRole.dto'
 import { WSValidationPipe } from 'src/modules/wsPipeValid'
 import { RolesGuard } from 'src/auth/roles.guard'
 import { GetServiceUsersDto } from './dto/GetServiceUsers.dto'
+import { ServicesService } from 'src/service/services.service'
 // import { RolesByUserIdDto } from './dto/getRolesById.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
@@ -16,6 +17,7 @@ import { GetServiceUsersDto } from './dto/GetServiceUsers.dto'
   export class UserGateway  {
 
   constructor(
+    private serviceMongo: ServicesService,
     private userSevice: UsersService
   ) {}
 
@@ -50,8 +52,10 @@ import { GetServiceUsersDto } from './dto/GetServiceUsers.dto'
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('addRoleToUser')
-  async addRoleToUser(@MessageBody() updateUserRoleDto: UpdateUserRoleDto): Promise<void> {
+  async addRoleToUser(@ConnectedSocket() client: Socket, @MessageBody() updateUserRoleDto: UpdateUserRoleDto): Promise<void> {
     await this.userSevice.addRoleToUser(updateUserRoleDto.email, updateUserRoleDto.serviceId, updateUserRoleDto.role, updateUserRoleDto.subServiceId)
+    const users = await this.userSevice.getServiceUsers(updateUserRoleDto.serviceId)
+    this.server.to(client.id).emit(`getServiceUsers${updateUserRoleDto.serviceId}`, users)
   }
 
 }

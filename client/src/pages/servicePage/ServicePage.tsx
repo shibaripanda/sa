@@ -10,7 +10,8 @@ import { getFromSocket } from '../../modules/socket/pipGetSocket.ts'
 import { sendToSocket } from '../../modules/socket/pipSendSocket.ts'
 import { ServiceClass } from '../../classes/ServiceClass.ts'
 import { UserClass } from '../../classes/UserClass.ts'
-import { AppShell, useMatches } from '@mantine/core'
+import { AppShell, Center, Loader, useMatches } from '@mantine/core'
+import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 
 function ServicePage() {
 
@@ -36,6 +37,7 @@ function ServicePage() {
   const [workTime, setWorkTime] = useState('')
   const [contact, setContact] = useState('')
   const [address, setAddress] = useState('')
+  const [role, setRole] = useState('')
   const [emailForNewUser, setEmailForNewUser] = useState('')
   const [checkedAccess, setCheckedAccess] = useState<any>({})
   const [settingsFilter, setSettingsFilter] = useState('')
@@ -113,7 +115,9 @@ function ServicePage() {
               contact: contact,
               setContact: setContact,
               address: address,
-              setAddress: setAddress
+              setAddress: setAddress,
+              role: role,
+              setRole: setRole
               }
             )}
           </AppShell.Main>
@@ -121,7 +125,7 @@ function ServicePage() {
     )
   }
   return (
-    <div>Loading</div>
+    <LoaderShow/>
   )
   
 }

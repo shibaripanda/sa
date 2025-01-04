@@ -26,7 +26,6 @@ export class AuthClass {
         console.log(user.roles)
         user.roles = user.roles.filter(item => item.serviceId === this.getServiceId())[0].subServices.filter(item => item.subServiceId === this.getSubServiceId())[0]
         user.serviceId = this.getServiceId()
-        console.log(user)
         return user
     }
 

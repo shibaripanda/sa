@@ -46,13 +46,13 @@ export const line = [
             {message: 'changeAddressSubService', screenItem: ChangeAddressSubService},
         ]
     },
-    // {
-    //     name: 'changeServiceUser',
-    //     screen: SeviceSettingsScreen,
-    //     items: [
-    //         {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12},
-    //     ]
-    // }
+    {
+        name: 'changeServiceUser',
+        screen: SeviceSettingsScreen,
+        items: [
+            {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12},
+        ]
+    }
 ]
 
 export class ScreenLine {

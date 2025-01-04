@@ -1,11 +1,11 @@
-import { Button, Center, Checkbox, Table, Text, TextInput, Tooltip } from '@mantine/core'
+import { Button, Group, Select, Table, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
-import { IconSquareX } from '@tabler/icons-react'
 
 export function ChangeServiceUser(props, message) {
 
-  console.log('ChangeServiceUser', props, message)
+  // console.log('ChangeServiceUser', props, message)
+  console.log('ChangeServiceUser')
 
   if(props.props.users === false){
      sendToSocket('getServiceUsers', {
@@ -18,7 +18,6 @@ export function ChangeServiceUser(props, message) {
 
   const usersList = () => {
     if(props.props.users && props.props.users.length){
-      console.log('ffffffff')
         return <Table.ScrollContainer minWidth={500}>
                 <Table stickyHeader>
                   <Table.Thead>
@@ -112,18 +111,26 @@ export function ChangeServiceUser(props, message) {
           </Table.ScrollContainer> */}
           
 
-          <TextInput placeholder={'email'}
+          <Group grow>
+            <TextInput placeholder={'email'}
           value={props.props.emailForNewUser}
           onChange={(event) => {
             props.props.setEmailForNewUser(event.target.value.toLowerCase())
-          }}/>
+          }}
+          />
+          <Select placeholder={'role'}
+          value={props.props.role}
+          onChange={props.props.setRole}
+          data={props.service.roles.map(item => item.role)}
+          /></Group>
           <Button style={{marginTop: 10}}
-          disabled={!props.props.emailForNewUser || props.props.users.map(item => item.email.toLowerCase()).includes(props.props.emailForNewUser.toLowerCase())}
+          disabled={!props.props.emailForNewUser || props.props.users.map(item => item.email.toLowerCase()).includes(props.props.emailForNewUser.toLowerCase()) || !props.props.role}
           onClick={() => {
-            sendToSocket('addNewUser', {
+            sendToSocket('addRoleToUser', {
               serviceId: props.user.serviceId, 
               subServiceId: props.user.subServiceId, 
-              emailForNewUser: props.props.emailForNewUser.toLowerCase()
+              email: props.props.emailForNewUser.toLowerCase(),
+              role: props.props.role
             })
             props.props.setEmailForNewUser('')
           }}

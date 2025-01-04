@@ -4,7 +4,8 @@ import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeAddressSubService(props, message) {
 
-    console.log('ChangeAddressSubService', props, message)
+    // console.log('ChangeAddressSubService', props, message)
+    console.log('ChangeAddressSubService')
 
   return (
     <div>

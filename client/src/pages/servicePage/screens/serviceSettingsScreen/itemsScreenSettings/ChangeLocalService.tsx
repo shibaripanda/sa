@@ -1,11 +1,12 @@
-import { Button, Grid, Group, Paper, Text, TextInput } from '@mantine/core'
+import { Button, Group, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { IconSquareX } from '@tabler/icons-react'
 
 export function ChangeLocalService(props, message) {
 
-  console.log('ChangeLocalService', props, message)
+  // console.log('ChangeLocalService', props, message)
+  console.log('ChangeLocalService')
 
   console.log(props.user.subServiceId)
   return (

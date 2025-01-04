@@ -6,7 +6,8 @@ import { upFirstString } from '../../../../../modules/upFirstString.ts'
 
 export function ChangeServiceStatusList(props, message) {
 
-    console.log('ChangeServiceStatusList', props, message)
+    // console.log('ChangeServiceStatusList', props, message)
+    console.log('ChangeServiceStatusList')
 
     const iconStatus = (item) => {
       if(!['New', 'Ready'].includes(item)){

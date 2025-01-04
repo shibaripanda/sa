@@ -4,7 +4,8 @@ import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeNameMainService(props, message) {
 
-    console.log('ChangeNameMainService', props, message)
+    // console.log('ChangeNameMainService', props, message)
+    console.log('ChangeNameMainService')
 
   return (
     <div>
