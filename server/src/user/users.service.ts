@@ -20,6 +20,7 @@ export class UsersService {
             for(const i of users){
                 i.services_roles = i.services_roles.filter(item => item.serviceId === serviceId)
             }
+            console.log(users)
             return users
         }
         return []

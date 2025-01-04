@@ -29,13 +29,16 @@ export function ChangeServiceUser(props, message) {
                   </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {props.props.users.map(item => <Table.Tr key={item._id}>
-                                                  <Table.Td>
-                                                    {item.name ? item.name + ' ' + item.email : item.email}
-                                                  </Table.Td>
-                                                  <Table.Td>
-                                                  </Table.Td>
-                                              </Table.Tr>)}
+                    {props.props.users.map(item => 
+                    <>
+                    <Table.Tr key={item._id}>
+                      <Table.Td>
+                        {item.name ? item.name + ' ' + item.email : item.email}
+                      </Table.Td>
+                      </Table.Tr>
+                      {item.services_roles.map(item => item.subServices.map(s => <Table.Tr><Table.Td>{s.subServiceId}</Table.Td></Table.Tr>))}
+                    </>
+                  )}
                   </Table.Tbody>
                   <Table.Thead>
                   <Table.Tr>
