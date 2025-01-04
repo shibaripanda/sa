@@ -20,7 +20,6 @@ export class UsersService {
             for(const i of users){
                 i.services_roles = i.services_roles.filter(item => item.serviceId === serviceId)
             }
-            console.log(users)
             return users
         }
         return []
@@ -55,12 +54,23 @@ export class UsersService {
         if(roles){
             
             const subServ = roles.subServices.find(item => item.subServiceId === subServiceId)
-            if(subServ && subServ.roles.includes(role)){
-                await this.userMongo.updateOne(
-                    {email: email}, 
-                    {$pull: {'services_roles.$[el].subServices.$[al].roles': role}}, 
-                    {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServiceId': subServiceId}]}
-                )
+            if(subServ){
+                if(subServ.roles.includes(role)){
+                    console.log('1')
+                    await this.userMongo.updateOne(
+                        {email: email}, 
+                        {$pull: {'services_roles.$[el].subServices.$[al].roles': role}}, 
+                        {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServiceId': subServiceId}]}
+                    )
+                }
+                else{
+                    console.log('2')
+                    await this.userMongo.updateOne(
+                        {email: email}, 
+                        {$addToSet: {'services_roles.$[el].subServices.$[al].roles': role}}, 
+                        {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServiceId': subServiceId}], new: true }
+                    )
+                }
             }
             else{
                 await this.userMongo.updateOne(
