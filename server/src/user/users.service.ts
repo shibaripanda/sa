@@ -50,25 +50,30 @@ export class UsersService {
         const newService = await this.serviceMongo.getServiceById(serviceId)
 
         if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
-        const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === newService._id.toString())
+        const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === serviceId)
+    console.log(roles)
         if(roles){
             
             const subServ = roles.subServices.find(item => item.subServiceId === subServiceId)
             if(subServ){
+                console.log(user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId))
+                console.log(subServ)
+                console.log(subServ.roles)
+                console.log(role)
                 if(subServ.roles.includes(role)){
                     console.log('1')
-                    await this.userMongo.updateOne(
-                        {email: email}, 
-                        {$pull: {'services_roles.$[el].subServices.$[al].roles': role}}, 
-                        {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServiceId': subServiceId}]}
-                    )
+                    // await this.userMongo.updateOne(
+                    //     {email: email}, 
+                    //     {$pull: {"services_roles.$[el].subServices.$[al].roles": role}}, 
+                    //     {arrayFilters: [{"el.serviceId": serviceId}, {"al.subServiceId": subServiceId}]}
+                    // )
                 }
                 else{
                     console.log('2')
                     await this.userMongo.updateOne(
                         {email: email}, 
-                        {$addToSet: {'services_roles.$[el].subServices.$[al].roles': role}}, 
-                        {arrayFilters: [{'el.serviceId': newService._id.toString()}, {'al.subServiceId': subServiceId}], new: true }
+                        {$addToSet: {"services_roles.$[el].subServices.$[elem].roles": role}}, 
+                        {arrayFilters: [{"el.serviceId": serviceId}, {"elem.subServiceId": subServiceId}]}
                     )
                 }
             }
@@ -81,7 +86,7 @@ export class UsersService {
                         statuses: newService.statuses,
                         devices: newService.devices 
                     }}},
-                    {arrayFilters: [{'el.serviceId': newService._id.toString()}]}
+                    {arrayFilters: [{'el.serviceId': serviceId}]}
                 )
             }
         }
@@ -90,7 +95,7 @@ export class UsersService {
                 {email: email}, 
                 {$addToSet: 
                     {services_roles: 
-                        {serviceId: newService._id.toString(), subServices: [{
+                        {serviceId: serviceId, subServices: [{
                             roles: [role], 
                             subServiceId: subServiceId,
                             statuses: newService.statuses,

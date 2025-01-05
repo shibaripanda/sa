@@ -17,6 +17,36 @@ interface ServicesRoles {
   subServices: SubRoles[]
 }
 
+const roleShema1 = new mongoose.Schema({
+  roles: {
+    type: Array,
+    required: true,
+  },
+  subServiceId: {
+    type: String,
+    required: true,
+  },
+  statuses: {
+    type: Array,
+    required: true,
+  },
+  devices: {
+    type: Array,
+    required: true,
+  }
+})
+
+const roleShema = new mongoose.Schema({
+  serviceId: {
+    type: String,
+    required: true,
+  },
+  subServices: {
+    type: [roleShema1],
+    required: true,
+  }
+})
+
 export const UsersSchema = new mongoose.Schema({
   email: {
     type: String, 
@@ -30,7 +60,7 @@ export const UsersSchema = new mongoose.Schema({
     type: Object
   },
   services_roles: {
-    type: Array, 
+    type: [roleShema], 
     require: true, 
     default: []
   },
