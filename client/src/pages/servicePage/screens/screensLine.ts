@@ -10,9 +10,10 @@ import { ChangeNameSubService } from "./serviceSettingsScreen/itemsScreenSetting
 import { ChangeServiceDeviceList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceDeviceList.tsx";
 import { ChangeServiceRole } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceRole.tsx";
 import { ChangeServiceStatusList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceStatusList.tsx";
-import { ChangeServiceUser } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceUser.tsx";
+import { ChangeServiceUser } from "./userSettingsScreen/itemsScreenSettings/ChangeServiceUser.tsx";
 import { ChangeTimeSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeTimeSubService.tsx";
 import { SeviceSettingsScreen } from "./serviceSettingsScreen/SeviceSettingsScreen.tsx";
+import { UserSettingsScreen } from "./userSettingsScreen/UserSettingsScreen.tsx";
 
 export const line = [
     // {
@@ -48,7 +49,7 @@ export const line = [
     },
     {
         name: 'changeServiceUser',
-        screen: SeviceSettingsScreen,
+        screen: UserSettingsScreen,
         items: [
             {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12},
         ]
@@ -74,7 +75,6 @@ export class ScreenLine {
 
     getMessagesForUser(){
         const messages = this.service.roles.filter(item => this.user.userRoles.includes(item.role)).map(item => item.access)
-        // console.log(messages.length ? [...new Set(messages.flat())] : [])
         return messages.length ? [...new Set(messages.flat())] : []
     }
 

@@ -13,6 +13,9 @@ export class UsersService {
         private serviceMongo: ServicesService
     ) {}
 
+    async deleteUserFromService(email: string, serviceId: string){
+        await this.userMongo.updateOne({email: email}, {$pull: {services_roles: {serviceId: serviceId}}})
+    }
 
     async getServiceUsers(serviceId: string){
         const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
@@ -47,7 +50,7 @@ export class UsersService {
 
     async addRoleToUser(email: string, serviceId: string, role: string, subServiceId: string){
         const user = await this.userMongo.findOne({email: email})
-        const newService = await this.serviceMongo.getServiceById(serviceId)
+        // const newService = await this.serviceMongo.getServiceById(serviceId)
 
         if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
         const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === serviceId)
@@ -78,8 +81,8 @@ export class UsersService {
                     {$addToSet: {'services_roles.$[el].subServices': {
                         roles: [role], 
                         subServiceId: subServiceId,
-                        statuses: newService.statuses,
-                        devices: newService.devices 
+                        statuses: [],
+                        devices: [] 
                     }}},
                     {arrayFilters: [{'el.serviceId': serviceId}]}
                 )
@@ -93,8 +96,8 @@ export class UsersService {
                         {serviceId: serviceId, subServices: [{
                             roles: [role], 
                             subServiceId: subServiceId,
-                            statuses: newService.statuses,
-                            devices: newService.devices 
+                            statuses: [],
+                            devices: [] 
                         }]}}})
         }
     }

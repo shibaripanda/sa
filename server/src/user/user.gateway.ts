@@ -9,6 +9,7 @@ import { WSValidationPipe } from 'src/modules/wsPipeValid'
 import { RolesGuard } from 'src/auth/roles.guard'
 import { GetServiceUsersDto } from './dto/GetServiceUsers.dto'
 import { ServicesService } from 'src/service/services.service'
+import { DeleteServiceUser } from './dto/DeleteServiceUser.dto'
 // import { RolesByUserIdDto } from './dto/getRolesById.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
@@ -22,6 +23,16 @@ import { ServicesService } from 'src/service/services.service'
   ) {}
 
   @WebSocketServer() server: Server
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deleteUserFromService')
+  async deleteUserFromService(@ConnectedSocket() client: Socket, @MessageBody() payload: DeleteServiceUser): Promise<void> {
+    await this.userSevice.deleteUserFromService(payload.email, payload.serviceId)
+    const users = await this.userSevice.getServiceUsers(payload.serviceId)
+    this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new WSValidationPipe())
