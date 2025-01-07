@@ -38,6 +38,7 @@ function ServicePage() {
   const [contact, setContact] = useState('')
   const [address, setAddress] = useState('')
   const [role, setRole] = useState('')
+  const [subService, setSubService] = useState('')
   const [emailForNewUser, setEmailForNewUser] = useState('')
   const [checkedAccess, setCheckedAccess] = useState<any>({})
   const [settingsFilter, setSettingsFilter] = useState('')
@@ -117,7 +118,9 @@ function ServicePage() {
               address: address,
               setAddress: setAddress,
               role: role,
-              setRole: setRole
+              setRole: setRole,
+              subService: subService,
+              setSubService: setSubService
               }
             )}
           </AppShell.Main>

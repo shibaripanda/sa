@@ -13,7 +13,7 @@ export function UserItem(props, user) {
       const a = user.services_roles
       .find(item => item.serviceId === props.user.serviceId).subServices
       .find(item => item.subServiceId === service.subServiceId)
-      if(a.roles.length){
+      if(a && a.roles && a.roles.length){
           return ''
       }
       return 'dimmed'

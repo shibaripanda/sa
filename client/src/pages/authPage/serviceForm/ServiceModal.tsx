@@ -15,13 +15,13 @@ interface Role {
 interface Service {
     _id: string
     name: string[]
-    subServices: {subServiceId: string, name: string}[]
+    subServices: {subServiceId: string, name: string, roles: string[]}[]
 }
 
 export function ServiceModal(props: any) {
 
     useConnectSocket(props.user.token)
-// console.log(props.user)
+console.log(props.user)
     const navigate = useNavigate()
     const [roles, setRoles] = useState<Role[]>(props.user.roles)
     const [services, setServices] = useState<Service[]>([])
@@ -66,7 +66,6 @@ export function ServiceModal(props: any) {
         return name + ' (' + props.text.outLoginForEnter[props.leng] + ')'
     }
 
-console.log('SM', props)
     return (
         <>
             <Modal opened={props.opened} size="50%" title={props.user.name ? props.user.name : props.user.email}
@@ -81,7 +80,10 @@ console.log('SM', props)
                     <>
                         {item1.name}
                         <Grid>
-                            {item1.subServices.filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiceId))).map(item =>
+                            {item1.subServices
+                            .filter(ss => props.user.roles.map(i => i.subServices).flat().map(c => c.subServiceId).includes(ss.subServiceId))
+                            .filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiceId)))
+                            .map(item =>
                             <Grid.Col key={item.subServiceId} span={12}> 
                             <Button
                             disabled={!props.user.roles.find(item => item.serviceId === item1._id) || !props.user.roles.find(item => item.serviceId === item1._id).subServices.map(item => item.subServiceId).includes(item.subServiceId)} 

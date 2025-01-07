@@ -109,7 +109,6 @@ export class UsersService {
             const subServ = roles.subServices.find(item => item.subServiceId === subServiceId)
             if(subServ){
                 if(subServ.roles.includes(role)){
-                    console.log('1')
                     await this.userMongo.updateOne(
                         {email: email}, 
                         {$pull: {"services_roles.$[el].subServices.$[al].roles": role}}, 
@@ -117,7 +116,6 @@ export class UsersService {
                     )
                 }
                 else{
-                    console.log('2')
                     await this.userMongo.updateOne(
                         {email: email}, 
                         {$addToSet: {"services_roles.$[el].subServices.$[elem].roles": role}}, 
