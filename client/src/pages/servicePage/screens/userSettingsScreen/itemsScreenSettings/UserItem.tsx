@@ -14,9 +14,9 @@ export function UserItem(props, user) {
       .find(item => item.serviceId === props.user.serviceId).subServices
       .find(item => item.subServiceId === service.subServiceId)
       if(a && a.roles && a.roles.length){
-          return ''
+          return <Text c={'green'} fw={700}>{service.name}</Text>
       }
-      return 'dimmed'
+      return <Text c={'dimmed'}>{service.name}</Text>
     }
 
       return (
@@ -35,9 +35,7 @@ export function UserItem(props, user) {
                   {props.service.subServices.map(service => 
                   <Table.Th key={service.subServiceId}>
                     <Center>
-                      <Text c={subServStatus(service)}>
-                        {service.name}
-                      </Text>
+                      {subServStatus(service)}
                     </Center>
                   </Table.Th>
                   )}

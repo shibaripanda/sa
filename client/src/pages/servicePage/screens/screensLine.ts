@@ -14,6 +14,7 @@ import { ChangeServiceUser } from "./userSettingsScreen/itemsScreenSettings/Chan
 import { ChangeTimeSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeTimeSubService.tsx";
 import { SeviceSettingsScreen } from "./serviceSettingsScreen/SeviceSettingsScreen.tsx";
 import { UserSettingsScreen } from "./userSettingsScreen/UserSettingsScreen.tsx";
+import { ChangeLocalServiceUser } from "./userSettingsScreen/itemsScreenSettings/ChangeLocalServiceUser.tsx";
 
 export const line = [
     // {
@@ -50,14 +51,23 @@ export const line = [
     {
         name: 'changeServiceUser',
         screen: UserSettingsScreen,
+        getDataMessage: 'getServiceUsers',
         items: [
             {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12},
+        ]
+    },
+    {
+        name: 'changeLocalServiceUser',
+        screen: UserSettingsScreen,
+        getDataMessage: 'getServiceLocalUsers',
+        items: [
+            {message: 'changeLocalServiceUser', screenItem: ChangeLocalServiceUser, size: 12},
         ]
     }
 ]
 
 export class ScreenLine {
-    line: {name: string, screen: any, items: {message: string, screenItem: any}[]}[]
+    line: {name: string, screen: any, items: {message: string, screenItem: any}[], getDataMessage?: string | undefined}[]
     data: {text: {}, leng: string, user: UserClass, service: ServiceClass}
     service: ServiceClass
     user: UserClass
@@ -88,7 +98,8 @@ export class ScreenLine {
         if(items.length){
             return this.line[activeScreen].screen(
                 {
-                    ...this.data, 
+                    ...this.data,
+                    getDataMessage: this.line[activeScreen].getDataMessage,
                     items: items.filter(item => this.text[item.message][this.leng].toLowerCase().includes(props.settingsFilter.toLowerCase())), 
                     props: props
                 }

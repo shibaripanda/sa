@@ -10,7 +10,7 @@ export function UserSettingsScreen(props) {
   console.log('UserSettingsScreen', props)
 
   if(props.props.users === false){
-    sendToSocket('getServiceUsers', {
+    sendToSocket(props.getDataMessage, {
                serviceId: props.user.serviceId, 
                subServiceId: props.user.subServiceId
              })
@@ -18,7 +18,6 @@ export function UserSettingsScreen(props) {
   
   const userList = () => {
     if(props.props.users.length){
-      console.log()
       return props.props.users.filter(user => user.name ? user.email + ' ' + user.name : user.email.toLowerCase().includes(props.props.settingsFilter.toLowerCase())).map(user =>
         <Grid.Col key={user._id} span={12}>
           <Paper shadow="xl" radius="md" withBorder p="xl">

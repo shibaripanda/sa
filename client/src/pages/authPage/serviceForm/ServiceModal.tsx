@@ -81,7 +81,7 @@ console.log(props.user)
                         {item1.name}
                         <Grid>
                             {item1.subServices
-                            .filter(ss => props.user.roles.map(i => i.subServices).flat().map(c => c.subServiceId).includes(ss.subServiceId))
+                            // .filter(ss => props.user.roles.map(i => i.subServices).flat().map(c => c.subServiceId).includes(ss.subServiceId))
                             .filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiceId)))
                             .map(item =>
                             <Grid.Col key={item.subServiceId} span={12}> 
