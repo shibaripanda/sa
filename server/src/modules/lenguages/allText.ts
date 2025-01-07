@@ -84,5 +84,9 @@ export const textArray: LengData[] = [
     {rutext: 'Контакты (пример: +334 355 6464646)', index: 'workContact', info_data: 'установка контактов'},
     {rutext: 'Адрес', index: 'changeAddressSubService', info_data: 'адрес'},
     {rutext: 'Адрес (пример: Северный полюс, Берлога №7, комната 5)', index: 'workAddress', info_data: 'установка адреса'},
+    {rutext: 'Девайсы', index: 'devices', info_data: 'девайсы'},
+    {rutext: 'Удалить пользователя и полностью отключить доступ ко всем сервисам', index: 'deletUser', info_data: 'удалитьпользователя'},
+    {rutext: 'Доступ пользователя к определенным статусам заказов', index: 'deletStatus', info_data: 'удалитьстатуст'},
+    {rutext: 'Доступ пользователя к определенным девайсам заказов', index: 'deletDevice', info_data: 'удалитьдевайс'},
     
 ]

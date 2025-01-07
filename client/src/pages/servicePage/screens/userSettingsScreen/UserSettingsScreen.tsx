@@ -17,7 +17,7 @@ export function UserSettingsScreen(props) {
   }
   
   const userList = () => {
-    if(props.props.users && props.props.users.length){
+    if(props.props.users.length){
       console.log()
       return props.props.users.filter(user => user.name ? user.email + ' ' + user.name : user.email.toLowerCase().includes(props.props.settingsFilter.toLowerCase())).map(user =>
         <Grid.Col key={user._id} span={12}>
@@ -27,9 +27,15 @@ export function UserSettingsScreen(props) {
         </Grid.Col> 
       )
     }
+    else if(!props.props.users){
+      return (
+        <Grid.Col span={12}>
+            {LoaderShow()}
+        </Grid.Col>
+      )
+    }
  }
   
- if(props.props.users && props.props.users.length){
 
     return (
       <>
@@ -58,10 +64,5 @@ export function UserSettingsScreen(props) {
         </div>
       </>
     )
-  }
-  else{
-    return (
-      LoaderShow()
-    )
-  }
+  
 }

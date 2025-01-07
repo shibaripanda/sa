@@ -1,13 +1,23 @@
-import { Button, Center, Checkbox, Group, Select, Table, Text, TextInput } from '@mantine/core'
+import { Button, Center, Checkbox, Table, Text, Tooltip } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
-import { IconDoorExit, IconSquareX } from '@tabler/icons-react'
+import { IconSquareX } from '@tabler/icons-react'
 
 export function UserItem(props, user) {
 
   console.log('UserItem')
-  console.log(user)
+  
   const userTable = () => {
+
+    const subServStatus = (service) => {
+      const a = user.services_roles
+      .find(item => item.serviceId === props.user.serviceId).subServices
+      .find(item => item.subServiceId === service.subServiceId)
+      if(a.roles.length){
+          return ''
+      }
+      return 'dimmed'
+    }
 
       return (
         <Table.ScrollContainer minWidth={500}>
@@ -22,14 +32,22 @@ export function UserItem(props, user) {
                     </Text>
                   </Center>
                 </Table.Th>
-                  {props.service.subServices.map(service => <Table.Th key={service.subServiceId}><Center>{service.name}</Center></Table.Th>)}
+                  {props.service.subServices.map(service => 
+                  <Table.Th key={service.subServiceId}>
+                    <Center>
+                      <Text c={subServStatus(service)}>
+                        {service.name}
+                      </Text>
+                    </Center>
+                  </Table.Th>
+                  )}
               </Table.Tr>
             </Table.Thead>
 
             <Table.Tbody>
               <Table.Tr>
                 <Table.Td>
-                  <Text fw={700}>Roles</Text>
+                  <Text fw={700}>{props.text.changeServiceRole[props.leng]}</Text>
                 </Table.Td>
               </Table.Tr>
               {props.service.roles.map(serviceRole => 
@@ -40,6 +58,7 @@ export function UserItem(props, user) {
                 {props.service.subServices.map(service => 
                 <Table.Td key={service.subServiceId}>
                   <Center>
+                  <Tooltip label={serviceRole.role}>
                     <Checkbox 
                     checked={
                       user.services_roles
@@ -51,8 +70,6 @@ export function UserItem(props, user) {
                       false
                     }
                     onChange={() => {
-                      console.log(user.email)
-                      console.log(serviceRole.role)
                       sendToSocket('addRoleToUser', {
                         serviceId: props.user.serviceId, 
                         subServiceId: service.subServiceId, 
@@ -61,6 +78,7 @@ export function UserItem(props, user) {
                       })
                     }}
                         />
+                    </Tooltip>
                   </Center>
                 </Table.Td>)}
               </Table.Tr>
@@ -68,7 +86,62 @@ export function UserItem(props, user) {
 
               <Table.Tr>
                 <Table.Td>
-                <Text fw={700}>Devices</Text>
+                <Tooltip label={props.text.deletStatus[props.leng]}> 
+                  <Text fw={700}>
+                    {props.text.changeServiceStatusList[props.leng]}
+                  </Text>
+                </Tooltip>
+                </Table.Td>
+              </Table.Tr>
+              {props.service.statuses.map(status => 
+                <Table.Tr key={status}>
+                <Table.Td>
+                  {status}
+                </Table.Td>
+                {props.service.subServices.map(service => 
+                <Table.Td key={service.subServiceId}>
+                  <Center>
+                    <Tooltip label={status}> 
+                      <Checkbox
+                      disabled={user.services_roles
+                        .find(item => item.serviceId === props.user.serviceId).subServices
+                        .find(item => item.subServiceId === service.subServiceId) ? 
+                        !user.services_roles
+                        .find(item => item.serviceId === props.user.serviceId).subServices
+                        .find(item => item.subServiceId === service.subServiceId).roles.length :
+                        true
+                      } 
+                      checked={
+                        user.services_roles
+                        .find(item => item.serviceId === props.user.serviceId).subServices
+                        .find(item => item.subServiceId === service.subServiceId) ? 
+                        !user.services_roles
+                        .find(item => item.serviceId === props.user.serviceId).subServices
+                        .find(item => item.subServiceId === service.subServiceId).statuses.includes(status) :
+                        true
+                      }
+                      onChange={() => {
+                        sendToSocket('addStatusToUser', {
+                          serviceId: props.user.serviceId, 
+                          subServiceId: service.subServiceId, 
+                          email: user.email,
+                          status: status
+                        })
+                      }}
+                          />
+                    </Tooltip>
+                  </Center>
+                </Table.Td>)}
+              </Table.Tr>
+              )}
+
+              <Table.Tr>
+                <Table.Td>
+                <Tooltip label={props.text.deletDevice[props.leng]}> 
+                  <Text fw={700}>
+                    {props.text.devices[props.leng]}
+                  </Text>
+                </Tooltip>
                 </Table.Td>
               </Table.Tr>
               {props.service.devices.map(dev => 
@@ -79,6 +152,7 @@ export function UserItem(props, user) {
                 {props.service.subServices.map(service => 
                 <Table.Td key={service.subServiceId}>
                   <Center>
+                  <Tooltip label={dev}> 
                     <Checkbox
                     disabled={user.services_roles
                       .find(item => item.serviceId === props.user.serviceId).subServices
@@ -97,68 +171,22 @@ export function UserItem(props, user) {
                       .find(item => item.subServiceId === service.subServiceId).devices.includes(dev) :
                       true
                     }
-                    // onChange={() => {
-                    //   console.log(user.email)
-                    //   console.log(serviceRole.role)
-                    //   sendToSocket('addRoleToUser', {
-                    //     serviceId: props.user.serviceId, 
-                    //     subServiceId: service.subServiceId, 
-                    //     email: user.email,
-                    //     role: serviceRole.role
-                    //   })
-                    // }}
+                    onChange={() => {
+                      sendToSocket('addDeviceToUser', {
+                        serviceId: props.user.serviceId, 
+                        subServiceId: service.subServiceId, 
+                        email: user.email,
+                        device: dev
+                      })
+                    }}
                         />
+                    </Tooltip>
                   </Center>
                 </Table.Td>)}
               </Table.Tr>
               )}
 
-              <Table.Tr>
-                <Table.Td>
-                  <Text fw={700}>Statuses</Text>
-                </Table.Td>
-              </Table.Tr>
-              {props.service.statuses.map(status => 
-                <Table.Tr key={status}>
-                <Table.Td>
-                  {status}
-                </Table.Td>
-                {props.service.subServices.map(service => 
-                <Table.Td key={service.subServiceId}>
-                  <Center>
-                    <Checkbox
-                    disabled={user.services_roles
-                      .find(item => item.serviceId === props.user.serviceId).subServices
-                      .find(item => item.subServiceId === service.subServiceId) ? 
-                      !user.services_roles
-                      .find(item => item.serviceId === props.user.serviceId).subServices
-                      .find(item => item.subServiceId === service.subServiceId).roles.length :
-                      true
-                    } 
-                    checked={
-                      user.services_roles
-                      .find(item => item.serviceId === props.user.serviceId).subServices
-                      .find(item => item.subServiceId === service.subServiceId) ? 
-                      !user.services_roles
-                      .find(item => item.serviceId === props.user.serviceId).subServices
-                      .find(item => item.subServiceId === service.subServiceId).statuses.includes(status) :
-                      true
-                    }
-                    // onChange={() => {
-                    //   console.log(user.email)
-                    //   console.log(serviceRole.role)
-                    //   sendToSocket('addRoleToUser', {
-                    //     serviceId: props.user.serviceId, 
-                    //     subServiceId: service.subServiceId, 
-                    //     email: user.email,
-                    //     role: serviceRole.role
-                    //   })
-                    // }}
-                        />
-                  </Center>
-                </Table.Td>)}
-              </Table.Tr>
-              )}
+              
             </Table.Tbody>
 
           </Table>
@@ -170,16 +198,18 @@ export function UserItem(props, user) {
       <div>
 
           {userTable()}
-          <Button variant='default'
-                      onClick={() => {
-                        sendToSocket('deleteUserFromService', {
-                          serviceId: props.user.serviceId, 
-                          subServiceId: props.user.subServiceId, 
-                          email: user.email
-                          })
-                      }}>
-                        <IconSquareX color='red'/>{'\u00A0'}<Text fw={700}>{user.name ? user.name + ' (' + user.email + ')' : user.email}</Text>
-                      </Button>
+          <Tooltip label={props.text.deletUser[props.leng]}>
+            <Button variant='default'
+              onClick={() => {
+                sendToSocket('deleteUserFromService', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId, 
+                  email: user.email
+                  })
+              }}>
+              <IconSquareX color='red'/>{'\u00A0'}<Text fw={700}>{user.name ? user.name + ' (' + user.email + ')' : user.email}</Text>
+            </Button>
+          </Tooltip>
           
       </div>
     )
