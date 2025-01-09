@@ -58,11 +58,12 @@ export function ChangeServiceRole(props, message) {
         <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>
       
         <Table.ScrollContainer minWidth={500}>
-          <Table stickyHeader>
+          <Table withTableBorder withColumnBorders highlightOnHover>
             <Table.Thead>
             <Table.Tr>
               <Table.Th>Доступ</Table.Th>
               {props.service.roles.map(item => <Table.Th key={item.role}>
+                <Center>
                 <Button variant='default' key={item}
                             onClick={() => {
                               sendToSocket('addNewServiceRole', {
@@ -73,8 +74,9 @@ export function ChangeServiceRole(props, message) {
                             }}>
                               <IconSquareX color='red'/>{'\u00A0'}<Text>{item.role}</Text>
                             </Button>
+                            </Center>
                 </Table.Th>)}
-              <Table.Th>Доступ</Table.Th>
+              {/* <Table.Th>Доступ</Table.Th> */}
             </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -83,12 +85,12 @@ export function ChangeServiceRole(props, message) {
                                               {props.text[item][props.leng]}
                                             </Table.Td>
                                             {props.service.roles.map((role, index) => <Table.Td  key={index}>{accessStatus(item, role.role)}</Table.Td>)}
-                                            <Table.Td>
+                                            {/* <Table.Td>
                                               {props.text[item][props.leng]}
-                                            </Table.Td>
+                                            </Table.Td> */}
                                         </Table.Tr>)}
             </Table.Tbody>
-            <Table.Thead>
+            {/* <Table.Thead>
             <Table.Tr>
               <Table.Th>Доступ</Table.Th>
               {props.service.roles.map(item => <Table.Th key={item.role}>
@@ -105,7 +107,7 @@ export function ChangeServiceRole(props, message) {
                 </Table.Th>)}
               <Table.Th>Доступ</Table.Th>
             </Table.Tr>
-            </Table.Thead>
+            </Table.Thead> */}
             
           </Table>
         </Table.ScrollContainer>
