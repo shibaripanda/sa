@@ -13,6 +13,26 @@ export class UsersService {
         private serviceMongo: ServicesService
     ) {}
 
+    async getServiceLocalUsers(serviceId: string, subServiceId: string){
+        const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
+        if(users){
+            for(const i of users){
+                i.services_roles = i.services_roles.filter(item => item.serviceId === serviceId)
+                for(const a of i.services_roles){
+                    a.subServices = a.subServices.filter(item => item.subServiceId === subServiceId)
+                }
+            }
+            const res = users
+            .filter(s => !s.services_roles.map(s1 => s1.subServices).flat().map(s3 => s3.roles).flat().includes('owner'))
+            .filter(s => s.services_roles[0].subServices.length)
+            .filter(s => s.services_roles[0].subServices[0].roles.length)
+
+
+            return res 
+        }
+        return []
+    }
+
     async addStatusToUser(email: string, serviceId: string, subServiceId: string, status: string){
         const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === serviceId)
         if(roles){

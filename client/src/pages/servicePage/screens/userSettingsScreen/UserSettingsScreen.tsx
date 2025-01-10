@@ -7,18 +7,29 @@ import { LoaderShow } from '../../../../components/Loader/LoaderShow.tsx'
 
 export function UserSettingsScreen(props) {
 
-  console.log('UserSettingsScreen', props)
+  console.log('UserSettingsScreen')
 
-  if(props.props.users === false){
+  const localService = () => {
+    if(props.getDataMessage === 'getServiceLocalUsers'){
+      return props.props.usersLocal
+    }
+    else if(props.getDataMessage === 'getServiceUsers'){
+      return props.props.users
+    }
+  }
+
+  if(localService() === false){
     sendToSocket(props.getDataMessage, {
                serviceId: props.user.serviceId, 
                subServiceId: props.user.subServiceId
              })
   }
+
+  
   
   const userList = () => {
-    if(props.props.users.length){
-      return props.props.users.filter(user => user.name ? user.email + ' ' + user.name : user.email.toLowerCase().includes(props.props.settingsFilter.toLowerCase())).map(user =>
+    if(localService().length){
+      return localService().filter(user => user.name ? user.email + ' ' + user.name : user.email.toLowerCase().includes(props.props.settingsFilter.toLowerCase())).map(user =>
         <Grid.Col key={user._id} span={12}>
           <Paper shadow="xl" radius="md" withBorder p="xl">
             {UserItem(props, user)}
@@ -26,7 +37,7 @@ export function UserSettingsScreen(props) {
         </Grid.Col> 
       )
     }
-    else if(!props.props.users){
+    else if(!localService()){
       return (
         <Grid.Col span={12}>
             {LoaderShow()}

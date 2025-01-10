@@ -34,6 +34,7 @@ function ServicePage() {
   const [newRole, setNewRole] = useState('')
   const [status, setStatus] = useState('')
   const [users, setUsers] = useState(false)
+  const [usersLocal, setUsersLocal] = useState(false)
   const [workTime, setWorkTime] = useState('')
   const [contact, setContact] = useState('')
   const [address, setAddress] = useState('')
@@ -67,7 +68,8 @@ function ServicePage() {
       }
       getFromSocket([
                   {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
-                  {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers}
+                  {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
+                  {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal}
               ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
       
@@ -120,7 +122,9 @@ function ServicePage() {
               role: role,
               setRole: setRole,
               subService: subService,
-              setSubService: setSubService
+              setSubService: setSubService,
+              usersLocal: usersLocal, 
+              setUsersLocal: setUsersLocal
               }
             )}
           </AppShell.Main>

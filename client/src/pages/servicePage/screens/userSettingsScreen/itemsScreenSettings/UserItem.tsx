@@ -19,6 +19,15 @@ export function UserItem(props, user) {
       return <Text c={'dimmed'}>{service.name}</Text>
     }
 
+    const localService = () => {
+      if(props.getDataMessage === 'getServiceLocalUsers'){
+        return props.service.subServices.filter(item => item.subServiceId === props.user.subServiceId)
+      }
+      else if(props.getDataMessage === 'getServiceUsers'){
+        return props.service.subServices
+      }
+    }
+
       return (
         <Table.ScrollContainer minWidth={500}>
           <Table withTableBorder withColumnBorders highlightOnHover>
@@ -32,7 +41,7 @@ export function UserItem(props, user) {
                     </Text>
                   </Center>
                 </Table.Th>
-                  {props.service.subServices.map(service => 
+                  {localService().map(service => 
                   <Table.Th key={service.subServiceId}>
                     <Center>
                       {subServStatus(service)}
@@ -53,7 +62,7 @@ export function UserItem(props, user) {
                 <Table.Td>
                   {serviceRole.role}
                 </Table.Td>
-                {props.service.subServices.map(service => 
+                {localService().map(service => 
                 <Table.Td key={service.subServiceId}>
                   <Center>
                   <Tooltip label={serviceRole.role}>
@@ -96,7 +105,7 @@ export function UserItem(props, user) {
                 <Table.Td>
                   {status}
                 </Table.Td>
-                {props.service.subServices.map(service => 
+                {localService().map(service => 
                 <Table.Td key={service.subServiceId}>
                   <Center>
                     <Tooltip label={status}> 
@@ -147,7 +156,7 @@ export function UserItem(props, user) {
                 <Table.Td>
                   {dev}
                 </Table.Td>
-                {props.service.subServices.map(service => 
+                {localService().map(service => 
                 <Table.Td key={service.subServiceId}>
                   <Center>
                   <Tooltip label={dev}> 
@@ -191,7 +200,7 @@ export function UserItem(props, user) {
         </Table.ScrollContainer>
       )
   }
-
+   
     return (
       <div>
 

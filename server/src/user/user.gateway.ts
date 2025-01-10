@@ -12,7 +12,6 @@ import { ServicesService } from 'src/service/services.service'
 import { DeleteServiceUser } from './dto/DeleteServiceUser.dto'
 import { AddDeviceToUser } from './dto/AddDeviceToUser.dto'
 import { AddStatusToUser } from './dto/AddStatusToUser.dto'
-// import { RolesByUserIdDto } from './dto/getRolesById.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 
@@ -27,6 +26,14 @@ import { AddStatusToUser } from './dto/AddStatusToUser.dto'
   @WebSocketServer() server: Server
 
   @UseGuards(JwtAuthGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('getServiceLocalUsers')
+  async getServiceLocalUsers(@MessageBody() payload: GetServiceUsersDto, @ConnectedSocket() client: Socket): Promise<void> {
+    const users = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
+    this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users)
+  }
+
+  @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('addStatusToUser')
@@ -35,6 +42,8 @@ import { AddStatusToUser } from './dto/AddStatusToUser.dto'
     await this.userSevice.addStatusToUser(payload.email, payload.serviceId, payload.subServiceId, payload.status)
     const users = await this.userSevice.getServiceUsers(payload.serviceId)
     this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
+    const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
+    this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -46,6 +55,8 @@ import { AddStatusToUser } from './dto/AddStatusToUser.dto'
     await this.userSevice.addDeviceToUser(payload.email, payload.serviceId, payload.subServiceId, payload.device)
     const users = await this.userSevice.getServiceUsers(payload.serviceId)
     this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
+    const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
+    this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -56,6 +67,8 @@ import { AddStatusToUser } from './dto/AddStatusToUser.dto'
     await this.userSevice.deleteUserFromService(payload.email, payload.serviceId)
     const users = await this.userSevice.getServiceUsers(payload.serviceId)
     this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
+    const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
+    this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -87,10 +100,12 @@ import { AddStatusToUser } from './dto/AddStatusToUser.dto'
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('addRoleToUser')
-  async addRoleToUser(@ConnectedSocket() client: Socket, @MessageBody() updateUserRoleDto: UpdateUserRoleDto): Promise<void> {
-    await this.userSevice.addRoleToUser(updateUserRoleDto.email, updateUserRoleDto.serviceId, updateUserRoleDto.role, updateUserRoleDto.subServiceId)
-    const users = await this.userSevice.getServiceUsers(updateUserRoleDto.serviceId)
-    this.server.to(client.id).emit(`getServiceUsers${updateUserRoleDto.serviceId}`, users)
+  async addRoleToUser(@ConnectedSocket() client: Socket, @MessageBody() payload: UpdateUserRoleDto): Promise<void> {
+    await this.userSevice.addRoleToUser(payload.email, payload.serviceId, payload.role, payload.subServiceId)
+    const users = await this.userSevice.getServiceUsers(payload.serviceId)
+    this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
+    const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
+    this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
   }
 
 }
