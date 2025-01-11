@@ -15,6 +15,8 @@ import { ChangeTimeSubService } from "./serviceSettingsScreen/itemsScreenSetting
 import { SeviceSettingsScreen } from "./serviceSettingsScreen/SeviceSettingsScreen.tsx";
 import { UserSettingsScreen } from "./userSettingsScreen/UserSettingsScreen.tsx";
 import { ChangeLocalServiceUser } from "./userSettingsScreen/itemsScreenSettings/ChangeLocalServiceUser.tsx";
+import { MySettingsScreen } from "./mySettingsScreen/MySettingsScreen.tsx";
+import { ChangeMyName } from "./mySettingsScreen/itemsScreenSettings/ChangeMyName.tsx";
 
 export const line = [
     // {
@@ -62,6 +64,30 @@ export const line = [
         getDataMessage: 'getServiceLocalUsers',
         items: [
             {message: 'changeLocalServiceUser', screenItem: ChangeLocalServiceUser, size: 12},
+        ]
+    },
+    {
+        name: 'changeMyUser',
+        screen: MySettingsScreen,
+        items: [
+            {
+                message: 'changeMyName', 
+                screenItem: ChangeMyName, 
+                setData: 'setUserName', 
+                newData: 'userName', 
+                data: 'name', 
+                title: 'name', 
+                res: 'newUserName'
+            },
+            {
+                message: 'changeMyName', 
+                screenItem: ChangeMyName, 
+                setData: 'setUserName', 
+                newData: 'userName', 
+                data: 'name', 
+                title: 'name', 
+                res: 'newUserName'
+            }
         ]
     }
 ]

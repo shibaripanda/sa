@@ -13,6 +13,13 @@ export class UsersService {
         private serviceMongo: ServicesService
     ) {}
 
+    async changeMyName(_id: string, newUserName: string){
+        if(newUserName){
+           return await this.userMongo.findOneAndUpdate({_id: _id}, {name: newUserName}, {returnDocument: 'after'}) 
+        }
+        return await this.userMongo.findOne({_id: _id})
+    }
+
     async getServiceLocalUsers(serviceId: string, subServiceId: string){
         const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
         if(users){

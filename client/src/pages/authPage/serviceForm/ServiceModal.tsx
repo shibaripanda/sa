@@ -29,8 +29,13 @@ console.log(props.user)
 
     useEffect(() => {
         console.log('uEf 1')
+        const upUserRole = (data: any) => {
+            console.log('setRole ----------------')
+                props.authClass.updateServiceAppUsers(data, 'roles')
+                setRoles(data)
+              }
         getFromSocket([
-            {message: 'getUserRolesByUserId', handler: setRoles}
+            {message: 'getUserRolesByUserId', handler: upUserRole}
         ])
         sendToSocket('getUserRolesByUserId', {})
     }, [])

@@ -12,10 +12,10 @@ import { ServicesService } from 'src/service/services.service'
 import { DeleteServiceUser } from './dto/DeleteServiceUser.dto'
 import { AddDeviceToUser } from './dto/AddDeviceToUser.dto'
 import { AddStatusToUser } from './dto/AddStatusToUser.dto'
+import { UpdateUserData } from './dto/UpdateUserData.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 
-// export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   export class UserGateway  {
 
   constructor(
@@ -24,6 +24,15 @@ import { AddStatusToUser } from './dto/AddStatusToUser.dto'
   ) {}
 
   @WebSocketServer() server: Server
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeMyName')
+  async changeMyName(@ConnectedSocket() client: Socket, @MessageBody() payload: UpdateUserData, @Request() req: any): Promise<void> {
+    const user = await this.userSevice.changeMyName(req.user._id.toString(), payload.newUserName)
+    this.server.to(client.id).emit(`changeMyName${payload.serviceId}`, user ? user.name : '')
+  }
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new WSValidationPipe())

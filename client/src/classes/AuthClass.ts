@@ -23,7 +23,6 @@ export class AuthClass {
         if(!sessionStorage.getItem('currentUser')) return false
          // @ts-ignore
         const user = JSON.parse(sessionStorage.getItem('currentUser'))
-        console.log(user.roles)
         user.roles = user.roles.filter(item => item.serviceId === this.getServiceId())[0].subServices.filter(item => item.subServiceId === this.getSubServiceId())[0]
         user.serviceId = this.getServiceId()
         return user
@@ -38,6 +37,7 @@ export class AuthClass {
     deleteCurrentUser(){
         sessionStorage.removeItem('currentUser')
     }
+
     deleteCurrentService(){
         sessionStorage.removeItem('serviceId')
     }
@@ -46,6 +46,15 @@ export class AuthClass {
         if(!sessionStorage.getItem('serviceAppUsers')) return []
         // @ts-ignore
         return JSON.parse(sessionStorage.getItem('serviceAppUsers'))
+    }
+
+    updateServiceAppUsers(data, field){
+        const users = this.getServiceAppUsers()
+        const user = this.getCurrentUser()
+        user[field] = data
+        users.find(item => item._id === user._id)[field] = data
+        sessionStorage.setItem('currentUser', JSON.stringify(user))
+        sessionStorage.setItem('serviceAppUsers', JSON.stringify(users))
     }
 
     async startRequest(email, leng, authCode, setDescriptionText, setUsersThisSession, usersThisSession, setAuthCode, setEmail, setClickEmailSend){

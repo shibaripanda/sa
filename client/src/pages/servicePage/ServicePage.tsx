@@ -43,6 +43,7 @@ function ServicePage() {
   const [emailForNewUser, setEmailForNewUser] = useState('')
   const [checkedAccess, setCheckedAccess] = useState<any>({})
   const [settingsFilter, setSettingsFilter] = useState('')
+  const [userName, setUserName] = useState('')
 
   useEffect(() => {
     getTexLengUserService()
@@ -66,11 +67,16 @@ function ServicePage() {
       const filterService = (data: any) => {
         setService(new ServiceClass(data))
       }
+      const upUserName = (data: any) => {
+        authClass.updateServiceAppUsers(data, 'name')
+        setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), name: data}))
+      }
       getFromSocket([
                   {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
                   {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
-                  {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal}
-              ])
+                  {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
+                  {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
+                ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
       
     }
@@ -124,7 +130,9 @@ function ServicePage() {
               subService: subService,
               setSubService: setSubService,
               usersLocal: usersLocal, 
-              setUsersLocal: setUsersLocal
+              setUsersLocal: setUsersLocal,
+              userName: userName,
+              setUserName: setUserName
               }
             )}
           </AppShell.Main>

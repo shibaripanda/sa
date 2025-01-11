@@ -136,8 +136,16 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
     }
     const modalBlock = () => {
       if(sessionStorage.getItem('currentUser')){
+        
+        return <ServiceModal 
+        authClass={props.authClass} 
+        text={props.text} 
+        leng={props.leng} 
+        opened={opened} 
+        close={close}
         // @ts-ignore
-        return <ServiceModal text={props.text} leng={props.leng} opened={opened} close={close} user={JSON.parse(sessionStorage.getItem('currentUser'))}/>
+        user={JSON.parse(sessionStorage.getItem('currentUser'))}
+        />
       }
     }
 
