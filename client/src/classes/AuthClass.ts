@@ -49,12 +49,16 @@ export class AuthClass {
     }
 
     updateServiceAppUsers(data, field){
+        console.log('start', this.getServiceAppUsers()[0].roles)
+        console.log('start', this.getCurrentUser().roles)
         const users = this.getServiceAppUsers()
         const user = this.getCurrentUser()
         user[field] = data
         users.find(item => item._id === user._id)[field] = data
         sessionStorage.setItem('currentUser', JSON.stringify(user))
         sessionStorage.setItem('serviceAppUsers', JSON.stringify(users))
+        console.log('done', this.getServiceAppUsers()[0].roles)
+        console.log('done', this.getCurrentUser().roles)
     }
 
     async startRequest(email, leng, authCode, setDescriptionText, setUsersThisSession, usersThisSession, setAuthCode, setEmail, setClickEmailSend){

@@ -17,6 +17,8 @@ import { UserSettingsScreen } from "./userSettingsScreen/UserSettingsScreen.tsx"
 import { ChangeLocalServiceUser } from "./userSettingsScreen/itemsScreenSettings/ChangeLocalServiceUser.tsx";
 import { MySettingsScreen } from "./mySettingsScreen/MySettingsScreen.tsx";
 import { ChangeMyName } from "./mySettingsScreen/itemsScreenSettings/ChangeMyName.tsx";
+import { DeleteService } from "./serviceSettingsScreen/itemsScreenSettings/DeleteService.tsx";
+import { ChangeServiceOrderDataList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceOrderDataList.tsx";
 
 export const line = [
     // {
@@ -36,8 +38,10 @@ export const line = [
             {message: 'changeNameMainService', screenItem: ChangeNameMainService}, 
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
+            {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12},
             {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12},
-            {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12}
+            {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12},
+            {message: 'deleteService', screenItem: DeleteService}
         ]
     },
     {
@@ -70,15 +74,6 @@ export const line = [
         name: 'changeMyUser',
         screen: MySettingsScreen,
         items: [
-            {
-                message: 'changeMyName', 
-                screenItem: ChangeMyName, 
-                setData: 'setUserName', 
-                newData: 'userName', 
-                data: 'name', 
-                title: 'name', 
-                res: 'newUserName'
-            },
             {
                 message: 'changeMyName', 
                 screenItem: ChangeMyName, 

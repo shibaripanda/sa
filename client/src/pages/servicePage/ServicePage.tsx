@@ -44,6 +44,7 @@ function ServicePage() {
   const [checkedAccess, setCheckedAccess] = useState<any>({})
   const [settingsFilter, setSettingsFilter] = useState('')
   const [userName, setUserName] = useState('')
+  const [deleteServiceName, setDeleteServiceName] = useState('')
 
   useEffect(() => {
     getTexLengUserService()
@@ -71,11 +72,15 @@ function ServicePage() {
         authClass.updateServiceAppUsers(data, 'name')
         setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), name: data}))
       }
+      const deleteServiceRedirect = () => {
+        navigate('/')
+      }
       getFromSocket([
                   {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
                   {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
                   {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
                   {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
+                  {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
                 ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
       
@@ -132,7 +137,9 @@ function ServicePage() {
               usersLocal: usersLocal, 
               setUsersLocal: setUsersLocal,
               userName: userName,
-              setUserName: setUserName
+              setUserName: setUserName,
+              deleteServiceName: deleteServiceName,
+              setDeleteServiceName: setDeleteServiceName
               }
             )}
           </AppShell.Main>

@@ -17,6 +17,7 @@ import { ChangeServiceRoleDto } from './dto/ChangeServiceRoleDto.dto'
 import { AddServiceRoleDto } from './dto/AddServiceRoleDto.dto'
 import { ChangeServiceLocalDto } from './dto/ChangeServiceLocalDto.dto'
 import { ChangeSubServiceDataDto } from './dto/ChangeSubServiceDataDto.dto'
+import { DeleteServiceDto } from './dto/DeleteServiceDto.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 export class ServicesGateway {
@@ -26,6 +27,15 @@ export class ServicesGateway {
     ) {}
 
   @WebSocketServer() server: Server 
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deleteService')
+  async deleteService(@MessageBody() payload: DeleteServiceDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const res = await this.serviceSevice.deleteService(payload.serviceId) 
+    if(res) client.emit(`deleteService${payload.serviceId}`, 'done')
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
@@ -141,7 +151,6 @@ export class ServicesGateway {
   @SubscribeMessage('getServiceById')
   async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto): Promise<any> {
     const service = await this.serviceSevice.getServiceById(payload.serviceId)
-    // console.log('SEND')
     this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
   }
 

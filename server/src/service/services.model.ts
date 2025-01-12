@@ -42,6 +42,11 @@ export const ServiceSchema = new mongoose.Schema({
       default: ['New', 'Ready'],
       require: true
     },
+    orderData: {
+      type: Array,
+      default: [{item: 'Name', require: true, variants: [], onlyVariants: true}],
+      require: true
+    },
     roles: {
       type: Array,
       default: [{role: 'Serviceman', access: []}, {role: 'Manager', access: []}, {role: 'Supermanager', access: []}],

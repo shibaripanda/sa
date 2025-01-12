@@ -15,6 +15,17 @@ constructor(
 ) {}
 
 
+    async deleteService(serviceId: string){
+        const resDelUsers = await this.userService.deleteServiceFromUsers(serviceId)
+        if(resDelUsers.modifiedCount > 0){
+            const resDelService = await this.serviceMongo.deleteOne({_id: serviceId})
+            if(resDelService.deletedCount === 1){
+                return true
+            }
+        }
+        return false     
+    }
+
     async changeSubServiceData(serviceId: string, subServiceId: string, data: string, field: string){
         const link = `subServices.$[el].options.${field}`
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {[link]: data}, {arrayFilters: [{'el.subServiceId': subServiceId}], returnDocument: 'after'})

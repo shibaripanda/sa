@@ -21,7 +21,7 @@ interface Service {
 export function ServiceModal(props: any) {
 
     useConnectSocket(props.user.token)
-console.log(props.user)
+
     const navigate = useNavigate()
     const [roles, setRoles] = useState<Role[]>(props.user.roles)
     const [services, setServices] = useState<Service[]>([])
@@ -30,7 +30,6 @@ console.log(props.user)
     useEffect(() => {
         console.log('uEf 1')
         const upUserRole = (data: any) => {
-            console.log('setRole ----------------')
                 props.authClass.updateServiceAppUsers(data, 'roles')
                 setRoles(data)
               }
@@ -43,19 +42,21 @@ console.log(props.user)
     useEffect(() => {
         console.log('uEf 2')
         const addService = (data: any) => {
-            const index = services.findIndex(item => item._id === data._id)
-            if(index < 0){
-                services.splice(services.length + 1, 0, data)
-                setServices([...services])
-                close()
+            if(data){
+                const index = services.findIndex(item => item._id === data._id)
+                if(index < 0){
+                    services.splice(services.length + 1, 0, data)
+                    setServices([...services])
+                    close()
+                }
             }
         }
         for(const serviceId of roles.map(item => item.serviceId)){
             getFromSocket([{message: `getServiceById${serviceId}`, handler: addService}])
             sendToSocket('getServiceById', {serviceId: serviceId})
         }
-        console.log(roles)
-        console.log(services)
+        // console.log(roles)
+        // console.log(services)
     }, [roles])
 
     const createNewService = () => {
@@ -64,13 +65,7 @@ console.log(props.user)
         setTimeout(() => sendToSocket('getUserRolesByUserId', {}), 2500)
     }
 
-    const loginOutForEnter = (status, name) => {
-        if(!status){
-            return name
-        }
-        return name + ' (' + props.text.outLoginForEnter[props.leng] + ')'
-    }
-
+  
     return (
         <>
             <Modal opened={props.opened} size="50%" title={props.user.name ? props.user.name : props.user.email}
@@ -86,20 +81,18 @@ console.log(props.user)
                         {item1.name}
                         <Grid>
                             {item1.subServices
-                            // .filter(ss => props.user.roles.map(i => i.subServices).flat().map(c => c.subServiceId).includes(ss.subServiceId))
-                            .filter(item => roles.filter(role => role.subServices.map(sId => sId.subServiceId).includes(item.subServiceId)))
+                            .filter(subServ => roles.map(role => role.subServices).flat().map(subs => subs.subServiceId).includes(subServ.subServiceId))
                             .map(item =>
                             <Grid.Col key={item.subServiceId} span={12}> 
                             <Button
-                            disabled={!props.user.roles.find(item => item.serviceId === item1._id) || !props.user.roles.find(item => item.serviceId === item1._id).subServices.map(item => item.subServiceId).includes(item.subServiceId)} 
                             onClick={() => {
                                 sessionStorage.setItem('serviceId', item1._id)
                                 sessionStorage.setItem('subServiceId', item.subServiceId)
-                                navigate('/service')
+                                setTimeout(() => navigate('/service'), 1000)
                             }} 
                             fullWidth
                             >
-                            {loginOutForEnter(!props.user.roles.find(item => item.serviceId === item1._id) || !props.user.roles.find(item => item.serviceId === item1._id).subServices.map(item => item.subServiceId).includes(item.subServiceId), item.name)}
+                            {item.name}
                             </Button>
                         </Grid.Col>
                             )}  
@@ -117,7 +110,7 @@ console.log(props.user)
                     onClick={() => {
                         createNewService()
                     }}>
-                        Создать сервис
+                    {props.text.createService[props.leng]}
                     </Button>
                 </Grid.Col>
             </Grid>

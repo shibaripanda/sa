@@ -13,6 +13,12 @@ export class UsersService {
         private serviceMongo: ServicesService
     ) {}
 
+    async deleteServiceFromUsers(serviceId: string){
+        return await this.userMongo.updateMany({services_roles: {$elemMatch: {serviceId: serviceId}}}, 
+            {$pull: {services_roles: {serviceId: serviceId}}}
+        )
+    }
+
     async changeMyName(_id: string, newUserName: string){
         if(newUserName){
            return await this.userMongo.findOneAndUpdate({_id: _id}, {name: newUserName}, {returnDocument: 'after'}) 
