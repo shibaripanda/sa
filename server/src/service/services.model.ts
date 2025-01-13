@@ -22,6 +22,15 @@ interface ServiceDocuments {
   image: {name: string, image: string}[]
 }
 
+interface OrderData {
+  item: string
+  control: boolean
+  variants: string[]
+  onlyVariants: boolean
+  multiVariants: boolean
+  hidden: boolean
+}
+
 export const ServiceSchema = new mongoose.Schema({
     name: {
       type: String, 
@@ -44,7 +53,9 @@ export const ServiceSchema = new mongoose.Schema({
     },
     orderData: {
       type: Array,
-      default: [{item: 'Name', require: true, variants: [], onlyVariants: true}],
+      default: [
+        {item: 'Name', control: true, variants: [], onlyVariants: true, multiVariants: true, hidden: false}
+      ],
       require: true
     },
     roles: {
@@ -87,7 +98,8 @@ export const ServiceSchema = new mongoose.Schema({
     subServices: SubService[]
     serviceInfo: string
     serviceDocuments: ServiceDocuments[]
-    price: Price[]
+    price: Price[],
+    orderData: OrderData[]
   }
   
   

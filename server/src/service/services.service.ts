@@ -15,6 +15,15 @@ constructor(
 ) {}
 
 
+async changeServiceOrderDataList(serviceId: string, newOrderData: string){
+    const orderData = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData
+    if(orderData.map(item => item.item).includes(newOrderData)){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {orderData: {item: newOrderData}}}, {returnDocument: 'after'})
+    }
+    const newItem =  {item: newOrderData, control: false, variants: [], onlyVariants: false, multiVariants: true, hidden: true}
+    return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {orderData: newItem}}, {returnDocument: 'after'})
+}
+
     async deleteService(serviceId: string){
         const resDelUsers = await this.userService.deleteServiceFromUsers(serviceId)
         if(resDelUsers.modifiedCount > 0){
@@ -82,6 +91,7 @@ constructor(
     async changeNameSubService(serviceId: string, subServiceId: string, newName: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {'subServices.$[el].name': newName}, {arrayFilters: [{'el.subServiceId': subServiceId}], returnDocument: 'after'})
     }
+
     async changeNameMainService(serviceId: string, newName: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {name: newName}, {returnDocument: 'after'})
     }

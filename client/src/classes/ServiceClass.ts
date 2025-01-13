@@ -4,8 +4,18 @@ interface Service {
     statuses: string[]
     devices: string[]
     roles: {role: string, access: string[]}[]
-    price: {}[] 
+    price: {}[]
+    orderData: OrderData[] 
 }
+
+interface OrderData {
+    item: string
+    control: boolean
+    variants: string[]
+    onlyVariants: boolean
+    multiVariants: boolean
+    hidden: boolean
+  }
 
 export class ServiceClass {
     
@@ -19,6 +29,7 @@ export class ServiceClass {
     subWorkTime: string
     subContact: string
     subAddress: string
+    orderData: OrderData[]
 
     constructor(data: Service){
 
@@ -36,6 +47,7 @@ export class ServiceClass {
         this.roles = data.roles
         this.price = data.price
         this.subServices = data.subServices
+        this.orderData = data.orderData
 
         // data.subServices = data.subServices.filter(item => item.subServiceId !== authClass.getSubServiceId())
 

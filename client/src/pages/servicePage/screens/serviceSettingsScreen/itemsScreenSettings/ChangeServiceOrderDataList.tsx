@@ -1,55 +1,42 @@
-import { Button, Group, Text, TextInput } from '@mantine/core'
+import { Button, Center, Grid, Group, Paper, Table, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { IconLockSquare, IconSquareX } from '@tabler/icons-react'
 import { upFirstString } from '../../../../../modules/upFirstString.ts'
+import { DragAndDrop } from './DragAndDrop/DragAndDrop.tsx'
 
 export function ChangeServiceOrderDataList(props, message) {
 
-    // console.log('ChangeServiceStatusList', props, message)
-    console.log('ChangeServiceOrderDataList')
+  console.log('ChangeServiceOrderDataList')
 
-    const iconStatus = (item) => {
-      if(!['New', 'Ready'].includes(item)){
-        return <IconSquareX color='red'/>
-      }
-      return <IconLockSquare/>
-    }
-    // payload.device[0].toUpperCase() + payload.device.slice(1, payload.device.length).toLowerCase()
+  if(!props.props.dragDrop.length){
+    console.log('rrrrrrrrrrrrrrrrrrrrrrrrrr')
+    props.props.dragDrop = props.service.orderData
+  }
+
   return (
     <div>
         <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>
-          <Group style={{marginBottom: 10}}>{props.service.statuses.map(item => 
-            <Button variant='default' key={item}
-            onClick={() => {
-              if(!['New', 'Ready'].includes(item)){
-                sendToSocket(message, {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  status: item
-                })
-              }
-            }}>
-              {iconStatus(item)}{'\u00A0'}<Text>{item}</Text>
-            </Button>)}
-          </Group>
+
+        {DragAndDrop(props, message)}
+        
         <TextInput placeholder={props.text.statusName[props.leng]}
-        value={props.props.status}
+        value={props.props.newOrderData}
         onChange={(event) => {
-          props.props.setStatus(upFirstString(event.target.value))
+          props.props.setNewOrderData(event.target.value)
         }}/>
         <Button style={{marginTop: 10}}
-        disabled={!props.props.status || props.service.statuses.includes(props.props.status)}
+        disabled={!props.props.newOrderData || props.service.orderData.map(item => item.item).includes(props.props.newOrderData)}
         onClick={() => {
           sendToSocket(message, {
             serviceId: props.user.serviceId, 
             subServiceId: props.user.subServiceId, 
-            status: props.props.status.toString()
+            newOrderData: props.props.newOrderData.toString()
           })
-          props.props.setStatus('')
+          props.props.setNewOrderData('')
         }}
         >{props.text.add[props.leng]}
         </Button>
     </div>
-  )
+    )
 }

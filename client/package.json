@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hello-pangea/dnd": "^17.0.0",
     "@mantine/core": "^7.15.1",
     "@mantine/form": "^7.15.1",
     "@mantine/hooks": "^7.15.1",

@@ -18,6 +18,7 @@ import { AddServiceRoleDto } from './dto/AddServiceRoleDto.dto'
 import { ChangeServiceLocalDto } from './dto/ChangeServiceLocalDto.dto'
 import { ChangeSubServiceDataDto } from './dto/ChangeSubServiceDataDto.dto'
 import { DeleteServiceDto } from './dto/DeleteServiceDto.dto'
+import { ChangeServiceOrderDataDto } from './dto/ChangeServiceOrderDataDto.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 export class ServicesGateway {
@@ -26,7 +27,16 @@ export class ServicesGateway {
       private serviceSevice: ServicesService
     ) {}
 
-  @WebSocketServer() server: Server 
+  @WebSocketServer() server: Server
+  
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeServiceOrderDataList')
+  async changeServiceOrderDataList(@MessageBody() payload: ChangeServiceOrderDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeServiceOrderDataList(payload.serviceId, payload.newOrderData)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)

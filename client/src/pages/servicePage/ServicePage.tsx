@@ -12,6 +12,8 @@ import { ServiceClass } from '../../classes/ServiceClass.ts'
 import { UserClass } from '../../classes/UserClass.ts'
 import { AppShell, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
+import { useListState } from '@mantine/hooks'
+
 
 function ServicePage() {
 
@@ -45,6 +47,8 @@ function ServicePage() {
   const [settingsFilter, setSettingsFilter] = useState('')
   const [userName, setUserName] = useState('')
   const [deleteServiceName, setDeleteServiceName] = useState('')
+  const [dragDrop, setDragDrop] = useListState([])
+  const [newOrderData, setNewOrderData] = useState('')
 
   useEffect(() => {
     getTexLengUserService()
@@ -139,7 +143,11 @@ function ServicePage() {
               userName: userName,
               setUserName: setUserName,
               deleteServiceName: deleteServiceName,
-              setDeleteServiceName: setDeleteServiceName
+              setDeleteServiceName: setDeleteServiceName,
+              dragDrop: dragDrop,
+              setDragDrop: setDragDrop,
+              newOrderData: newOrderData,
+              setNewOrderData: setNewOrderData
               }
             )}
           </AppShell.Main>
