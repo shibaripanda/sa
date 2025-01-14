@@ -9,9 +9,10 @@ export function ChangeServiceOrderDataList(props, message) {
 
   console.log('ChangeServiceOrderDataList')
 
-  if(!props.props.dragDrop.length){
-    console.log('rrrrrrrrrrrrrrrrrrrrrrrrrr')
-    props.props.dragDrop = props.service.orderData
+  if(props.props.dragDrop.length !== props.service.orderData.length){
+    console.log('setDragDrop.setState')
+  //   console.log(props.service.orderData)
+    props.props.setDragDrop.setState(props.service.orderData)
   }
 
   return (
@@ -34,6 +35,7 @@ export function ChangeServiceOrderDataList(props, message) {
             newOrderData: props.props.newOrderData.toString()
           })
           props.props.setNewOrderData('')
+          
         }}
         >{props.text.add[props.leng]}
         </Button>

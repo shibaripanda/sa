@@ -7,22 +7,34 @@ import { UsersService } from 'src/user/users.service'
 @Injectable()
 export class ServicesService {
 
-constructor(
-    @InjectModel('Service') 
-    private serviceMongo: Model<Service>,
-    @Inject(forwardRef(() => UsersService))
-    private userService: UsersService
-) {}
-
-
-async changeServiceOrderDataList(serviceId: string, newOrderData: string){
-    const orderData = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData
-    if(orderData.map(item => item.item).includes(newOrderData)){
-        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {orderData: {item: newOrderData}}}, {returnDocument: 'after'})
+    constructor(
+        @InjectModel('Service') 
+        private serviceMongo: Model<Service>,
+        @Inject(forwardRef(() => UsersService))
+        private userService: UsersService
+    ) {}
+// 
+    async replaceOrderDataItems(serviceId: string, index1: number, index2: number){
+        const orderData = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData
+        if(orderData.length > 1){
+          [orderData[index1], orderData[index2]] = [orderData[index2], orderData[index1]]  
+          return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {orderData: orderData}, {returnDocument: 'after'})
+        }
     }
-    const newItem =  {item: newOrderData, control: false, variants: [], onlyVariants: false, multiVariants: true, hidden: true}
-    return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {orderData: newItem}}, {returnDocument: 'after'})
-}
+
+    async orderDataEdit(serviceId: string,  item: string, data: string, newValue: string | boolean){
+        const link = `orderData.$[el].${data}`
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {[link]: newValue}, {arrayFilters: [{'el.item': item}], returnDocument: 'after'})
+    }
+
+    async changeServiceOrderDataList(serviceId: string, newOrderData: string){
+        const orderData = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData
+        if(orderData.map(item => item.item).includes(newOrderData)){
+            return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {orderData: {item: newOrderData}}}, {returnDocument: 'after'})
+        }
+        const newItem =  {item: newOrderData, control: false, variants: [], onlyVariants: false, multiVariants: true, hidden: true, saveNewVariants: true}
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {orderData: newItem}}, {returnDocument: 'after'})
+    }
 
     async deleteService(serviceId: string){
         const resDelUsers = await this.userService.deleteServiceFromUsers(serviceId)
