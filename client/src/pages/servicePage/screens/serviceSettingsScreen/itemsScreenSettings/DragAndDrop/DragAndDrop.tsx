@@ -1,19 +1,34 @@
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { IconGripVertical } from '@tabler/icons-react'
-import { Button, Center, Checkbox, Table, Text } from '@mantine/core'
+import { Accordion, Button, Center, Checkbox, Table, Text } from '@mantine/core'
 // @ts-ignore
 import classes from './DragAndDrop.module.css'
 import React from 'react'
 import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts'
 
 export function DragAndDrop(props, message) {
+
   const colorTextDisableItem = (check) => {
     if(check){
       return 'grey'
     }
   }
-console.log(props.props.dragDrop)
-    const items = props.props.dragDrop.map((item, index) => (
+  console.log(props.props.dragDrop)
+
+      // <Accordion variant="separated">
+      //   <Accordion.Item className={classes.item} value="reset-password">
+      //     <Accordion.Control>How can I reset my password?</Accordion.Control>
+      //     <Accordion.Panel>{placeholder}</Accordion.Panel>
+      //   </Accordion.Item>
+
+      //   <Accordion.Item className={classes.item} value="payment">
+      //     <Accordion.Control>What payment systems to you work with?</Accordion.Control>
+      //     <Accordion.Panel>{placeholder}</Accordion.Panel>
+      //   </Accordion.Item>
+      // </Accordion>
+
+      const items = props.props.dragDrop.map((item, index) => (
+      
         <Draggable key={item.item} index={index} draggableId={item.item}>
           {(provided) => (
             <Table.Tr className={classes.item} ref={provided.innerRef} {...provided.draggableProps}>
@@ -22,7 +37,11 @@ console.log(props.props.dragDrop)
                   <IconGripVertical size={18} stroke={1.5} />
                 </div>
               </Table.Td>
-              <Table.Td><Text c={colorTextDisableItem(item.hidden)}>{item.item}</Text></Table.Td>
+              <Table.Td>
+                <Text c={colorTextDisableItem(item.hidden)}>
+                  {item.item}
+                </Text>
+              </Table.Td>
               <Table.Td>
                 <Center>
                 <Checkbox
@@ -44,17 +63,8 @@ console.log(props.props.dragDrop)
               </Table.Td>
               <Table.Td>
                 <Center>
-                  <Button
-                    color={colorTextDisableItem(item.hidden)}
-                    onClick={() => {
-                        // sendToSocket(message, {
-                        // serviceId: props.user.serviceId, 
-                        // subServiceId: props.user.subServiceId, 
-                        // newOrderData: item.item
-                        // })
-                    }}
-                    >{props.text.variants[props.leng]}
-                  </Button>
+                {/* <Accordion.Control>
+                </Accordion.Control> */}
                 </Center>
               </Table.Td>
               <Table.Td>
@@ -149,12 +159,14 @@ console.log(props.props.dragDrop)
                     </Button>
                 </Center>
               </Table.Td>
+              {/* <Accordion.Panel>fvfvfvfv</Accordion.Panel> */}
             </Table.Tr>
           )}
         </Draggable>
       ))
     
       return (
+        
         <Table.ScrollContainer minWidth={420}>
           <DragDropContext
             onDragEnd={({ destination, source }) => {
@@ -182,16 +194,25 @@ console.log(props.props.dragDrop)
                   <Table.Th><Center>Delete</Center></Table.Th>
                 </Table.Tr>
               </Table.Thead>
+
               <Droppable droppableId="dnd-list" direction="vertical">
                 {(provided) => (
+                  // <Accordion>
                   <Table.Tbody {...provided.droppableProps} ref={provided.innerRef}>
+                    
+                    
+                    {/* {items.map((item, index) => <Accordion.Item value={index.toString()}>{item}</Accordion.Item>)} */}
                     {items}
                     {provided.placeholder}
+                    
                   </Table.Tbody>
+                  // </Accordion>
                 )}
               </Droppable>
+              
             </Table>
           </DragDropContext>
         </Table.ScrollContainer>
+        // </Accordion>
       )
     }

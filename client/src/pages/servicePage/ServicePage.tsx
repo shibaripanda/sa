@@ -12,7 +12,8 @@ import { ServiceClass } from '../../classes/ServiceClass.ts'
 import { UserClass } from '../../classes/UserClass.ts'
 import { AppShell, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
-import { useListState } from '@mantine/hooks'
+import { useDisclosure, useListState } from '@mantine/hooks'
+import { ModalListVariant } from './screens/serviceSettingsScreen/itemsScreenSettings/ListVariant/ModalListVariant.tsx'
 
 
 function ServicePage() {
@@ -28,6 +29,8 @@ function ServicePage() {
   const [service, setService] = useState<object | false>(false)
 
   const screenSize = useMatches({base: 12, sm: 12, md: 4, lg: 3})
+
+  const [opened, { close, open }] = useDisclosure(false)
 
   const [newServiceName, setNewSeviceName] = useState('')
   const [newSubServiceName, setSubNewSeviceName] = useState('')
@@ -151,6 +154,7 @@ function ServicePage() {
               }
             )}
           </AppShell.Main>
+          <ModalListVariant opened={opened} close={close} open={open} text={text} leng={leng}/>
         </AppShell>
     )
   }

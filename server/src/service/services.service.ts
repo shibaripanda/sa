@@ -13,13 +13,14 @@ export class ServicesService {
         @Inject(forwardRef(() => UsersService))
         private userService: UsersService
     ) {}
-// 
+
     async replaceOrderDataItems(serviceId: string, index1: number, index2: number){
-        const orderData = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData
-        if(orderData.length > 1){
-          [orderData[index1], orderData[index2]] = [orderData[index2], orderData[index1]]  
-          return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {orderData: orderData}, {returnDocument: 'after'})
+        const item = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData[index1]
+        if(item){
+            await this.serviceMongo.updateOne({_id: serviceId}, {$pull: {orderData: item}})
+            return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$push: {orderData: {$each: [item], $position: index2}}}, {returnDocument: 'after'})
         }
+        return await this.serviceMongo.findOne({_id: serviceId})
     }
 
     async orderDataEdit(serviceId: string,  item: string, data: string, newValue: string | boolean){
