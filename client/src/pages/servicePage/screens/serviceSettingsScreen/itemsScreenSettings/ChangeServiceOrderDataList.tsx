@@ -1,8 +1,6 @@
-import { Button, Center, Grid, Group, Paper, Table, Text, TextInput } from '@mantine/core'
+import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
-import { IconLockSquare, IconSquareX } from '@tabler/icons-react'
-import { upFirstString } from '../../../../../modules/upFirstString.ts'
 import { DragAndDrop } from './DragAndDrop/DragAndDrop.tsx'
 
 export function ChangeServiceOrderDataList(props, message) {
@@ -10,8 +8,6 @@ export function ChangeServiceOrderDataList(props, message) {
   console.log('ChangeServiceOrderDataList')
 
   if(props.props.dragDrop.length !== props.service.orderData.length){
-    console.log('setDragDrop.setState')
-  //   console.log(props.service.orderData)
     props.props.setDragDrop.setState(props.service.orderData)
   }
 

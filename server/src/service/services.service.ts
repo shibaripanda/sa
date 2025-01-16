@@ -14,6 +14,15 @@ export class ServicesService {
         private userService: UsersService
     ) {}
 
+    
+    async addOrDelListVariant(serviceId: string,  itemName: string, variant: string){
+        const orderData = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData
+        if(orderData.find(item => item.item === itemName).variants.includes(variant)){
+            return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {'orderData.$[el].variants': variant}}, {arrayFilters: [{'el.item': itemName}],returnDocument: 'after'})
+        }
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {'orderData.$[el].variants': variant}}, {arrayFilters: [{'el.item': itemName}],returnDocument: 'after'})
+    }
+
     async replaceOrderDataItems(serviceId: string, index1: number, index2: number){
         const item = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData[index1]
         if(item){

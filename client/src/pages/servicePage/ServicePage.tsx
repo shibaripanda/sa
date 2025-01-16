@@ -13,7 +13,6 @@ import { UserClass } from '../../classes/UserClass.ts'
 import { AppShell, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 import { useDisclosure, useListState } from '@mantine/hooks'
-import { ModalListVariant } from './screens/serviceSettingsScreen/itemsScreenSettings/ListVariant/ModalListVariant.tsx'
 
 
 function ServicePage() {
@@ -27,11 +26,9 @@ function ServicePage() {
   const [user, setUser] = useState<object | false>(false)
   const [activeScreen, setActiveScreen] = useState(sessionStorage.getItem('activescreen') ? Number(sessionStorage.getItem('activescreen')) : 0)
   const [service, setService] = useState<object | false>(false)
-
   const screenSize = useMatches({base: 12, sm: 12, md: 4, lg: 3})
-
   const [opened, { close, open }] = useDisclosure(false)
-
+  const [listVariantName, setListVariantName] = useState('')
   const [newServiceName, setNewSeviceName] = useState('')
   const [newSubServiceName, setSubNewSeviceName] = useState('')
   const [newSubService, setSubNewSevice] = useState('')
@@ -52,6 +49,7 @@ function ServicePage() {
   const [deleteServiceName, setDeleteServiceName] = useState('')
   const [dragDrop, setDragDrop] = useListState([])
   const [newOrderData, setNewOrderData] = useState('')
+  const [newVariant, setNewVariant] = useState('')
 
   useEffect(() => {
     getTexLengUserService()
@@ -96,7 +94,6 @@ function ServicePage() {
       navigate('/')
     }
   }
-
  
   if(text && leng && user && service){
     const screen = new ScreenLine({text, leng, user, service})
@@ -150,11 +147,17 @@ function ServicePage() {
               dragDrop: dragDrop,
               setDragDrop: setDragDrop,
               newOrderData: newOrderData,
-              setNewOrderData: setNewOrderData
+              setNewOrderData: setNewOrderData,
+              opened: opened,
+              close: close,
+              open: open,
+              listVariantName: listVariantName,
+              setListVariantName: setListVariantName,
+              newVariant: newVariant,
+              setNewVariant: setNewVariant
               }
             )}
           </AppShell.Main>
-          <ModalListVariant opened={opened} close={close} open={open} text={text} leng={leng}/>
         </AppShell>
     )
   }
