@@ -19,6 +19,7 @@ import { MySettingsScreen } from "./mySettingsScreen/MySettingsScreen.tsx";
 import { ChangeMyName } from "./mySettingsScreen/itemsScreenSettings/ChangeMyName.tsx";
 import { DeleteService } from "./serviceSettingsScreen/itemsScreenSettings/DeleteService.tsx";
 import { ChangeServiceOrderDataList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceOrderDataList.tsx";
+import { CreateOrderScreen } from "./newOrderScreen/itemsScreenSettings/CreateOrderScreen.tsx";
 
 export const line = [
     // {
@@ -26,11 +27,13 @@ export const line = [
     //     screen: OrderScreen,
     //     items: []
     // },
-    // {
-    //     name: 'createOrder',
-    //     screen: NewOrderScreen,
-    //     items: []
-    // },
+    {
+        name: 'createOrder',
+        screen: NewOrderScreen,
+        items: [
+            {message: 'createOrder', screenItem: CreateOrderScreen}, 
+        ]
+    },
     {
         name: 'serviceSettings',
         screen: SeviceSettingsScreen,

@@ -27,6 +27,7 @@ function ServicePage() {
   const [activeScreen, setActiveScreen] = useState(sessionStorage.getItem('activescreen') ? Number(sessionStorage.getItem('activescreen')) : 0)
   const [service, setService] = useState<object | false>(false)
   const screenSize = useMatches({base: 12, sm: 12, md: 4, lg: 3})
+  const screenSizeNewOrder = useMatches({base: 12, sm: 12, md: 4, lg: 4})
   const [opened, { close, open }] = useDisclosure(false)
   const [listVariantName, setListVariantName] = useState('')
   const [newServiceName, setNewSeviceName] = useState('')
@@ -50,6 +51,7 @@ function ServicePage() {
   const [dragDrop, setDragDrop] = useListState([])
   const [newOrderData, setNewOrderData] = useState('')
   const [newVariant, setNewVariant] = useState('')
+  const [newOrderRend, setNewOrderRend] = useState(Date.now())
 
   useEffect(() => {
     getTexLengUserService()
@@ -154,7 +156,10 @@ function ServicePage() {
               listVariantName: listVariantName,
               setListVariantName: setListVariantName,
               newVariant: newVariant,
-              setNewVariant: setNewVariant
+              setNewVariant: setNewVariant,
+              screenSizeNewOrder,
+              newOrderRend: newOrderRend,
+              setNewOrderRend: setNewOrderRend
               }
             )}
           </AppShell.Main>

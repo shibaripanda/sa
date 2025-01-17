@@ -1,33 +1,33 @@
+import { Grid, Group, Paper, TextInput } from '@mantine/core'
+import { IconBackspace } from '@tabler/icons-react'
 import React from 'react'
 
 export function NewOrderScreen(props) {
 
     console.log('NewOrderScreen')
 
-    console.log(props)
-
-  
-//   const mainItems = mainLinks.map((item, index) => (
-//     <Anchor<'a'>
-//       href={item.link}
-//       key={item.label}
-//       className={classes.mainLink}
-//       data-active={index === props.activeScreen || undefined}
-//       onClick={(event) => {
-//         event.preventDefault()
-//         props.setActiveScreen(index)
-//         if(opened){
-//             toggle()
-//             close()
-//         }
-//       }}
-//     >
-//       {item.label}
-//     </Anchor>
-//   ))
-
-
-  return (
-    <>NewOrderScreen</>
-  )
+    return (
+      <>
+        {/* <div style={{margin: 15}}> */}
+          {/* <Group gap={0} justify="center">
+            <TextInput inputSize={'45'} rightSection={<IconBackspace onClick={() => props.props.setSettingsFilter('')} stroke={2}/>}
+            value={props.props.settingsFilter}
+            placeholder='filter'
+            onChange={(event) => {
+              props.props.setSettingsFilter(event.target.value)
+            }}/>
+          </Group> */}
+        {/* </div> */}
+        <div style={{margin: 15}}>
+          <Grid grow align="stretch">
+            {props.items.map((item, index) => 
+            <Grid.Col key={item.message + index} span={item.size ? item.size : props.props.screenSize}>
+              <Paper shadow="xl" radius="md" withBorder p="xl">
+                {item.screenItem(props, item.message)}
+              </Paper>
+            </Grid.Col>)}
+          </Grid>
+        </div>
+      </>
+    )
 }
