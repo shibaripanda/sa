@@ -1,12 +1,32 @@
 import { Button, Grid, Group, Select, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
+import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 
 export function CreateOrderScreen(props, message) {
 
   console.log('CreateOrderScreen')
 
   const activData = props.service.orderData.filter(item => !item.hidden)
+
+
+
+  const selectInput = (item) => {
+    return (
+            <Select
+              label={item.item}
+              withAsterisk={item.control}
+              value={sessionStorage.getItem(`docInput_${item.item}`) ? sessionStorage.getItem(`docInput_${item.item}`) : ''}
+              placeholder={item.item}
+              data={item.variants}
+              // onChange={(event) => {
+              //   sessionStorage.setItem(`docInput_${item.item}`, event.target.value)
+              //   props.props.setNewOrderRend(Date.now())
+              // }}
+              onChange={(_value, option) => sessionStorage.setItem(`docInput_${item.item}`, option)}
+            />
+          )
+  }
 
     return (
       <div>
@@ -15,7 +35,9 @@ export function CreateOrderScreen(props, message) {
           <Grid>
             {activData.map(item => 
             <Grid.Col key={item.item} span={props.props.screenSizeNewOrder}>
-              <TextInput placeholder={item.item}
+              <MultSelectCreate item={item}/>
+              {/* {selectInput(item)} */}
+              {/* <TextInput placeholder={item.item}
                 withAsterisk={item.control}
                 label={item.item}
                 // @ts-ignore
@@ -24,7 +46,7 @@ export function CreateOrderScreen(props, message) {
                   sessionStorage.setItem(`docInput_${item.item}`, event.target.value)
                   props.props.setNewOrderRend(Date.now())
                 }}
-                />
+                /> */}
             </Grid.Col>)}
           </Grid>
 
