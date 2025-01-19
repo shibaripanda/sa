@@ -1,7 +1,7 @@
 import { ServiceClass } from "../../../classes/ServiceClass.ts";
 import { UserClass } from "../../../classes/UserClass.ts";
 import { NewOrderScreen } from "./newOrderScreen/NewOrderScreen.tsx";
-import { OrderScreen } from "./ordersScreen/OrderScreen.tsx";
+// import { OrderScreen } from "./ordersScreen/OrderScreen.tsx";
 import { ChangeAddressSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeAddressSubService.tsx";
 import { ChangeContactSubService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeContactSubService.tsx";
 import { ChangeLocalService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeLocalService.tsx";

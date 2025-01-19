@@ -1,7 +1,8 @@
-import { Button, Grid, Group, Select, Text, TextInput } from '@mantine/core'
+import { Button, Grid, Group, Text } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
+import { SelectField } from './ElementsInput/SelectField.tsx'
 
 export function CreateOrderScreen(props, message) {
 
@@ -10,23 +11,17 @@ export function CreateOrderScreen(props, message) {
   const activData = props.service.orderData.filter(item => !item.hidden)
 
 
+    const fieldCheck = (item) => {
+      if(item.onlyVariants && !item.multiVariants){
+        return <SelectField props={{...props, field: item}}/>
+      }
+      else if(item){
+        return <MultSelectCreate props={{...props, field: item}}/>
+      }
+      else{
 
-  const selectInput = (item) => {
-    return (
-            <Select
-              label={item.item}
-              withAsterisk={item.control}
-              value={sessionStorage.getItem(`docInput_${item.item}`) ? sessionStorage.getItem(`docInput_${item.item}`) : ''}
-              placeholder={item.item}
-              data={item.variants}
-              // onChange={(event) => {
-              //   sessionStorage.setItem(`docInput_${item.item}`, event.target.value)
-              //   props.props.setNewOrderRend(Date.now())
-              // }}
-              onChange={(_value, option) => sessionStorage.setItem(`docInput_${item.item}`, option)}
-            />
-          )
-  }
+      }
+    }
 
     return (
       <div>
@@ -35,34 +30,10 @@ export function CreateOrderScreen(props, message) {
           <Grid>
             {activData.map(item => 
             <Grid.Col key={item.item} span={props.props.screenSizeNewOrder}>
-              <MultSelectCreate item={item}/>
-              {/* {selectInput(item)} */}
-              {/* <TextInput placeholder={item.item}
-                withAsterisk={item.control}
-                label={item.item}
-                // @ts-ignore
-                value={sessionStorage.getItem(`docInput_${item.item}`) ? sessionStorage.getItem(`docInput_${item.item}`) : ''}
-                onChange={(event) => {
-                  sessionStorage.setItem(`docInput_${item.item}`, event.target.value)
-                  props.props.setNewOrderRend(Date.now())
-                }}
-                /> */}
+              {fieldCheck(item)}
             </Grid.Col>)}
           </Grid>
 
-          {/* <Group grow>
-            <TextInput placeholder={'email'}
-          value={props.props.emailForNewUser}
-          onChange={(event) => {
-            props.props.setEmailForNewUser(event.target.value.toLowerCase())
-          }}
-          />
-          <Select placeholder={'role'}
-          value={props.props.role}
-          onChange={props.props.setRole}
-          data={props.service.roles.map(item => item.role)}
-          />
-          </Group> */}
           <Group grow style={{marginTop: '3vmax'}}>
             <Button 
               disabled={false}

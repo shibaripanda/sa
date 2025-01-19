@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { CheckIcon, Combobox, Group, Pill, PillsInput, useCombobox } from '@mantine/core'
 import React from 'react'
+import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts';
 
 
 export function MultSelectCreate(props) {
+  console.log(props.props.field)
     
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -11,8 +13,9 @@ export function MultSelectCreate(props) {
   })
 
   const [search, setSearch] = useState('');
-  const [data, setData] = useState(props.item.variants);
-  const [value, setValue] = useState<string[]>([]);
+  const [data, setData] = useState(props.props.field.variants)
+  // @ts-ignore
+  const [value, setValue] = useState<string[]>(sessionStorage.getItem(`docInput_${props.props.field.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${props.props.field.item}`)) : [])
 
   const exactOptionMatch = data.some((item) => item === search)
 
@@ -21,17 +24,32 @@ export function MultSelectCreate(props) {
 
     if(val === '$create'){
       setData((current) => [...current, search])
+      if(props.props.field.saveNewVariants){
+        sendToSocket('addOrDelListVariant', {
+                    serviceId: props.props.user.serviceId, 
+                    subServiceId: props.props.user.subServiceId, 
+                    item: props.props.field.item,
+                    variant: search
+                    })
+                  }
       setValue((current) => [...current, search])
+      sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([...value, search]))
+      console.log('add+')
     }
     else{
       setValue((current) =>
         current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
       )
+      sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify(value.includes(val) ? value.filter((v) => v !== val) : [...value, val]))
+      console.log('add')
     }
+
   }
 
   const handleValueRemove = (val: string) => {
     setValue((current) => current.filter((v) => v !== val))
+    sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify(value.filter((v) => v !== val)))
+    console.log('remove')
   }
 
   const values = value.map((item) => (
@@ -54,7 +72,7 @@ export function MultSelectCreate(props) {
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
-        <PillsInput label={props.item.item} onClick={() => combobox.openDropdown()}>
+        <PillsInput label={props.props.field.item} onClick={() => combobox.openDropdown()}>
           <Pill.Group>
             {values}
 
@@ -64,7 +82,7 @@ export function MultSelectCreate(props) {
                 onFocus={() => combobox.openDropdown()}
                 onBlur={() => combobox.closeDropdown()}
                 value={search}
-                placeholder={props.item.item}
+                placeholder={props.props.field.item}
                 onChange={(event) => {
                   combobox.updateSelectedOptionIndex();
                   setSearch(event.currentTarget.value);
@@ -86,7 +104,7 @@ export function MultSelectCreate(props) {
           {options}
 
           {!exactOptionMatch && search.trim().length > 0 && (
-            <Combobox.Option value="$create">+ Create {search}</Combobox.Option>
+            <Combobox.Option value="$create">+ {search}</Combobox.Option>
           )}
 
           {exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
