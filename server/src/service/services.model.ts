@@ -30,6 +30,7 @@ interface OrderData {
   multiVariants: boolean
   hidden: boolean
   saveNewVariants: boolean
+  variant: boolean
 }
 
 export const ServiceSchema = new mongoose.Schema({
@@ -55,7 +56,7 @@ export const ServiceSchema = new mongoose.Schema({
     orderData: {
       type: Array,
       default: [
-        {item: 'Name', control: true, variants: [], onlyVariants: true, multiVariants: true, hidden: false, saveNewVariants: true}
+        {item: 'Device', control: true, variant: false, variants: [], saveNewVariants: true, onlyVariants: true, multiVariants: true, hidden: false, hold: true}
       ],
       require: true
     },

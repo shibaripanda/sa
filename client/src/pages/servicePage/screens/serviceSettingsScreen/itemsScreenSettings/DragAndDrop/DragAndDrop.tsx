@@ -1,6 +1,6 @@
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
-import { IconGripVertical } from '@tabler/icons-react'
-import { Button, Center, Checkbox, Table, Text } from '@mantine/core'
+import { IconCheck, IconGripVertical, IconX } from '@tabler/icons-react'
+import { Button, Center, Checkbox, Group, Switch, Table, Text } from '@mantine/core'
 // @ts-ignore
 import classes from './DragAndDrop.module.css'
 import React from 'react'
@@ -15,6 +15,24 @@ export function DragAndDrop(props, message) {
     }
   }
 
+  const listBut = (item) => {
+    console.log(item.variant)
+    if(item.variant){
+      return (
+            <Button
+              variant='default'
+              disabled={item.hidden}
+              size='xs'
+              onClick={() => {
+                props.props.setListVariantName(item.item)
+                props.props.open()
+              }}>
+                List
+            </Button>
+      )
+    }
+  }
+
   const items = props.props.dragDrop.map((item, index) => (
     <Draggable key={item.item} index={index} draggableId={item.item}>
       {(provided) => (
@@ -23,6 +41,30 @@ export function DragAndDrop(props, message) {
               <div className={classes.dragHandle} {...provided.dragHandleProps}>
                 <IconGripVertical size={18} stroke={1.5} />
               </div>
+            </Table.Td>
+            <Table.Td>
+                <Switch
+                checked={!item.hidden}
+                color='green'
+                onChange={() => {
+                  sendToSocket('orderDataEdit', {
+                    serviceId: props.user.serviceId, 
+                    subServiceId: props.user.subServiceId,
+                    item: item.item, 
+                    data: 'hidden',
+                    newValue: !item.hidden
+                    })
+                    props.props.setDragDrop.setItem(index, {...item, hidden: !item.hidden})
+                  }
+                }
+                thumbIcon={
+                  !item.hidden ? (
+                    <IconCheck size={12} color="var(--mantine-color-teal-6)" stroke={3} />
+                  ) : (
+                    <IconX size={12} color="var(--mantine-color-red-6)" stroke={3} />
+                  )
+                }
+                />
             </Table.Td>
             <Table.Td>
               <Text c={colorTextDisableItem(item.hidden)}>
@@ -50,39 +92,39 @@ export function DragAndDrop(props, message) {
             </Table.Td>
             <Table.Td>
               <Center>
-                <Button
-                onClick={() => {
-                  props.props.setListVariantName(item.item)
-                  props.props.open()
-                }}>
-                  List
-                </Button>
-              </Center>
-            </Table.Td>
-            <Table.Td>
-              <Center>
-              <Checkbox 
-                  checked={item.saveNewVariants}
-                  disabled={item.hidden}
-                  onChange={() => {
-                    sendToSocket('orderDataEdit', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      item: item.item, 
-                      data: 'saveNewVariants',
-                      newValue: !item.saveNewVariants
-                      })
-                      props.props.setDragDrop.setItem(index, {...item, saveNewVariants: !item.saveNewVariants})
+                <Group>
+                  <Switch
+                    checked={item.variant}
+                    color='green'
+                    disabled={item.hidden}
+                    onChange={() => {
+                      sendToSocket('orderDataEdit', {
+                        serviceId: props.user.serviceId, 
+                        subServiceId: props.user.subServiceId,
+                        item: item.item, 
+                        data: 'variant',
+                        newValue: !item.variant
+                        })
+                        props.props.setDragDrop.setItem(index, {...item, variant: !item.variant})
+                      }
                     }
-                  }
+                    thumbIcon={
+                      item.variant ? (
+                        <IconCheck size={12} color="var(--mantine-color-teal-6)" stroke={3} />
+                      ) : (
+                        <IconX size={12} color="var(--mantine-color-red-6)" stroke={3} />
+                      )
+                    }
                   />
+                  {listBut(item)}
+                </Group>
               </Center>
-            </Table.Td>
+            </Table.Td>       
             <Table.Td>
               <Center>
               <Checkbox 
                   checked={item.onlyVariants}
-                  disabled={item.hidden}
+                  disabled={!item.variant || item.hidden}
                   onChange={() => {
                     sendToSocket('orderDataEdit', {
                       serviceId: props.user.serviceId, 
@@ -101,7 +143,7 @@ export function DragAndDrop(props, message) {
               <Center>
                 <Checkbox
                   checked={item.multiVariants}
-                  disabled={item.hidden}
+                  disabled={!item.variant || item.hidden}
                   onChange={() => {
                     sendToSocket('orderDataEdit', {
                       serviceId: props.user.serviceId, 
@@ -118,27 +160,29 @@ export function DragAndDrop(props, message) {
             </Table.Td>
             <Table.Td>
               <Center>
-                <Checkbox
-                checked={item.hidden}
-                color='red'
-                onChange={() => {
-                  sendToSocket('orderDataEdit', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId,
-                    item: item.item, 
-                    data: 'hidden',
-                    newValue: !item.hidden
-                    })
-                    props.props.setDragDrop.setItem(index, {...item, hidden: !item.hidden})
+              <Checkbox 
+                  checked={item.saveNewVariants}
+                  disabled={!item.variant || item.hidden}
+                  onChange={() => {
+                    sendToSocket('orderDataEdit', {
+                      serviceId: props.user.serviceId, 
+                      subServiceId: props.user.subServiceId,
+                      item: item.item, 
+                      data: 'saveNewVariants',
+                      newValue: !item.saveNewVariants
+                      })
+                      props.props.setDragDrop.setItem(index, {...item, saveNewVariants: !item.saveNewVariants})
+                    }
                   }
-                }
-                />
+                  />
               </Center>
             </Table.Td>
             <Table.Td>
             <Center>
                 <Button
-                    color='red'
+                    variant='default'
+                    size='xs'
+                    c='red'
                     onClick={() => {
                         sendToSocket(message, {
                         serviceId: props.user.serviceId, 
@@ -176,14 +220,17 @@ export function DragAndDrop(props, message) {
             <Table.Thead>
               <Table.Tr>
                 <Table.Th/>
+                <Table.Th/>
                 <Table.Th>Name</Table.Th>
+                
                 <Table.Th><Center>Control</Center></Table.Th>
                 <Table.Th><Center>Variants</Center></Table.Th>
-                <Table.Th><Center>SaveNewVariants</Center></Table.Th>
+                
                 <Table.Th><Center>OnlyVariants</Center></Table.Th>
                 <Table.Th><Center>MultiVariants</Center></Table.Th>
-                <Table.Th><Center>Hide</Center></Table.Th>
-                <Table.Th><Center>Delete</Center></Table.Th>
+                <Table.Th><Center>SaveNewVariants</Center></Table.Th>
+                
+                <Table.Th><Center>{props.text.delete[props.leng]}</Center></Table.Th>
               </Table.Tr>
             </Table.Thead>
 

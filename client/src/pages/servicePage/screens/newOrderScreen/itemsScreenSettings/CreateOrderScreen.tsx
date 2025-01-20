@@ -3,6 +3,7 @@ import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
+import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
 
 export function CreateOrderScreen(props, message) {
 
@@ -12,15 +13,21 @@ export function CreateOrderScreen(props, message) {
 
 
     const fieldCheck = (item) => {
-      if(item.onlyVariants && !item.multiVariants){
-        return <SelectField props={{...props, field: item}}/>
+      if(!item.variant){
+        return  <HandTextInput props={{...props, field: item}}/>
       }
-      else if(item){
-        return <MultSelectCreate props={{...props, field: item}}/>
-      }
-      else{
+      else if(item.variant){
+        if(item.onlyVariants){
+          return <SelectField props={{...props, field: item}}/>
+        }
 
       }
+      // else if(item){
+      //   return <MultSelectCreate props={{...props, field: item}}/>
+      // }
+      // else{
+      //   return <SelectField props={{...props, field: item}}/> 
+      // }
     }
 
     return (

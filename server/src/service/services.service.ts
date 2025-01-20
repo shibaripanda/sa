@@ -42,7 +42,7 @@ export class ServicesService {
         if(orderData.map(item => item.item).includes(newOrderData)){
             return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {orderData: {item: newOrderData}}}, {returnDocument: 'after'})
         }
-        const newItem =  {item: newOrderData, control: false, variants: [], onlyVariants: false, multiVariants: true, hidden: true, saveNewVariants: true}
+        const newItem =  {item: newOrderData, control: false, variants: [], onlyVariants: false, multiVariants: false, hidden: true, saveNewVariants: false}
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {orderData: newItem}}, {returnDocument: 'after'})
     }
 
