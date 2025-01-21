@@ -4,7 +4,7 @@ import React from 'react'
 import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts';
 
 
-export function MultSelectCreate(props) {
+export function MultSelect(props) {
   // console.log(props.props)
   console.log(props.props.field)
   console.log(props.props.props.newOrderRend)
@@ -105,9 +105,9 @@ export function MultSelectCreate(props) {
         <Combobox.Options>
           {options}
 
-          {!exactOptionMatch && search.trim().length > 0 && (
+          {/* {!exactOptionMatch && search.trim().length > 0 && (
             <Combobox.Option value="$create">+ {search}</Combobox.Option>
-          )}
+          )} */}
 
           {exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
             <Combobox.Empty>Nothing found</Combobox.Empty>

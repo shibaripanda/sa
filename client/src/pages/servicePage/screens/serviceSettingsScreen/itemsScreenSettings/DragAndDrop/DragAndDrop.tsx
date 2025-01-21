@@ -162,7 +162,7 @@ export function DragAndDrop(props, message) {
               <Center>
               <Checkbox 
                   checked={item.saveNewVariants}
-                  disabled={!item.variant || item.hidden}
+                  disabled={!item.variant || item.hidden || item.onlyVariants}
                   onChange={() => {
                     sendToSocket('orderDataEdit', {
                       serviceId: props.user.serviceId, 

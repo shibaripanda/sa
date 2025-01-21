@@ -1,9 +1,10 @@
 import { Button, Grid, Group, Text } from '@mantine/core'
-import React from 'react'
+import React, { useState } from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
 import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
+import { MultSelect } from './ElementsInput/MultSelect.tsx'
 
 export function CreateOrderScreen(props, message) {
 
@@ -11,23 +12,27 @@ export function CreateOrderScreen(props, message) {
 
   const activData = props.service.orderData.filter(item => !item.hidden)
 
+  // props.props.orderData = activData.map(item => ({[item.item]: ''}))
 
     const fieldCheck = (item) => {
       if(!item.variant){
         return  <HandTextInput props={{...props, field: item}}/>
       }
-      else if(item.variant){
-        if(item.onlyVariants){
-          return <SelectField props={{...props, field: item}}/>
-        }
 
+      if(item.onlyVariants){
+        if(item.multiVariants){
+          return <MultSelect props={{...props, field: item}}/>
+        }
+        return <SelectField props={{...props, field: item}}/>
       }
-      // else if(item){
-      //   return <MultSelectCreate props={{...props, field: item}}/>
-      // }
-      // else{
-      //   return <SelectField props={{...props, field: item}}/> 
-      // }
+
+      return <MultSelectCreate props={{...props, field: item}}/>
+    }
+
+    for(const i of activData){
+      // console.log(i.item)
+      // sessionStorage.removeItem(`docInput_${i.item}`)
+      console.log(i.item, sessionStorage.getItem(`docInput_${i.item}`))
     }
 
     return (
@@ -47,8 +52,8 @@ export function CreateOrderScreen(props, message) {
               onClick={() => {
                 for(const i of activData.map(item => item.item)){
                   sessionStorage.removeItem(`docInput_${i}`)
-                  props.props.setNewOrderRend(Date.now())
                 }
+                props.props.setNewOrderRend(Date.now())
               }}
               >Clear
             </Button>

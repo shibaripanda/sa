@@ -1,25 +1,21 @@
 import { TextInput} from '@mantine/core'
-import React, { useState } from 'react'
+import React from 'react'
 
 
 export function HandTextInput(props) {
   console.log(props.props.field)
-
-  const [data, setData] = useState(sessionStorage.getItem(`docInput_${props.props.field.item}`) ? sessionStorage.getItem(`docInput_${props.props.field.item}`) : '')
     
     return (
             <TextInput
               label={props.props.field.item}
               withAsterisk={props.props.field.control}
-              value={data}
+              // @ts-ignore
+              value={sessionStorage.getItem(`docInput_${props.props.field.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${props.props.field.item}`))[0] : ''}
               placeholder={props.props.field.item}
-              data={props.props.field.variants}
               onChange={(event) => {
-                setData(event.target.value)
-                sessionStorage.setItem(`docInput_${props.props.field.item}`, event.target.value ? event.target.value : '')
-                // props.props.setNewOrderRend(Date.now())
+                sessionStorage.setItem(`docInput_${props.props.field.item}`, event.target.value ? JSON.stringify([event.target.value]) : JSON.stringify(['']))
+                props.props.props.setNewOrderRend(Date.now())
               }}
-              // onChange={(_value, option) => sessionStorage.setItem(`docInput_${props.props.field.item}`, option)}
             />
           )
 }

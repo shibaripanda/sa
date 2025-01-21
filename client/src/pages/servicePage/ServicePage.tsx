@@ -52,6 +52,7 @@ function ServicePage() {
   const [newOrderData, setNewOrderData] = useState('')
   const [newVariant, setNewVariant] = useState('')
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
+  const [orderData, setOrderData] = useState([])
 
   useEffect(() => {
     getTexLengUserService()
@@ -159,7 +160,9 @@ function ServicePage() {
               setNewVariant: setNewVariant,
               screenSizeNewOrder,
               newOrderRend: newOrderRend,
-              setNewOrderRend: setNewOrderRend
+              setNewOrderRend: setNewOrderRend,
+              orderData: orderData,
+              setOrderData: setOrderData
               }
             )}
           </AppShell.Main>
