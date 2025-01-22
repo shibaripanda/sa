@@ -23,29 +23,11 @@ export function MultSelect(props) {
 
   const handleValueSelect = (val: string) => {
     setSearch('')
-
-    if(val === '$create'){
-      setData((current) => [...current, search])
-      if(props.props.field.saveNewVariants){
-        sendToSocket('addOrDelListVariant', {
-                    serviceId: props.props.user.serviceId, 
-                    subServiceId: props.props.user.subServiceId, 
-                    item: props.props.field.item,
-                    variant: search
-                    })
-                  }
-      setValue((current) => [...current, search])
-      sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([...value, search]))
-      console.log('add+')
-    }
-    else{
-      setValue((current) =>
-        current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
-      )
-      sessionStorage.setItem(`docInput_${props.props.field.item}`, value.includes(val) ? JSON.stringify(value.filter((v) => v !== val)) : JSON.stringify([...value, val]))
-      console.log('add')
-    }
-
+    setValue((current) =>
+      current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
+    )
+    sessionStorage.setItem(`docInput_${props.props.field.item}`, value.includes(val) ? JSON.stringify(value.filter((v) => v !== val)) : JSON.stringify([...value, val]))
+    console.log('add')
   }
 
   const handleValueRemove = (val: string) => {
@@ -60,23 +42,63 @@ export function MultSelect(props) {
     </Pill>
   ))
 
-  const options = data
-    .filter((item) => item.toLowerCase().includes(search.trim().toLowerCase()))
-    .map((item) => (
-      <Combobox.Option value={item} key={item} active={value.includes(item)}>
-        <Group gap="sm">
-          {value.includes(item) ? <CheckIcon size={12} /> : null}
-          <span>{item}</span>
-        </Group>
-      </Combobox.Option>
-    ))
+  // const options = data
+  //   .filter((item) => item.toLowerCase().includes(search.trim().toLowerCase()))
+  //   .map((item) => (
+  //     <Combobox.Option value={item} key={item} active={value.includes(item)}>
+  //       <Group gap="sm">
+  //         {value.includes(item) ? <CheckIcon size={12} /> : null}
+  //         <span>{item}</span>
+  //       </Group>
+  //     </Combobox.Option>
+  //   ))
+
+    const options = () => {
+      console.log('option')
+      if(!values.length){
+        return data.filter((item) => item.toLowerCase().includes(search.trim().toLowerCase()))
+        .map((item) => (
+          <Combobox.Option value={item} key={item} active={false}>
+            <Group gap="sm">
+              {value.includes(item) ? <CheckIcon size={12} /> : null}
+              <span>{item}</span>
+            </Group>
+          </Combobox.Option>
+        ))
+      }
+      return data.filter((item) => item.toLowerCase().includes(search.trim().toLowerCase()))
+      .map((item) => (
+        <Combobox.Option value={item} key={item} active={value.includes(item)}>
+          <Group gap="sm">
+            {value.includes(item) ? <CheckIcon size={12} /> : null}
+            <span>{item}</span>
+          </Group>
+        </Combobox.Option>
+      ))
+    }
+
+
+  const deleteData = () => {
+    if(!sessionStorage.getItem(`docInput_${props.props.field.item}`)){
+      values.splice(0, value.length)
+      console.log('values', values)
+      console.log('search', search)
+      // console.log('option', options)
+      return values
+    }
+    return values
+  }
+
+
+  console.log(options().map(item => item.props.active))
 
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
         <PillsInput label={props.props.field.item} onClick={() => combobox.openDropdown()}>
           <Pill.Group>
-            {values}
+            {deleteData()}
+            {/* {values} */}
 
             <Combobox.EventsTarget>
               <PillsInput.Field
@@ -103,15 +125,16 @@ export function MultSelect(props) {
 
       <Combobox.Dropdown>
         <Combobox.Options>
-          {options}
+          {/* {deleteDataOptions()} */}
+          {options()}
 
           {/* {!exactOptionMatch && search.trim().length > 0 && (
             <Combobox.Option value="$create">+ {search}</Combobox.Option>
           )} */}
 
-          {exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
+          {/* {exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
             <Combobox.Empty>Nothing found</Combobox.Empty>
-          )}
+          )} */}
         </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>
