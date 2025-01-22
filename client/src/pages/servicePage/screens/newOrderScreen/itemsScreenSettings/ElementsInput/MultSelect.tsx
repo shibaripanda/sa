@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { CheckIcon, Combobox, Group, Pill, PillsInput, useCombobox } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts';
 
 
 export function MultSelect(props) {
-  // console.log(props.props)
   console.log(props.props.field)
-  console.log(props.props.props.newOrderRend)
+  console.log(sessionStorage.getItem(`docInput_${props.props.field.item}`))
     
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -15,11 +13,9 @@ export function MultSelect(props) {
   })
 
   const [search, setSearch] = useState('');
-  const [data, setData] = useState(props.props.field.variants)
+  const [data] = useState(props.props.field.variants)
   // @ts-ignore
   const [value, setValue] = useState<string[]>(sessionStorage.getItem(`docInput_${props.props.field.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${props.props.field.item}`)) : [])
-
-  const exactOptionMatch = data.some((item) => item === search)
 
   const handleValueSelect = (val: string) => {
     setSearch('')
@@ -42,63 +38,35 @@ export function MultSelect(props) {
     </Pill>
   ))
 
-  // const options = data
-  //   .filter((item) => item.toLowerCase().includes(search.trim().toLowerCase()))
-  //   .map((item) => (
-  //     <Combobox.Option value={item} key={item} active={value.includes(item)}>
-  //       <Group gap="sm">
-  //         {value.includes(item) ? <CheckIcon size={12} /> : null}
-  //         <span>{item}</span>
-  //       </Group>
-  //     </Combobox.Option>
-  //   ))
+  const options = data
+    .filter((item) => item.toLowerCase().includes(search.trim().toLowerCase()))
+    .map((item) => (
+      <Combobox.Option value={item} key={item} active={value.includes(item)}>
+        <Group gap="sm">
+          {value.includes(item) ? <CheckIcon size={12} /> : null}
+          <span>{item}</span>
+        </Group>
+      </Combobox.Option>
+    ))
 
-    const options = () => {
-      console.log('option')
-      if(!values.length){
-        return data.filter((item) => item.toLowerCase().includes(search.trim().toLowerCase()))
-        .map((item) => (
-          <Combobox.Option value={item} key={item} active={false}>
-            <Group gap="sm">
-              {value.includes(item) ? <CheckIcon size={12} /> : null}
-              <span>{item}</span>
-            </Group>
-          </Combobox.Option>
-        ))
-      }
-      return data.filter((item) => item.toLowerCase().includes(search.trim().toLowerCase()))
-      .map((item) => (
-        <Combobox.Option value={item} key={item} active={value.includes(item)}>
-          <Group gap="sm">
-            {value.includes(item) ? <CheckIcon size={12} /> : null}
-            <span>{item}</span>
-          </Group>
-        </Combobox.Option>
-      ))
-    }
-
-
-  const deleteData = () => {
+   
+  const currentValue = () => {
     if(!sessionStorage.getItem(`docInput_${props.props.field.item}`)){
+      console.log('empty')
       values.splice(0, value.length)
-      console.log('values', values)
-      console.log('search', search)
-      // console.log('option', options)
-      return values
+      for(const i of data){
+        handleValueRemove(i)
+      }
     }
-    return values
   }
 
-
-  console.log(options().map(item => item.props.active))
-
+  currentValue()
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
         <PillsInput label={props.props.field.item} onClick={() => combobox.openDropdown()}>
           <Pill.Group>
-            {deleteData()}
-            {/* {values} */}
+            {values}
 
             <Combobox.EventsTarget>
               <PillsInput.Field
@@ -125,16 +93,7 @@ export function MultSelect(props) {
 
       <Combobox.Dropdown>
         <Combobox.Options>
-          {/* {deleteDataOptions()} */}
-          {options()}
-
-          {/* {!exactOptionMatch && search.trim().length > 0 && (
-            <Combobox.Option value="$create">+ {search}</Combobox.Option>
-          )} */}
-
-          {/* {exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
-            <Combobox.Empty>Nothing found</Combobox.Empty>
-          )} */}
+          {options}
         </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>

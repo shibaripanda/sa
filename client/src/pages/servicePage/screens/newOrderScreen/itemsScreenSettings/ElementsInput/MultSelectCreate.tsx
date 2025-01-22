@@ -5,9 +5,8 @@ import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts'
 
 
 export function MultSelectCreate(props) {
-  // console.log(props.props)
   console.log(props.props.field)
-  console.log(props.props.props.newOrderRend)
+  console.log(sessionStorage.getItem(`docInput_${props.props.field.item}`))
     
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -70,6 +69,17 @@ export function MultSelectCreate(props) {
         </Group>
       </Combobox.Option>
     ))
+
+    const currentValue = () => {
+      if(!sessionStorage.getItem(`docInput_${props.props.field.item}`)){
+        values.splice(0, value.length)
+        for(const i of data){
+          handleValueRemove(i)
+        }
+      }
+    }
+  
+    currentValue()
 
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
