@@ -5,7 +5,6 @@ import React from 'react'
 
 export function MultSelect(props) {
   console.log(props.props.field)
-  console.log(sessionStorage.getItem(`docInput_${props.props.field.item}`))
     
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -23,13 +22,16 @@ export function MultSelect(props) {
       current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
     )
     sessionStorage.setItem(`docInput_${props.props.field.item}`, value.includes(val) ? JSON.stringify(value.filter((v) => v !== val)) : JSON.stringify([...value, val]))
-    console.log('add')
   }
 
   const handleValueRemove = (val: string) => {
     setValue((current) => current.filter((v) => v !== val))
     sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify(value.filter((v) => v !== val)))
-    console.log('remove')
+  }
+
+  const handleValueRemove1 = (val: string) => {
+    setValue((current) => current.filter((v) => v !== val))
+    sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([]))
   }
 
   const values = value.map((item) => (
@@ -52,10 +54,9 @@ export function MultSelect(props) {
    
   const currentValue = () => {
     if(!sessionStorage.getItem(`docInput_${props.props.field.item}`)){
-      console.log('empty')
-      values.splice(0, value.length)
+      values.splice(0, values.length)
       for(const i of data){
-        handleValueRemove(i)
+        handleValueRemove1(i)
       }
     }
   }

@@ -3,7 +3,7 @@ import React from 'react'
 
 
 export function HandTextInput(props) {
-  console.log(props.props.field)
+  // console.log(props.props.field)
     
     return (
             <TextInput

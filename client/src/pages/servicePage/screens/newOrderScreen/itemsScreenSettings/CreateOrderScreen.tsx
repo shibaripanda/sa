@@ -28,9 +28,7 @@ export function CreateOrderScreen(props, message) {
   }
 
   for(const i of activData){
-    // console.log(i.item)
-    // sessionStorage.removeItem(`docInput_${i.item}`)
-    console.log(i.item, sessionStorage.getItem(`docInput_${i.item}`))
+    console.log('control', i.item, sessionStorage.getItem(`docInput_${i.item}`))
   }
 
   return (
@@ -44,33 +42,37 @@ export function CreateOrderScreen(props, message) {
           </Grid.Col>)}
         </Grid>
 
-        <Group grow style={{marginTop: '3vmax'}}>
-          <Button 
-            disabled={false}
-            onClick={() => {
-              for(const i of activData.map(item => item.item)){
-                sessionStorage.removeItem(`docInput_${i}`)
-                console.log(sessionStorage.getItem(`docInput_${i}`))
-              }
-              props.props.setNewOrderRend(Date.now())
-            }}
-            >Clear
-          </Button>
-          <Button
-            disabled={false}
-            onClick={() => {
-              sendToSocket('addRoleToUser', {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId, 
-                email: props.props.emailForNewUser.toLowerCase(),
-                role: props.props.role
-              })
-              props.props.setEmailForNewUser('')
-              props.props.setSettingsFilter(props.props.emailForNewUser.toLowerCase())
-            }}
-            >{props.text.add[props.leng]}
-          </Button>
-        </Group>
+        <Grid style={{marginTop: '3vmax'}}>
+          <Grid.Col span={props.props.screenSizeNewOrder}>
+            <Button
+              fullWidth
+              disabled={false}
+              onClick={() => {
+                sendToSocket('createOrder', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId
+                })
+              }}
+              >
+              {props.text.add[props.leng]}
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={props.props.screenSizeNewOrder}>
+            <Button
+              fullWidth 
+              disabled={false}
+              onClick={() => {
+                for(const i of activData.map(item => item.item)){
+                  sessionStorage.removeItem(`docInput_${i}`)
+                }
+                props.props.setNewOrderRend(Date.now())
+              }}
+              >
+              {props.text.clearForm[props.leng]}
+            </Button>
+          </Grid.Col>
+        </Grid>
+
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { AuthModule } from 'src/auth/auth.module'
 import { ServicesModule } from 'src/service/services.module'
 import { UsersModule } from 'src/user/users.module'
 import { AppGateway } from './app.gateway'
+import { OrderModule } from 'src/order/orders.module'
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { AppGateway } from './app.gateway'
     MongooseModule.forFeature([{ name: 'App', schema: AppSchema }]),
     AuthModule,
     ServicesModule,
-    UsersModule
+    UsersModule,
+    OrderModule
   ],
   providers: [AppService, AppGateway],
 })

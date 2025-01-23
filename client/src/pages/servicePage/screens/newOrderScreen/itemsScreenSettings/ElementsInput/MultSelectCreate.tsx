@@ -6,14 +6,13 @@ import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts'
 
 export function MultSelectCreate(props) {
   console.log(props.props.field)
-  console.log(sessionStorage.getItem(`docInput_${props.props.field.item}`))
     
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex('active'),
   })
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('')
   const [data, setData] = useState(props.props.field.variants)
   // @ts-ignore
   const [value, setValue] = useState<string[]>(sessionStorage.getItem(`docInput_${props.props.field.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${props.props.field.item}`)) : [])
@@ -35,14 +34,12 @@ export function MultSelectCreate(props) {
                   }
       setValue((current) => [...current, search])
       sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([...value, search]))
-      console.log('add+')
     }
     else{
       setValue((current) =>
         current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
       )
       sessionStorage.setItem(`docInput_${props.props.field.item}`, value.includes(val) ? JSON.stringify(value.filter((v) => v !== val)) : JSON.stringify([...value, val]))
-      console.log('add')
     }
 
   }
@@ -50,7 +47,11 @@ export function MultSelectCreate(props) {
   const handleValueRemove = (val: string) => {
     setValue((current) => current.filter((v) => v !== val))
     sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify(value.filter((v) => v !== val)))
-    console.log('remove')
+  }
+
+  const handleValueRemove1 = (val: string) => {
+    setValue((current) => current.filter((v) => v !== val))
+    sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([]))
   }
 
   const values = value.map((item) => (
@@ -72,9 +73,8 @@ export function MultSelectCreate(props) {
 
     const currentValue = () => {
       if(!sessionStorage.getItem(`docInput_${props.props.field.item}`)){
-        values.splice(0, value.length)
         for(const i of data){
-          handleValueRemove(i)
+          handleValueRemove1(i)
         }
       }
     }
@@ -96,12 +96,12 @@ export function MultSelectCreate(props) {
                 value={search}
                 placeholder={props.props.field.item}
                 onChange={(event) => {
-                  combobox.updateSelectedOptionIndex();
-                  setSearch(event.currentTarget.value);
+                  combobox.updateSelectedOptionIndex()
+                  setSearch(event.currentTarget.value)
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Backspace' && search.length === 0) {
-                    event.preventDefault();
+                    event.preventDefault()
                     handleValueRemove(value[value.length - 1])
                   }
                 }}
