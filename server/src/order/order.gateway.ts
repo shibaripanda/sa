@@ -1,4 +1,4 @@
-import { UseGuards, UsePipes } from '@nestjs/common'
+import { Request, UseGuards, UsePipes } from '@nestjs/common'
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
@@ -21,10 +21,25 @@ import { OrderService } from './order.service'
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('createOrder')
-  async createOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+  async createOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    console.log(req.user)
+    console.log(req.service)
+
+    await this.orderService.createOrder(payload.serviceId, payload.subServiceId, payload.newOrder, req.user)
+    // const users = await this.userSevice.getServiceUsers(payload.serviceId)
+    // this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
+    // const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
+    // this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('getOrder')
+  async getOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
     console.log(payload)
 
-    await this.orderService.createOrder(payload)
+    await this.orderService.getOrder(payload)
     // const users = await this.userSevice.getServiceUsers(payload.serviceId)
     // this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
     // const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)

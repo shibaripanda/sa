@@ -1,4 +1,4 @@
-import { Button, Grid, Group, Text } from '@mantine/core'
+import { Button, Grid, Text } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
@@ -13,18 +13,40 @@ export function CreateOrderScreen(props, message) {
   const activData = props.service.orderData.filter(item => !item.hidden)
 
   const fieldCheck = (item) => {
-    if(!item.variant){
+    if(!item.variant || item.number){
       return  <HandTextInput props={{...props, field: item}}/>
     }
-
     if(item.onlyVariants){
       if(item.multiVariants){
         return <MultSelect props={{...props, field: item}}/>
       }
       return <SelectField props={{...props, field: item}}/>
     }
-
     return <MultSelectCreate props={{...props, field: item}}/>
+  }
+
+  const createOrder = () => {
+    const newOrder = []
+    for(const i of activData){
+      // @ts-ignore
+      newOrder.push({
+        data: sessionStorage.getItem(`docInput_${i.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${i.item}`)).join(', ') : '', 
+        field: i.item, number: i.number,
+        control: i.control
+      })
+    }
+    return newOrder
+  }
+
+
+  const disabledCreateButton = () => {
+    const controlData = props.service.orderData.filter(item => !item.hidden).filter(item => item.control).map(item => item.item)
+    // @ts-ignore
+    const fullItems = createOrder().filter(item => !item.data && item.control)
+    console.log('order', controlData)
+    console.log('fullorder', fullItems)
+    return true
+    
   }
 
   for(const i of activData){
@@ -46,9 +68,24 @@ export function CreateOrderScreen(props, message) {
           <Grid.Col span={props.props.screenSizeNewOrder}>
             <Button
               fullWidth
-              disabled={false}
+              disabled={disabledCreateButton()}
               onClick={() => {
                 sendToSocket('createOrder', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  newOrder: createOrder()
+                })
+              }}
+              >
+              Create order
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={props.props.screenSizeNewOrder}>
+            <Button
+              fullWidth
+              disabled={false}
+              onClick={() => {
+                sendToSocket('getOrder', {
                   serviceId: props.user.serviceId, 
                   subServiceId: props.user.subServiceId
                 })

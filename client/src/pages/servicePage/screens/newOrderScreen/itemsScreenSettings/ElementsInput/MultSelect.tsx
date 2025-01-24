@@ -63,9 +63,9 @@ export function MultSelect(props) {
 
   currentValue()
   return (
-    <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
+    <Combobox store={combobox} onOptionSubmit={handleValueSelect}  withinPortal={false}>
       <Combobox.DropdownTarget>
-        <PillsInput label={props.props.field.item} onClick={() => combobox.openDropdown()}>
+        <PillsInput label={props.props.field.item} withAsterisk={props.props.field.control} onClick={() => combobox.openDropdown()}>
           <Pill.Group>
             {values}
 
