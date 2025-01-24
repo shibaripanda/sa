@@ -29,8 +29,7 @@ export function CreateOrderScreen(props, message) {
     const newOrder = []
     for(const i of activData){
       // @ts-ignore
-      newOrder.push({
-        data: sessionStorage.getItem(`docInput_${i.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${i.item}`)).join(', ') : '', 
+      newOrder.push({data: sessionStorage.getItem(`docInput_${i.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${i.item}`)).join(', ') : '', 
         field: i.item, number: i.number,
         control: i.control
       })
@@ -40,13 +39,15 @@ export function CreateOrderScreen(props, message) {
 
 
   const disabledCreateButton = () => {
-    const controlData = props.service.orderData.filter(item => !item.hidden).filter(item => item.control).map(item => item.item)
     // @ts-ignore
     const fullItems = createOrder().filter(item => !item.data && item.control)
-    console.log('order', controlData)
-    console.log('fullorder', fullItems)
-    return true
-    
+    return fullItems.length ? true : false
+  }
+
+  const disabledClearButton = () => {
+    // @ts-ignore
+    const fullItems = createOrder().filter(item => !item.data)
+    return fullItems.length === createOrder().length
   }
 
   for(const i of activData){
@@ -67,6 +68,7 @@ export function CreateOrderScreen(props, message) {
         <Grid style={{marginTop: '3vmax'}}>
           <Grid.Col span={props.props.screenSizeNewOrder}>
             <Button
+              color='green'
               fullWidth
               disabled={disabledCreateButton()}
               onClick={() => {
@@ -77,7 +79,7 @@ export function CreateOrderScreen(props, message) {
                 })
               }}
               >
-              Create order
+              {props.text.createNewOrder[props.leng]}
             </Button>
           </Grid.Col>
           <Grid.Col span={props.props.screenSizeNewOrder}>
@@ -96,8 +98,9 @@ export function CreateOrderScreen(props, message) {
           </Grid.Col>
           <Grid.Col span={props.props.screenSizeNewOrder}>
             <Button
+              color='red'
               fullWidth 
-              disabled={false}
+              disabled={disabledClearButton()}
               onClick={() => {
                 for(const i of activData.map(item => item.item)){
                   sessionStorage.removeItem(`docInput_${i}`)

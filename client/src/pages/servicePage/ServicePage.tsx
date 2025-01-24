@@ -13,6 +13,7 @@ import { UserClass } from '../../classes/UserClass.ts'
 import { AppShell, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 import { useDisclosure, useListState } from '@mantine/hooks'
+import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
 
 
 function ServicePage() {
@@ -53,6 +54,9 @@ function ServicePage() {
   const [newVariant, setNewVariant] = useState('')
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
   const [orderData, setOrderData] = useState([])
+  const [dataForPrint, setDataForPrint] = useState(false)
+
+  const [openedPrintNewOrder, openedPrintNewOrderHandlers] = useDisclosure(false)
 
   useEffect(() => {
     getTexLengUserService()
@@ -83,12 +87,18 @@ function ServicePage() {
       const deleteServiceRedirect = () => {
         navigate('/')
       }
+      const printOrder = (data: any) => {
+        console.log('mODAL', data)
+        setDataForPrint(data)
+        openedPrintNewOrderHandlers.open()
+      }
       getFromSocket([
                   {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
                   {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
                   {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
                   {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
                   {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
+                  {message: `createOrder`, handler: printOrder},
                 ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
       
@@ -166,6 +176,11 @@ function ServicePage() {
               }
             )}
           </AppShell.Main>
+          <ModalWindowPrint 
+          openedPrintNewOrder={openedPrintNewOrder} 
+          openedPrintNewOrderHandlers={openedPrintNewOrderHandlers}
+          dataForPrint={dataForPrint}
+          />
         </AppShell>
     )
   }

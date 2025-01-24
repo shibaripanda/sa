@@ -22,11 +22,13 @@ export function MultSelect(props) {
       current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
     )
     sessionStorage.setItem(`docInput_${props.props.field.item}`, value.includes(val) ? JSON.stringify(value.filter((v) => v !== val)) : JSON.stringify([...value, val]))
+    props.props.props.setNewOrderRend(Date.now())
   }
 
   const handleValueRemove = (val: string) => {
     setValue((current) => current.filter((v) => v !== val))
     sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify(value.filter((v) => v !== val)))
+    props.props.props.setNewOrderRend(Date.now())
   }
 
   const handleValueRemove1 = (val: string) => {

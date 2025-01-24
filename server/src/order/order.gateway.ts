@@ -22,14 +22,8 @@ import { OrderService } from './order.service'
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('createOrder')
   async createOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
-    console.log(req.user)
-    console.log(req.service)
-
-    await this.orderService.createOrder(payload.serviceId, payload.subServiceId, payload.newOrder, req.user)
-    // const users = await this.userSevice.getServiceUsers(payload.serviceId)
-    // this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
-    // const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
-    // this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
+    const order = await this.orderService.createOrder(payload.serviceId, payload.subServiceId, payload.newOrder, req.user)
+    client.emit('createOrder', order)
   }
 
   @UseGuards(JwtAuthGuard)

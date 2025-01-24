@@ -14,7 +14,6 @@ export class OrderService {
     ) {}
 
     async createOrder(serviceId, subServiceId, newOrder, user){
-
         const orderSh = () => {
             const res = {}
             for(const i of newOrder){
@@ -34,23 +33,11 @@ export class OrderService {
             }
             return res
         }
-
         OrderSchema.add(orderSh())
-        const res = await this.orderMongo.create(orderData())
-        console.log(res)
+        return await this.orderMongo.create(orderData())
     }
 
     async getOrder(serviceId){
-        // const obg = {
-        //     name: 'string',
-        //     color: 'string',
-        //     price: 35
-        // }
-        // OrderSchema.add({
-        //     name: 'string',
-        //     color: 'string',
-        //     price: 'number'
-        //   })
         console.log(serviceId)
         const res = await this.orderMongo.find()
         console.log(res)
