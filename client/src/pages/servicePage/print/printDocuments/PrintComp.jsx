@@ -18,7 +18,7 @@ export const PrintComp = React.forwardRef((props, ref) => {
     return (
         <div ref={ref} className="App">
             bgbgbgbgbg
-        {/* <table border="0" cellSpacing="0" cellPadding="0" width='775px' className="table">
+        <table border="0" cellSpacing="0" cellPadding="0" width='775px' className="table">
             <tbody>
             <tr>
                 <td align="left"><b><font size="2">{camp.docprint.namecomp.text ? camp.docprint.namecomp.text : 'не настроено'}</font></b></td>  
@@ -27,9 +27,9 @@ export const PrintComp = React.forwardRef((props, ref) => {
                 <td align="center"><b><font size="3">{textSet('name')} № {post.order} от {new Date(post.date).toLocaleString().split(',')[0]}</font></b></td>
             </tr>
             </tbody>
-        </table> */}
+        </table>
         
-        {/* <table border="1" cellSpacing="0" cellPadding="0" width='775px' className="table">
+        <table border="1" cellSpacing="0" cellPadding="0" width='775px' className="table">
             <tbody>
             <tr>
                 <td colSpan="5" rowSpan="2" align="center"><b>&nbsp;Исполнитель принимает, а заказчик передает нижеуказанное оборудование</b></td>
@@ -89,9 +89,9 @@ export const PrintComp = React.forwardRef((props, ref) => {
                 <td colSpan={6}>&nbsp;{camp.docprint.time.text ? camp.docprint.time.text : 'не настроено'},&nbsp;{camp.docprint.telefonnumber.text ? camp.docprint.telefonnumber.text : 'не настроено'}</td>
             </tr>
             </tbody>
-        </table> */}
+        </table>
 
-        {/* <table border="0" cellSpacing="0" cellPadding="0" width='775px' className="table">
+        <table border="0" cellSpacing="0" cellPadding="0" width='775px' className="table">
             <tbody>
             <tr>
                 <td align="center" colSpan={5}><b><font size="3">Правила и условия ремонта и (или) диагностики.</font></b></td>
@@ -132,7 +132,7 @@ export const PrintComp = React.forwardRef((props, ref) => {
                 <td align="left" colSpan={2}><div className="create-line"></div></td>
             </tr>
             </tbody>
-        </table> */}
+        </table>
 
         </div>
     )
