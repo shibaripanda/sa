@@ -56,7 +56,7 @@ function ServicePage() {
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
 
-  const [openedPrintNewOrder, openedPrintNewOrderHandlers] = useDisclosure(false)
+  const [openedPrint, openedPrintHandlers] = useDisclosure(false)
 
   useEffect(() => {
     getTexLengUserService()
@@ -89,8 +89,8 @@ function ServicePage() {
       }
       const printOrder = (data: any) => {
         console.log('mODAL', data)
-        setDataForPrint(data)
-        openedPrintNewOrderHandlers.open()
+        setDataForPrint({...data, printDocument: 'newOrderDocument'})
+        openedPrintHandlers.open()
       }
       getFromSocket([
                   {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
@@ -177,9 +177,13 @@ function ServicePage() {
             )}
           </AppShell.Main>
           <ModalWindowPrint 
-          openedPrintNewOrder={openedPrintNewOrder} 
-          openedPrintNewOrderHandlers={openedPrintNewOrderHandlers}
-          dataForPrint={dataForPrint}
+          openedPrint={openedPrint} 
+          openedPrintHandlers={openedPrintHandlers}
+          data={dataForPrint}
+          service={service}
+          user={user}
+          text={text}
+          leng={leng}
           />
         </AppShell>
     )
