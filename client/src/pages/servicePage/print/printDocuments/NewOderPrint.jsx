@@ -21,14 +21,11 @@ export class NewOderPrint extends Component {
     render() {
       return (
         <div ref={this.props.innerRef} style={{margin: '1vmax'}}>
-          <Table>
+          <Table border="1" withTableBorder withColumnBorders>
 
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>
-                  Hello
-                </Table.Th>
-                <Table.Th>
+                <Table.Th width={'25%'}>
                   Hello
                 </Table.Th>
                 <Table.Th>
@@ -39,7 +36,20 @@ export class NewOderPrint extends Component {
 
             <Table.Tbody>
               <Table.Tr>
-                <Table.Td/>
+                <Table.Td>
+                  fggfg
+                </Table.Td>
+                <Table.Td>
+                  fggfg
+                </Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>
+                  fggfghghghgh
+                </Table.Td>
+                <Table.Td>
+                  fggfg
+                </Table.Td>
               </Table.Tr>
             </Table.Tbody>
 
