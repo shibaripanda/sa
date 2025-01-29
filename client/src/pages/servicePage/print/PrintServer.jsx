@@ -8,7 +8,7 @@ export const PrintServer = (props) => {
   console.log(props)
 
   const documentForPrint = () => {
-    if(props.data.printDocument === 'newOrderDocument'){
+    if(props.data._printDocument_ === 'newOrderDocument'){
       return <NewOderPrint innerRef={contentRef} {...props}/>
     }
   }

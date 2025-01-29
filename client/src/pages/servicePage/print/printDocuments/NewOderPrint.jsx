@@ -1,4 +1,4 @@
-import { Table } from "@mantine/core";
+import { Group, Table, Text } from "@mantine/core";
 import { Component } from "react";
 
 export class NewOderPrint extends Component {
@@ -18,57 +18,45 @@ export class NewOderPrint extends Component {
         return 'ff'
     }
 
+    dataForTable(){
+      console.log(this.data)
+      console.log(this.service)
+      const res = []
+      for(const i in this.data){
+        if(i[0] !== '_' && !['createdAt', 'updatedAt'].includes(i)){
+          res.push(
+            <Table.Tr>
+              <Table.Th w={250}>{i}</Table.Th>
+              <Table.Td>{this.data[i]}</Table.Td>
+            </Table.Tr>
+          )
+        }
+      }
+      return res
+    }
+
     render() {
       return (
         <div ref={this.props.innerRef} style={{margin: '1vmax'}}>
-          <Table border="1" withTableBorder withColumnBorders>
-
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th width={'25%'}>
-                  Hello
-                </Table.Th>
-                <Table.Th>
-                  Hello
-                </Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-
+          {/* <hr></hr> */}
+          <Group justify="space-between" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
+            <Text>{this.service.name} {this.service.subName}</Text>
+            <Text fw={700}>{this.data._orderServiceId_}</Text>
+            <Text>{new Date(this.data.createdAt).toLocaleDateString([`${this.leng}`, "en"])} {new Date(this.data.createdAt).toLocaleTimeString([`${this.leng}`, "en"])}</Text>
+            {/* <Text></Text> */}
+          </Group>
+          <Group justify="space-between" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
+            <Text>{this.service.subAddress}</Text>
+            <Text>{this.service.subContact}</Text>
+            <Text>{this.service.subWorkTime}</Text>
+          </Group>
+          {/* <hr></hr> */}
+          <Table border="1" withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
             <Table.Tbody>
-              <Table.Tr>
-                <Table.Td>
-                  fggfg
-                </Table.Td>
-                <Table.Td>
-                  fggfg
-                </Table.Td>
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Td>
-                  fggfghghghgh
-                </Table.Td>
-                <Table.Td>
-                  fggfg
-                </Table.Td>
-              </Table.Tr>
+              {this.dataForTable()}
             </Table.Tbody>
-
           </Table>
         </div>
       )
-      // return (
-      //   <div ref={this.props.innerRef} style={{margin: '1vmax'}}>
-      //     <table border="0" cellSpacing="0" cellPadding="0" width='775px' className="table">
-      //       <tbody>
-      //       <tr>
-      //           <td align="left"><b><font size="2">{this.myData()}</font></b></td>  
-      //       </tr>
-      //       <tr>
-      //           <td align="center"><b><font size="3">{this.myData()}</font></b></td>
-      //       </tr>
-      //       </tbody>
-      //   </table>
-      //   </div>
-      // )
     }
   }

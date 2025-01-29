@@ -89,7 +89,7 @@ function ServicePage() {
       }
       const printOrder = (data: any) => {
         console.log('mODAL', data)
-        setDataForPrint({...data, printDocument: 'newOrderDocument'})
+        setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
         openedPrintHandlers.open()
       }
       getFromSocket([
