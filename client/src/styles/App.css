@@ -13,3 +13,12 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.perenos {
+  white-space: pre-line;
+}
+
+.vertical span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
