@@ -33,6 +33,36 @@ export class NewOderPrint extends Component {
           )
         }
       }
+      if(this.service.subAddress){
+        res.push(
+          <Table.Tr>
+            <Table.Th w={250}>{this.text.changeAddressSubService[this.leng]}</Table.Th>
+            <Table.Td>{this.service.subAddress}</Table.Td>
+          </Table.Tr>
+        )
+      }
+      if(this.service.subContact){
+        res.push(
+          <Table.Tr>
+            <Table.Th w={250}>{this.text.changeContactSubService[this.leng]}</Table.Th>
+            <Table.Td>{this.service.subContact}</Table.Td>
+          </Table.Tr>
+        )
+      }
+      if(this.service.subWorkTime){
+        res.push(
+          <Table.Tr>
+            <Table.Th w={250}>{this.text.changeTimeSubService[this.leng]}</Table.Th>
+            <Table.Td>{this.service.subWorkTime}</Table.Td>
+          </Table.Tr>
+        )
+      }
+      res.push(
+        <Table.Tr>
+          <Table.Th w={250}>{this.text.manager[this.leng]}</Table.Th>
+          <Table.Td>{this.user.name ? this.user.name : this.user.email}</Table.Td>
+        </Table.Tr>
+      )
       return res
     }
 
@@ -46,7 +76,7 @@ export class NewOderPrint extends Component {
             <Text size="sm">{new Date(this.data.createdAt).toLocaleDateString([`${this.leng}`, "en"])} {new Date(this.data.createdAt).toLocaleTimeString([`${this.leng}`, "en"])}</Text>
           </Group>
           <hr></hr>
-          <Text size="xs">{this.service.subAddress}, {this.service.subContact}, {this.service.subWorkTime}</Text>
+          {/* <Text size="xs">{this.service.subAddress}, {this.service.subContact}, {this.service.subWorkTime}</Text> */}
 
           <Grid>
             <Grid.Col span={11.5}>
@@ -58,8 +88,13 @@ export class NewOderPrint extends Component {
             </Grid.Col>
             <Grid.Col span={0.5}>
               <Center>
-                <Text fw={700} size="xl" className='vertical'><span>{this.data._orderServiceId_}</span></Text>
+                <div className='vertical'>
+                  <span><b><font size="6">{this.data._orderServiceId_}</font></b></span>
+                </div>
               </Center>
+              {/* <Center>
+                <Text fw={700} size="xl" className='vertical'><span>{this.data._orderServiceId_}</span></Text>
+              </Center> */}
             </Grid.Col>
           </Grid>
 
