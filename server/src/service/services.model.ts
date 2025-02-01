@@ -85,6 +85,11 @@ export const ServiceSchema = new mongoose.Schema({
       type: Array,
       default: [{title: '', cost: 0}],
       require: true
+    },
+    dataService: {
+      type: String, 
+      default: '',
+      require: true
     }
   }, {timestamps: true})
 

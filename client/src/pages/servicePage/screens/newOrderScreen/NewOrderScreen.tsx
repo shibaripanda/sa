@@ -10,10 +10,10 @@ export function NewOrderScreen(props) {
         <div style={{margin: 15}}>
           <Grid grow align="stretch">
             {props.items.map((item, index) => 
-            <Grid.Col key={item.message + index} span={item.size ? item.size : props.props.screenSize}>
-              <Paper shadow="xl" radius="md" withBorder p="xl">
+            <Grid.Col key={item.message + index} span={12}>
+              {/* <Paper shadow="xl" radius="md" withBorder p="xl"> */}
                 {item.screenItem(props, item.message)}
-              </Paper>
+              {/* </Paper> */}
             </Grid.Col>)}
           </Grid>
         </div>

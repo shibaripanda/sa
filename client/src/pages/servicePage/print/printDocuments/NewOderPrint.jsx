@@ -63,6 +63,15 @@ export class NewOderPrint extends Component {
           <Table.Td>{this.user.name ? this.user.name : this.user.email}</Table.Td>
         </Table.Tr>
       )
+      if(this.service.dataService){
+        res.push(
+          <Table.Tr>
+            <Table.Th w={250}>{this.text.changeInfoMainService[this.leng]}</Table.Th>
+            <Table.Td>{this.service.dataService}</Table.Td>
+          </Table.Tr>
+        )
+      }
+      
       return res
     }
 

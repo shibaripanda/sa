@@ -34,6 +34,7 @@ function ServicePage() {
   const [newServiceName, setNewSeviceName] = useState('')
   const [newSubServiceName, setSubNewSeviceName] = useState('')
   const [newSubService, setSubNewSevice] = useState('')
+  const [newDataService, setNewDataService] = useState('')
   const [device, setDevice] = useState('')
   const [newRole, setNewRole] = useState('')
   const [status, setStatus] = useState('')
@@ -55,6 +56,9 @@ function ServicePage() {
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
+  const [orders, setOrders] = useState([])
+
+  const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
 
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
 
@@ -99,8 +103,10 @@ function ServicePage() {
                   {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
                   {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
                   {message: `createOrder`, handler: printOrder},
+                  {message: `getOrders`, handler: setOrders},
                 ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
+      sendToSocket('getOrders', {serviceId: authClass.getServiceId()})
       
     }
     else{
@@ -172,7 +178,11 @@ function ServicePage() {
               newOrderRend: newOrderRend,
               setNewOrderRend: setNewOrderRend,
               orderData: orderData,
-              setOrderData: setOrderData
+              setOrderData: setOrderData,
+              newDataService: newDataService,
+              setNewDataService: setNewDataService,
+              openedNewOrder: openedNewOrder,
+              openedNewOrderHandler: openedNewOrderHandler
               }
             )}
           </AppShell.Main>

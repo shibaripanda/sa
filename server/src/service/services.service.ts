@@ -14,6 +14,9 @@ export class ServicesService {
         private userService: UsersService
     ) {}
 
+    async changeInfoMainService(serviceId: string, newData: string){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {dataService: newData}, {returnDocument: 'after'})
+    }
     
     async addOrDelListVariant(serviceId: string,  itemName: string, variant: string){
         const orderData = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData

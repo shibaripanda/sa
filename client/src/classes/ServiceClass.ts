@@ -5,7 +5,8 @@ interface Service {
     devices: string[]
     roles: {role: string, access: string[]}[]
     price: {}[]
-    orderData: OrderData[] 
+    orderData: OrderData[]
+    dataService: string 
 }
 
 interface OrderData {
@@ -30,6 +31,7 @@ export class ServiceClass {
     subContact: string
     subAddress: string
     orderData: OrderData[]
+    dataService: string
 
     constructor(data: Service){
 
@@ -48,6 +50,7 @@ export class ServiceClass {
         this.price = data.price
         this.subServices = data.subServices
         this.orderData = data.orderData
+        this.dataService = data.dataService
 
         // data.subServices = data.subServices.filter(item => item.subServiceId !== authClass.getSubServiceId())
 

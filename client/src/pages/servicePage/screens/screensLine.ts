@@ -20,6 +20,7 @@ import { ChangeMyName } from "./mySettingsScreen/itemsScreenSettings/ChangeMyNam
 import { DeleteService } from "./serviceSettingsScreen/itemsScreenSettings/DeleteService.tsx";
 import { ChangeServiceOrderDataList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceOrderDataList.tsx";
 import { CreateOrderScreen } from "./newOrderScreen/itemsScreenSettings/CreateOrderScreen.tsx";
+import { ChangeInfoMainService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeInfoMainService.tsx";
 
 export const line = [
     // {
@@ -31,14 +32,16 @@ export const line = [
         name: 'createOrder',
         screen: NewOrderScreen,
         items: [
-            {message: 'createOrder', screenItem: CreateOrderScreen}, 
+            {message: 'createOrder', screenItem: CreateOrderScreen},
+            {message: 'createOrder', screenItem: CreateOrderScreen},  
         ]
     },
     {
         name: 'serviceSettings',
         screen: SeviceSettingsScreen,
         items: [
-            {message: 'changeNameMainService', screenItem: ChangeNameMainService}, 
+            {message: 'changeNameMainService', screenItem: ChangeNameMainService},
+            {message: 'changeInfoMainService', screenItem: ChangeInfoMainService}, 
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
             {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12},
