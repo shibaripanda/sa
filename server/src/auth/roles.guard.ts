@@ -19,7 +19,6 @@ export class RolesGuard implements CanActivate {
     const token = req.getClient().handshake.auth.token.Authorization.split(' ')[1]
     const userEmail = this.jwtService.verify(token).email
     const user = await this.userService.getUserByEmail(userEmail)
-
     // const roles = (user.roles.filter(item => item.serviceId === req.getData().serviceId))[0].subServices.filter(item => item.subServiceId === req.getData().subServiceId)[0].roles
     const roles = (user.services_roles.filter(item => item.serviceId === req.getData().serviceId))[0].subServices.filter(item => item.subServiceId === req.getData().subServiceId)[0].roles
     

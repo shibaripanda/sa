@@ -1,11 +1,10 @@
-import { Box, Button, Collapse, Grid, Group, Text, TextInput } from '@mantine/core'
+import { Button, Collapse, Grid, Group, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
 import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
 import { MultSelect } from './ElementsInput/MultSelect.tsx'
-import { useDisclosure } from '@mantine/hooks'
 
 export function CreateOrderScreen(props, message) {
 
@@ -39,7 +38,6 @@ export function CreateOrderScreen(props, message) {
     return newOrder
   }
 
-
   const disabledCreateButton = () => {
     // @ts-ignore
     const fullItems = createOrder().filter(item => !item.data && item.control)
@@ -52,9 +50,9 @@ export function CreateOrderScreen(props, message) {
     return fullItems.length === createOrder().length
   }
 
-  for(const i of activData){
-    console.log('control', i.item, sessionStorage.getItem(`docInput_${i.item}`))
-  }
+  // for(const i of activData){
+  //   console.log('control', i.item, sessionStorage.getItem(`docInput_${i.item}`))
+  // }
 
   return (
     <div>

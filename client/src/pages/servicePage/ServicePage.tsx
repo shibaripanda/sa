@@ -56,7 +56,7 @@ function ServicePage() {
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState<object[]>([])
 
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
 
@@ -67,14 +67,25 @@ function ServicePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const addNewOrder = (data: any) => {
+    console.log('orders', orders)
+    setOrders([...orders, data])
+    // orders.push(data)
+    printOrder(data)
+  }
+  const printOrder = (data: any) => {
+    console.log('mODAL', data)
+    setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
+    openedPrintHandlers.open()
+  }
+
   const getTexLengUserService = async () => {
     const authClass = new AuthClass()
     const textClass = new TextClass()
+    // const ordersDb = new OrdersClass(orders)
     const t2 = await textClass.getLeng()
     const t3 = await textClass.getText()
     const t4 = await authClass.getCurrentUser()
-
-    
 
     if(t2 && t3 && t4){
       setLeng(t2)
@@ -91,22 +102,18 @@ function ServicePage() {
       const deleteServiceRedirect = () => {
         navigate('/')
       }
-      const printOrder = (data: any) => {
-        console.log('mODAL', data)
-        setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
-        openedPrintHandlers.open()
-      }
+      
       getFromSocket([
                   {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
                   {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
                   {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
                   {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
                   {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
-                  {message: `createOrder`, handler: printOrder},
+                  {message: `createOrder`, handler: addNewOrder},
                   {message: `getOrders`, handler: setOrders},
                 ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
-      sendToSocket('getOrders', {serviceId: authClass.getServiceId()})
+      sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
       
     }
     else{
@@ -115,7 +122,7 @@ function ServicePage() {
   }
  
   if(text && leng && user && service){
-    const screen = new ScreenLine({text, leng, user, service})
+    const screen = new ScreenLine({text, leng, user, service, orders})
     return (
         <AppShell header={{ height: 77 }}>
           <AppShell.Header>

@@ -37,6 +37,11 @@ export class OrderService {
         return await this.orderMongo.create(orderData())
     }
 
+    async getOrders(serviceId, user){
+        const res = await this.orderMongo.find()
+        return res
+    }
+
     async getOrder(serviceId){
         console.log(serviceId)
         const res = await this.orderMongo.find()

@@ -5,7 +5,7 @@ import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts'
 
 
 export function MultSelectCreate(props) {
-  console.log(props.props.field)
+  // console.log(props.props.field)
     
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),

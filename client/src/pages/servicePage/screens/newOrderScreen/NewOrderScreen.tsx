@@ -1,4 +1,4 @@
-import { Grid, Paper } from '@mantine/core'
+import { Grid } from '@mantine/core'
 import React from 'react'
 
 export function NewOrderScreen(props) {
@@ -11,9 +11,7 @@ export function NewOrderScreen(props) {
           <Grid grow align="stretch">
             {props.items.map((item, index) => 
             <Grid.Col key={item.message + index} span={12}>
-              {/* <Paper shadow="xl" radius="md" withBorder p="xl"> */}
-                {item.screenItem(props, item.message)}
-              {/* </Paper> */}
+              {item.screenItem(props, item.message)}
             </Grid.Col>)}
           </Grid>
         </div>

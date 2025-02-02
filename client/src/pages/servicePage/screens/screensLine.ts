@@ -21,19 +21,15 @@ import { DeleteService } from "./serviceSettingsScreen/itemsScreenSettings/Delet
 import { ChangeServiceOrderDataList } from "./serviceSettingsScreen/itemsScreenSettings/ChangeServiceOrderDataList.tsx";
 import { CreateOrderScreen } from "./newOrderScreen/itemsScreenSettings/CreateOrderScreen.tsx";
 import { ChangeInfoMainService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeInfoMainService.tsx";
+import { OrdersScreen } from "./newOrderScreen/itemsScreenSettings/OrdersScreen.tsx";
 
 export const line = [
-    // {
-    //     name: 'orders',
-    //     screen: OrderScreen,
-    //     items: []
-    // },
     {
         name: 'createOrder',
         screen: NewOrderScreen,
         items: [
             {message: 'createOrder', screenItem: CreateOrderScreen},
-            {message: 'createOrder', screenItem: CreateOrderScreen},  
+            {message: 'createOrder', screenItem: OrdersScreen},  
         ]
     },
     {
@@ -100,6 +96,7 @@ export class ScreenLine {
     user: UserClass
     text: any
     leng: string
+    orders: []
 
     constructor(data){
         this.line = line
@@ -108,6 +105,7 @@ export class ScreenLine {
         this.user = data.user
         this.text = data.text
         this.leng = data.leng
+        this.orders = data.orders
     }
 
     getMessagesForUser(){
