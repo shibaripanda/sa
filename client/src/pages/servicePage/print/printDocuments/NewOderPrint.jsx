@@ -1,4 +1,4 @@
-import { Button, Center, Grid, Group, Paper, Table, Text } from "@mantine/core";
+import { Center, Grid, Group, Table, Text } from "@mantine/core";
 import { Component } from "react";
 
 export class NewOderPrint extends Component {
@@ -19,14 +19,12 @@ export class NewOderPrint extends Component {
     }
 
     dataForTable(){
-      console.log(this.data)
-      console.log(this.service)
       const res = [
       ]
       for(const i in this.data){
         if(i[0] !== '_' && !['createdAt', 'updatedAt'].includes(i) && this.data[i]){
           res.push(
-            <Table.Tr>
+            <Table.Tr key={i}>
               <Table.Th w={250}>{i}</Table.Th>
               <Table.Td>{this.data[i]}</Table.Td>
             </Table.Tr>
@@ -35,7 +33,7 @@ export class NewOderPrint extends Component {
       }
       if(this.service.subAddress){
         res.push(
-          <Table.Tr>
+          <Table.Tr key={this.text.changeAddressSubService[this.leng]}>
             <Table.Th w={250}>{this.text.changeAddressSubService[this.leng]}</Table.Th>
             <Table.Td>{this.service.subAddress}</Table.Td>
           </Table.Tr>
@@ -43,7 +41,7 @@ export class NewOderPrint extends Component {
       }
       if(this.service.subContact){
         res.push(
-          <Table.Tr>
+          <Table.Tr key={this.text.changeContactSubService[this.leng]}>
             <Table.Th w={250}>{this.text.changeContactSubService[this.leng]}</Table.Th>
             <Table.Td>{this.service.subContact}</Table.Td>
           </Table.Tr>
@@ -51,27 +49,26 @@ export class NewOderPrint extends Component {
       }
       if(this.service.subWorkTime){
         res.push(
-          <Table.Tr>
+          <Table.Tr key={this.text.changeTimeSubService[this.leng]}>
             <Table.Th w={250}>{this.text.changeTimeSubService[this.leng]}</Table.Th>
             <Table.Td>{this.service.subWorkTime}</Table.Td>
           </Table.Tr>
         )
       }
       res.push(
-        <Table.Tr>
+        <Table.Tr key={this.text.manager[this.leng]}>
           <Table.Th w={250}>{this.text.manager[this.leng]}</Table.Th>
           <Table.Td>{this.user.name ? this.user.name : this.user.email}</Table.Td>
         </Table.Tr>
       )
       if(this.service.dataService){
         res.push(
-          <Table.Tr>
+          <Table.Tr key={this.text.changeInfoMainService[this.leng]}>
             <Table.Th w={250}>{this.text.changeInfoMainService[this.leng]}</Table.Th>
             <Table.Td>{this.service.dataService}</Table.Td>
           </Table.Tr>
         )
       }
-      
       return res
     }
 
@@ -85,7 +82,6 @@ export class NewOderPrint extends Component {
             <Text size="sm">{new Date(this.data.createdAt).toLocaleDateString([`${this.leng}`, "en"])} {new Date(this.data.createdAt).toLocaleTimeString([`${this.leng}`, "en"])}</Text>
           </Group>
           <hr></hr>
-          {/* <Text size="xs">{this.service.subAddress}, {this.service.subContact}, {this.service.subWorkTime}</Text> */}
 
           <Grid>
             <Grid.Col span={11.5}>
@@ -101,9 +97,6 @@ export class NewOderPrint extends Component {
                   <span><b><font size="6">{this.data._orderServiceId_}</font></b></span>
                 </div>
               </Center>
-              {/* <Center>
-                <Text fw={700} size="xl" className='vertical'><span>{this.data._orderServiceId_}</span></Text>
-              </Center> */}
             </Grid.Col>
           </Grid>
 

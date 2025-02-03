@@ -38,7 +38,8 @@ import { OrderService } from './order.service'
     // this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
     // const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
     // this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
-    for(const order of orders){
+    // @ts-expect-error
+    for(const order of orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))){
       client.emit('getOrders', order)
     }
   }

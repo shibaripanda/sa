@@ -14,10 +14,11 @@ import { AppShell, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 import { useDisclosure, useListState } from '@mantine/hooks'
 import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
+import { SocketApt } from '../../modules/socket/api/socket-api.ts'
 
 
 function ServicePage() {
-
+  
   const navigate = useNavigate()
   // @ts-ignore
   useConnectSocket(sessionStorage.getItem('currentUser') ? JSON.parse(sessionStorage.getItem('currentUser')).token : navigate('/'))
@@ -78,17 +79,12 @@ function ServicePage() {
       {message: `createOrder`, handler: addNewOrder}
     ])
   }
-
   const getOneOrder = async (data: any) => {
-    console.log('a')
-    setOrders([...orders, data])
-    // await getOrdersFromDb()
-  }
-
-  const getOrdersFromDb = async () => {
-    getFromSocket([
-      {message: `getOrders`, handler: getOneOrder}
-    ])
+    orders.push(data)
+    SocketApt.socket?.once('getOrders', (data) => {
+      getOneOrder(data)
+    })
+    setOrders([...orders])
   }
 
   const getTexLengUserService = async () => {
@@ -120,11 +116,10 @@ function ServicePage() {
                   {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
                   {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
                   {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
-                  {message: `getOrders`, handler: getOneOrder},
                 ])
+      SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
       sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
-      
     }
     else{
       navigate('/')
