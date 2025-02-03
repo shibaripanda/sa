@@ -68,21 +68,32 @@ function ServicePage() {
   }, [])
 
   const addNewOrder = (data: any) => {
-    console.log('orders', orders)
+    console.log('orders', orders.length)
     setOrders([...orders, data])
-    // orders.push(data)
-    printOrder(data)
-  }
-  const printOrder = (data: any) => {
-    console.log('mODAL', data)
     setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
     openedPrintHandlers.open()
+  }
+  const getAndPrintNewOrder = async () => {
+    getFromSocket([
+      {message: `createOrder`, handler: addNewOrder}
+    ])
+  }
+
+  const getOneOrder = async (data: any) => {
+    console.log('a')
+    setOrders([...orders, data])
+    // await getOrdersFromDb()
+  }
+
+  const getOrdersFromDb = async () => {
+    getFromSocket([
+      {message: `getOrders`, handler: getOneOrder}
+    ])
   }
 
   const getTexLengUserService = async () => {
     const authClass = new AuthClass()
     const textClass = new TextClass()
-    // const ordersDb = new OrdersClass(orders)
     const t2 = await textClass.getLeng()
     const t3 = await textClass.getText()
     const t4 = await authClass.getCurrentUser()
@@ -109,8 +120,7 @@ function ServicePage() {
                   {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
                   {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
                   {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
-                  {message: `createOrder`, handler: addNewOrder},
-                  {message: `getOrders`, handler: setOrders},
+                  {message: `getOrders`, handler: getOneOrder},
                 ])
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
       sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
@@ -189,7 +199,8 @@ function ServicePage() {
               newDataService: newDataService,
               setNewDataService: setNewDataService,
               openedNewOrder: openedNewOrder,
-              openedNewOrderHandler: openedNewOrderHandler
+              openedNewOrderHandler: openedNewOrderHandler,
+              getAndPrintNewOrder: getAndPrintNewOrder
               }
             )}
           </AppShell.Main>

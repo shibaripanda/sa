@@ -1,5 +1,6 @@
 import { Table } from '@mantine/core'
 import React from 'react'
+import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 
 export function OrdersScreen(props, message) {
 
@@ -33,10 +34,9 @@ export function OrdersScreen(props, message) {
         <Table.Tbody>{rows}</Table.Tbody>
         <Table.Caption>Scroll page to see sticky thead</Table.Caption>
       </Table>
-      // <div>fvfv</div>
     )
   }
 
-  return <div>dfdfdf</div>
+  return <LoaderShow/>
 
 }

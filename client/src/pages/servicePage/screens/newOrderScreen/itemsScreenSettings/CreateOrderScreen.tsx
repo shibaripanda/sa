@@ -54,10 +54,17 @@ export function CreateOrderScreen(props, message) {
   //   console.log('control', i.item, sessionStorage.getItem(`docInput_${i.item}`))
   // }
 
+  const butOpenCreateOrder = () => {
+    if(!props.props.openedNewOrder){
+      return <Button color='green' onClick={props.props.openedNewOrderHandler.toggle}>{props.text[message][props.leng]}</Button>
+    }
+    return <Button color='red' onClick={props.props.openedNewOrderHandler.toggle}>{props.text.cancel[props.leng]}</Button>
+  }
+
   return (
     <div>
       <Group>
-        <Button color='green' onClick={props.props.openedNewOrderHandler.toggle}>{props.text[message][props.leng]}</Button>
+        {butOpenCreateOrder()}
         <TextInput/>
       </Group>
 
@@ -78,7 +85,8 @@ export function CreateOrderScreen(props, message) {
                 color='green'
                 fullWidth
                 disabled={disabledCreateButton()}
-                onClick={() => {
+                onClick={async () => {
+                  await props.props.getAndPrintNewOrder()
                   sendToSocket('createOrder', {
                     serviceId: props.user.serviceId, 
                     subServiceId: props.user.subServiceId,
