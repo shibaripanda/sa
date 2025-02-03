@@ -58,10 +58,14 @@ function ServicePage() {
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
   const [orders, setOrders] = useState<object[]>([])
+  const [countLoadOrders, setCountLoadOrders] = useState([0, 10])
 
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
 
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
+
+  const authClass = new AuthClass()
+  const textClass = new TextClass()
 
   useEffect(() => {
     getTexLengUserService()
@@ -86,10 +90,18 @@ function ServicePage() {
     })
     setOrders([...orders])
   }
+  const getCountOfOrders = (start, end) => {
+    orders.splice(0)
+    setOrders([])
+    SocketApt.socket?.removeListener('getOrders')
+    SocketApt.socket?.once('getOrders', (data) => {
+      getOneOrder(data)
+    })
+    sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: start, end: end})
+  }
 
   const getTexLengUserService = async () => {
-    const authClass = new AuthClass()
-    const textClass = new TextClass()
+    
     const t2 = await textClass.getLeng()
     const t3 = await textClass.getText()
     const t4 = await authClass.getCurrentUser()
@@ -119,7 +131,8 @@ function ServicePage() {
                 ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
-      sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
+      // sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
+      sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: countLoadOrders[0], end: countLoadOrders[1]})
     }
     else{
       navigate('/')
@@ -195,7 +208,10 @@ function ServicePage() {
               setNewDataService: setNewDataService,
               openedNewOrder: openedNewOrder,
               openedNewOrderHandler: openedNewOrderHandler,
-              getAndPrintNewOrder: getAndPrintNewOrder
+              getAndPrintNewOrder: getAndPrintNewOrder,
+              getCountOfOrders: getCountOfOrders,
+              countLoadOrders: countLoadOrders,
+              setCountLoadOrders: setCountLoadOrders
               }
             )}
           </AppShell.Main>

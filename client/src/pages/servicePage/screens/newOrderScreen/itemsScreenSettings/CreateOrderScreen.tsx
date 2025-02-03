@@ -1,10 +1,11 @@
-import { Button, Collapse, Grid, Group, TextInput } from '@mantine/core'
+import { Button, Collapse, Grid, Group, RangeSlider, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
 import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
 import { MultSelect } from './ElementsInput/MultSelect.tsx'
+import classes from './Slider.module.css'
 
 export function CreateOrderScreen(props, message) {
 
@@ -56,17 +57,33 @@ export function CreateOrderScreen(props, message) {
 
   const butOpenCreateOrder = () => {
     if(!props.props.openedNewOrder){
-      return <Button color='green' onClick={props.props.openedNewOrderHandler.toggle}>{props.text[message][props.leng]}</Button>
+      return <Button fullWidth color='green' onClick={props.props.openedNewOrderHandler.toggle}>{props.text[message][props.leng]}</Button>
     }
-    return <Button color='red' onClick={props.props.openedNewOrderHandler.toggle}>{props.text.cancel[props.leng]}</Button>
+    return <Button fullWidth color='red' onClick={props.props.openedNewOrderHandler.toggle}>{props.text.cancel[props.leng]}</Button>
   }
+
+  const butLine = [
+    butOpenCreateOrder(),
+    <TextInput/>,
+    '',
+    '',
+    <div>
+      <Button size={'xs'} fullWidth color='red' onClick={() => props.props.getCountOfOrders(props.props.countLoadOrders[0], props.props.countLoadOrders[1])}>Определенное количество</Button>
+      <RangeSlider color='red' size="xs" labelAlwaysOn defaultValue={props.props.countLoadOrders} classNames={classes} 
+      onChange={(event) => {
+          console.log(event)
+          props.props.setCountLoadOrders(event)
+        }
+      }
+      />
+    </div>
+  ]
 
   return (
     <div>
-      <Group>
-        {butOpenCreateOrder()}
-        <TextInput/>
-      </Group>
+      <Grid>
+        {butLine.map((item, index) => <Grid.Col key={index} span={12 / butLine.length}>{item}</Grid.Col>)}
+      </Grid>
 
       <Collapse in={props.props.openedNewOrder}>
         <div>

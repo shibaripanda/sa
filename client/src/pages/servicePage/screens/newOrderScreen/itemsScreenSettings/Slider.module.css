@@ -1,0 +1,19 @@
+.label {
+  top: 0;
+  height: 18px;
+  line-height: 5px;
+  width: 25px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  background-color: transparent;
+}
+
+.thumb {
+  background-color: red;
+  height: 18px;
+  width: 25px;
+  border: none;
+}

@@ -21,7 +21,7 @@ export function OrdersScreen(props, message) {
         )}
       </Table.Tr>
     ))
-  
+
     return (
       <Table stickyHeader stickyHeaderOffset={60}>
         <Table.Thead>
@@ -32,7 +32,6 @@ export function OrdersScreen(props, message) {
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
-        <Table.Caption>Scroll page to see sticky thead</Table.Caption>
       </Table>
     )
   }
