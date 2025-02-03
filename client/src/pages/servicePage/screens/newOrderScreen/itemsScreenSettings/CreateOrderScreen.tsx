@@ -1,10 +1,11 @@
-import { Button, Collapse, Grid, Group, RangeSlider, TextInput } from '@mantine/core'
+import { Button, Collapse, Grid, RangeSlider, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
 import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
 import { MultSelect } from './ElementsInput/MultSelect.tsx'
+// @ts-ignore
 import classes from './Slider.module.css'
 
 export function CreateOrderScreen(props, message) {
@@ -133,7 +134,7 @@ export function CreateOrderScreen(props, message) {
 
         </div>
       </Collapse>
-      <hr style={{marginTop: '1vmax', marginBottom: '0.5vmax'}}></hr>
+      <hr style={{marginTop: '1vmax', marginBottom: '0.1vmax'}}></hr>
     </div>
     
   )

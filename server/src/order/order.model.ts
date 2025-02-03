@@ -16,6 +16,11 @@ export const OrderSchema = new mongoose.Schema({
   _manager_: {
     type: String,
     require: true
+  },
+  status: {
+    type: String,
+    require: true,
+    default: 'New'
   }
 }, {timestamps: true})
 

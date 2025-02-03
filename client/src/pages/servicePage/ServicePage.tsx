@@ -74,7 +74,7 @@ function ServicePage() {
 
   const addNewOrder = (data: any) => {
     console.log('orders', orders.length)
-    setOrders([...orders, data])
+    setOrders([data, ...orders])
     setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
     openedPrintHandlers.open()
   }
