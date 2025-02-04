@@ -1,4 +1,4 @@
-import { Accordion, Center, Container, Grid, Text, Tooltip } from '@mantine/core'
+import { Accordion, Button, Center, Container, Grid, Text, Tooltip } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
@@ -12,6 +12,7 @@ export function OrdersScreen(props, message) {
 
   console.log('OrdersScreen')
   console.log(props.orders[0])
+  console.log('props.screenSize', props.props.screenSize)
 
   const colorOrder = (status) => {
     if(status === 'New'){
@@ -33,25 +34,41 @@ export function OrdersScreen(props, message) {
 
         <Accordion.Item className={classes.item} value={element._id} 
         style={{
-          border: `2px solid ${colorOrder(element.status)}`
+          border: `2px solid ${colorOrder(element._status_)}`
           }}>
           <Accordion.Control>
-            <Grid justify="space-between">
+            <Grid justify="space-between" align="center">
               {activData.map((item, index) => 
                 <Grid.Col span={12 / activData.length} key={element._id + index}><Center>{element[item.item]}</Center></Grid.Col>
               )}
             </Grid>
           </Accordion.Control>
           <Accordion.Panel>
-            gbbgb
+            <Grid>
+              <Grid.Col span={props.props.screenSizeOrderButLine}>
+                <Button fullWidth>1</Button>
+              </Grid.Col>
+              <Grid.Col span={props.props.screenSizeOrderButLine}>
+                <Button fullWidth>2</Button>
+              </Grid.Col>
+              <Grid.Col span={props.props.screenSizeOrderButLine}>
+                <Button fullWidth>3</Button>
+              </Grid.Col>
+              <Grid.Col span={props.props.screenSizeOrderButLine}>
+                <Button fullWidth>4</Button>
+              </Grid.Col>
+              <Grid.Col span={props.props.screenSizeOrderButLine}>
+                <Button fullWidth>4</Button>
+              </Grid.Col>
+            </Grid>
           </Accordion.Panel>
         </Accordion.Item>
 
     ))
 
     const textBigToSmall = (text) => {
-      if(text.length > 18){
-        return <Tooltip label={text}><Text size='xs'>{text.slice(0, 18) + '...'}</Text></Tooltip>
+      if(text.length > 15){
+        return <Tooltip label={text}><Text size='xs'>{text.slice(0, 15) + '...'}</Text></Tooltip>
       }
       return <Text size='xs'>{text}</Text>
     }

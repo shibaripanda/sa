@@ -28,6 +28,7 @@ function ServicePage() {
   const [user, setUser] = useState<object | false>(false)
   const [activeScreen, setActiveScreen] = useState(sessionStorage.getItem('activescreen') ? Number(sessionStorage.getItem('activescreen')) : 0)
   const [service, setService] = useState<object | false>(false)
+  const screenSizeOrderButLine = useMatches({base: 12, sm: 12, md: 2, lg: 2})
   const screenSize = useMatches({base: 12, sm: 12, md: 4, lg: 3})
   const screenSizeNewOrder = useMatches({base: 12, sm: 12, md: 4, lg: 4})
   const [opened, { close, open }] = useDisclosure(false)
@@ -59,9 +60,7 @@ function ServicePage() {
   const [dataForPrint, setDataForPrint] = useState(false)
   const [orders, setOrders] = useState<object[]>([])
   const [countLoadOrders, setCountLoadOrders] = useState([0, 10])
-
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
-
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
 
   const authClass = new AuthClass()
@@ -200,6 +199,7 @@ function ServicePage() {
               newVariant: newVariant,
               setNewVariant: setNewVariant,
               screenSizeNewOrder,
+              screenSizeOrderButLine,
               newOrderRend: newOrderRend,
               setNewOrderRend: setNewOrderRend,
               orderData: orderData,

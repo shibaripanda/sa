@@ -17,7 +17,7 @@ export const OrderSchema = new mongoose.Schema({
     type: String,
     require: true
   },
-  status: {
+  _status_: {
     type: String,
     require: true,
     default: 'New'
