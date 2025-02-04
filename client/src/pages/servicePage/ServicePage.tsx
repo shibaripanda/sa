@@ -16,7 +16,6 @@ import { useDisclosure, useListState } from '@mantine/hooks'
 import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
 import { SocketApt } from '../../modules/socket/api/socket-api.ts'
 
-
 function ServicePage() {
   
   const navigate = useNavigate()
@@ -61,6 +60,7 @@ function ServicePage() {
   const [orders, setOrders] = useState<object[]>([])
   const [countLoadOrders, setCountLoadOrders] = useState([0, 10])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
+  const [openedFilter, openedFilterHandler] = useDisclosure(false)
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
 
   const authClass = new AuthClass()
@@ -211,7 +211,9 @@ function ServicePage() {
               getAndPrintNewOrder: getAndPrintNewOrder,
               getCountOfOrders: getCountOfOrders,
               countLoadOrders: countLoadOrders,
-              setCountLoadOrders: setCountLoadOrders
+              setCountLoadOrders: setCountLoadOrders,
+              openedFilter: openedFilter,
+              openedFilterHandler: openedFilterHandler
               }
             )}
           </AppShell.Main>

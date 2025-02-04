@@ -56,34 +56,51 @@ export function CreateOrderScreen(props, message) {
   //   console.log('control', i.item, sessionStorage.getItem(`docInput_${i.item}`))
   // }
 
+  const switchFilterOrNewOrder = (set) => {
+      if(set === 'filter'){
+        props.props.openedFilterHandler.toggle()
+        props.props.openedNewOrderHandler.close()
+      }
+      else if(set === 'newOrder'){
+        props.props.openedFilterHandler.close()
+        props.props.openedNewOrderHandler.toggle()
+      }
+  }
+
   const butOpenCreateOrder = () => {
     if(!props.props.openedNewOrder){
-      return <Button fullWidth color='green' onClick={props.props.openedNewOrderHandler.toggle}>{props.text[message][props.leng]}</Button>
+      return <Button fullWidth color='green' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text[message][props.leng]}</Button>
     }
-    return <Button fullWidth color='red' onClick={props.props.openedNewOrderHandler.toggle}>{props.text.cancel[props.leng]}</Button>
+    return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text.cancel[props.leng]}</Button>
+  }
+
+  const butOpenFilter = () => {
+    if(!props.props.openedFilter){
+      return <Button fullWidth onClick={() => switchFilterOrNewOrder('filter')}>Filter</Button>
+    }
+    return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('filter')}>{props.text.cancel[props.leng]}</Button>
   }
 
   const butLine = [
-    butOpenCreateOrder(),
+    // <div>
+    //   <Button size={'xs'} fullWidth color='red' onClick={() => props.props.getCountOfOrders(props.props.countLoadOrders[0], props.props.countLoadOrders[1])}>Определенное количество</Button>
+    //   <RangeSlider color='red' size="xs" labelAlwaysOn defaultValue={props.props.countLoadOrders} classNames={classes} 
+    //   onChange={(event) => {
+    //       console.log(event)
+    //       props.props.setCountLoadOrders(event)
+    //     }
+    //   }
+    //   />
+    // </div>,
+    butOpenFilter(),
     <TextInput/>,
-    '',
-    '',
-    <div>
-      <Button size={'xs'} fullWidth color='red' onClick={() => props.props.getCountOfOrders(props.props.countLoadOrders[0], props.props.countLoadOrders[1])}>Определенное количество</Button>
-      <RangeSlider color='red' size="xs" labelAlwaysOn defaultValue={props.props.countLoadOrders} classNames={classes} 
-      onChange={(event) => {
-          console.log(event)
-          props.props.setCountLoadOrders(event)
-        }
-      }
-      />
-    </div>
+    butOpenCreateOrder(),
   ]
 
   return (
     <div>
       <Grid>
-        {butLine.map((item, index) => <Grid.Col key={index} span={12 / butLine.length}>{item}</Grid.Col>)}
+        {butLine.map((item, index) => <Grid.Col key={index} span={props.props.screenSizeNewOrder}>{item}</Grid.Col>)}
       </Grid>
 
       <Collapse in={props.props.openedNewOrder}>
@@ -131,6 +148,54 @@ export function CreateOrderScreen(props, message) {
               </Button>
             </Grid.Col>
           </Grid>
+
+        </div>
+      </Collapse>
+      <Collapse in={props.props.openedFilter}>
+        <div>
+          <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr>
+                  dddd
+          {/* <Grid grow>
+            {activData.map(item => 
+            <Grid.Col key={item.item} span={props.props.screenSizeNewOrder}>
+              {fieldCheck(item)}
+            </Grid.Col>)}
+          </Grid>
+
+          <Grid style={{marginTop: '1.5vmax'}} grow>
+            <Grid.Col span={props.props.screenSizeNewOrder}>
+              <Button
+                color='green'
+                fullWidth
+                disabled={disabledCreateButton()}
+                onClick={async () => {
+                  await props.props.getAndPrintNewOrder()
+                  sendToSocket('createOrder', {
+                    serviceId: props.user.serviceId, 
+                    subServiceId: props.user.subServiceId,
+                    newOrder: createOrder()
+                  })
+                }}
+                >
+                {props.text.createNewOrder[props.leng]}
+              </Button>
+            </Grid.Col>
+            <Grid.Col span={props.props.screenSizeNewOrder}>
+              <Button
+                color='red'
+                fullWidth 
+                disabled={disabledClearButton()}
+                onClick={() => {
+                  for(const i of activData.map(item => item.item)){
+                    sessionStorage.removeItem(`docInput_${i}`)
+                  }
+                  props.props.setNewOrderRend(Date.now())
+                }}
+                >
+                {props.text.clearForm[props.leng]}
+              </Button>
+            </Grid.Col>
+          </Grid> */}
 
         </div>
       </Collapse>

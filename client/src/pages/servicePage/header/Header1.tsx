@@ -133,15 +133,7 @@ export function Header1(props) {
           {[
             <Group key={1}>
               {topMenu}
-            </Group>, 
-            // <Group key={2}>
-            //   <TextInput rightSectionPointerEvents="none"
-            //     inputSize={'30'}
-            //     placeholder=' find'
-            //     rightSection={<IconBackspace stroke={1.5}/>} 
-            //     radius="sm"
-            //     key={49}/>
-            // </Group>
+            </Group>
             ]}
         </Group>
 

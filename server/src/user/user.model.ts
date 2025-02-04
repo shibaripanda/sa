@@ -63,7 +63,7 @@ export const UsersSchema = new mongoose.Schema({
     type: [roleShema], 
     require: true, 
     default: []
-  },
+  }
 }, {timestamps: true})
 
 export interface User {

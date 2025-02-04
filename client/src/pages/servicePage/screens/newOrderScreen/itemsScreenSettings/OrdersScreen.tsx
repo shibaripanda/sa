@@ -21,15 +21,6 @@ export function OrdersScreen(props, message) {
   }
 
   if(props.orders.length){
-    // const rows = props.orders.map((element) => (
-      
-    //   <Table.Tr key={element._id}>
-    //     {activData.map((item, index) => 
-    //       <Table.Td key={element._id + index}>{element[item.item]}</Table.Td>
-    //     )}
-    //   </Table.Tr>
-      
-    // ))
     const rowss = props.orders.map((element) => (
 
         <Accordion.Item className={classes.item} value={element._id} 
@@ -65,7 +56,6 @@ export function OrdersScreen(props, message) {
         </Accordion.Item>
 
     ))
-
     const textBigToSmall = (text) => {
       if(text.length > 15){
         return <Tooltip label={text}><Text size='xs'>{text.slice(0, 15) + '...'}</Text></Tooltip>
@@ -75,7 +65,7 @@ export function OrdersScreen(props, message) {
  
     return (
       <div>
-        <Grid justify="space-between" align="center">
+        <Grid justify="space-between" align="center" visibleFrom="sm" style={{marginBottom: '1vmax'}}>
           {activData.map(item => 
               <Grid.Col span={12 / activData.length} key={item.item}><Center>{textBigToSmall(item.item)}</Center></Grid.Col>
             )}
@@ -85,17 +75,6 @@ export function OrdersScreen(props, message) {
             {rowss}
           </Accordion>
         </Container>
-      
-      {/* <Table stickyHeader stickyHeaderOffset={60}>
-        <Table.Thead>
-          <Table.Tr>
-            {activData.map(item => 
-              <Table.Th key={item.item}>{item.item}</Table.Th>
-            )}
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table> */}
       </div>
     )
   }
