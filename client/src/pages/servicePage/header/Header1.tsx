@@ -1,5 +1,5 @@
-import React from 'react'
-import { Anchor, Burger, Grid, Group, Modal, TextInput } from '@mantine/core'
+import React, { useState } from 'react'
+import { Anchor, Burger, Grid, Group, Modal, Switch, TextInput, useMantineColorScheme } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 // @ts-ignore
 import classes from './Header1.module.css'
@@ -8,6 +8,8 @@ import { IconBackspace } from '@tabler/icons-react'
 export function Header1(props) {
   const [openedModal, { open, close }] = useDisclosure(false)
   const [opened, { toggle }] = useDisclosure(false, {onOpen: () => open()})
+  const { setColorScheme, clearColorScheme } = useMantineColorScheme()
+  const [checked, setChecked] = useState(false)
   
   const topMenuArray = 
     [
@@ -21,6 +23,15 @@ export function Header1(props) {
       },
       {name: `${props.service.name} (${props.service.subName})`, action: () => {}, class: classes.mainLink},
       {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink},
+      {name: <Switch
+        color='gray'
+        checked={checked}
+        onChange={(event) => {
+          if(checked) {setColorScheme('light')}
+          else {setColorScheme('dark')}
+          setChecked(event.currentTarget.checked)
+        }}
+      />, action: () => {}, class: classes.mainLink},
     ]
   const topMenuMobileArray = 
     [

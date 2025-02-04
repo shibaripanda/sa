@@ -13,7 +13,9 @@ const theme = createTheme({
 function App() {
   return (
     // <div className='App'>
-      <MantineProvider theme={theme}>
+      <MantineProvider theme={theme}  
+      // defaultColorScheme="dark"
+      >
         <BrowserRouter>
             <Routes>
               <Route path="/service" element={<ServicePage/>} />
