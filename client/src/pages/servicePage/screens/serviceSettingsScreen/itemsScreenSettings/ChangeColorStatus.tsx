@@ -7,11 +7,10 @@ import { IconHandStop } from '@tabler/icons-react'
 export function ChangeColorStatus(props, message) {
 
   console.log('ChangeColorStatus')
+  console.log('d', props)
 
-  // stateColorList:  setStateColorListhandlers
-
-  if(!props.props.stateColorList.length){
-    props.props.setStateColorListhandlers.set(props.service.statuses)
+  if(props.props.stateColorList.length !== props.service.statuses.length){
+    props.props.setStateColorListhandlers.setState(props.service.statuses)
   }
 
   const colorBut = (status) => {
@@ -49,6 +48,19 @@ export function ChangeColorStatus(props, message) {
                 }}>
                 {props.text.save[props.leng]}
               </Button>
+              <Button size='xs'
+                onClick={() => {
+                  // if(!['New', 'Ready'].includes(item)){
+                    sendToSocket(message, {
+                      serviceId: props.user.serviceId, 
+                      subServiceId: props.user.subServiceId, 
+                      status: item
+                    })
+                  // }
+                }}>
+                  {/* {iconStatus(item)}{'\u00A0'} */}
+                  <Text>{props.text.delete[props.leng]}</Text>
+                </Button>
             </Group>
             <ColorPicker
               value={props.props.colorStatus.color}
@@ -68,63 +80,37 @@ export function ChangeColorStatus(props, message) {
     </Draggable>
   ))
 
+  const vertikalHorizontal = (screen) => {
+    if(screen === 12){
+      return 'vertical'
+    }
+    return 'horizontal'
+  }
+
   return (
     <div>
       <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>
       <DragDropContext
-        onDragEnd={({ destination, source }) =>
+        onDragEnd={({ destination, source }) => {
+          sendToSocket('replaceStatusPosition', {
+                        serviceId: props.user.serviceId, 
+                        subServiceId: props.user.subServiceId, 
+                        index1: source.index,
+                        index2: destination?.index || 0 
+                        })
+        
           props.props.setStateColorListhandlers.reorder({ from: source.index, to: destination?.index || 0 })
-        }
+        }}
       >
-        <Droppable droppableId="dnd-list" direction="horizontal">
+        <Droppable droppableId="dnd-list" direction={vertikalHorizontal(props.props.screenSize)}>
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
-              <Group justify="center" grow>{items}</Group>
+              <Grid grow>{items.map((item, index) => <Grid.Col span={props.props.screenSize} key={index}>{item}</Grid.Col>)}</Grid>
               {provided.placeholder}
             </div>
           )}
         </Droppable>
       </DragDropContext>
-
-      {/* <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>
-      <Grid style={{marginBottom: 10}}>{props.service.statuses.map(item =>
-        <Grid.Col key={item} span={props.props.screenSize}>
-          <HoverCard width={280} shadow="md">
-            <HoverCard.Target>
-              <Button fullWidth color={colorBut(item)}>{item}</Button>
-            </HoverCard.Target>
-            <HoverCard.Dropdown>
-            <Group style={{marginBottom: '0.5vmax'}}>
-              <Text>{item}</Text>
-              <Button size='xs'
-              color={props.props.colorStatus.color}
-              disabled={!props.props.colorStatus}
-                onClick={() => {
-                  sendToSocket(message, {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId, 
-                    status: props.props.colorStatus.status,
-                    color: props.props.colorStatus.color
-                  })
-                }}>
-                {props.text.save[props.leng]}
-              </Button>
-            </Group>
-            <ColorPicker
-              value={props.props.colorStatus.color}
-              onChange={(color) => {
-                console.log(props.props.colorStatus)
-                props.props.setColorStatus({status: item, color: color})
-                console.log(props.props.colorStatus)
-              }}
-              format="hex"
-                swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
-            /> 
-            </HoverCard.Dropdown>
-          </HoverCard>
-        </Grid.Col> 
-        )}
-      </Grid> */}
     </div>
   )
 }

@@ -37,6 +37,15 @@ export class ServicesGateway {
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('replaceStatusPosition')
+  async replaceStatusPosition(@MessageBody() payload: ReplaceOrderDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.replaceStatusPosition(payload.serviceId, payload.index1, payload.index2)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeColorStatus')
   async changeColorStatus(@MessageBody() payload: ChangeServiceColorStatusDto, @ConnectedSocket() client: Socket,): Promise<void> {
     const service = await this.serviceSevice.changeColorStatus(payload.serviceId, payload.status, payload.color)

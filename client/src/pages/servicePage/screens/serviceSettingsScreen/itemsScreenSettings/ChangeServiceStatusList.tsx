@@ -1,4 +1,4 @@
-import { Button, Group, Text, TextInput } from '@mantine/core'
+import { Button, Grid, Group, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { IconLockSquare, IconSquareX } from '@tabler/icons-react'
@@ -6,20 +6,20 @@ import { upFirstString } from '../../../../../modules/upFirstString.ts'
 
 export function ChangeServiceStatusList(props, message) {
 
-    // console.log('ChangeServiceStatusList', props, message)
-    console.log('ChangeServiceStatusList')
+  console.log('ChangeServiceStatusList')
 
-    const iconStatus = (item) => {
-      if(!['New', 'Ready'].includes(item)){
-        return <IconSquareX color='red'/>
-      }
-      return <IconLockSquare/>
+  const iconStatus = (item) => {
+    if(!['New', 'Ready'].includes(item)){
+      return <IconSquareX color='red'/>
     }
-    // payload.device[0].toUpperCase() + payload.device.slice(1, payload.device.length).toLowerCase()
+    return <IconLockSquare/>
+  }
+
   return (
     <div>
         <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>
-          <Group style={{marginBottom: 10}}>{props.service.statuses.map(item => 
+
+          {/* <Group style={{marginBottom: 10}}>{props.service.statuses.map(item => 
             <Button variant='default' key={item}
             onClick={() => {
               if(!['New', 'Ready'].includes(item)){
@@ -32,7 +32,26 @@ export function ChangeServiceStatusList(props, message) {
             }}>
               {iconStatus(item)}{'\u00A0'}<Text>{item}</Text>
             </Button>)}
-          </Group>
+          </Group> */}
+          
+          <Grid grow style={{marginBottom: 10}}>
+            {props.service.statuses.map((item, index) => 
+            <Grid.Col span={props.props.screenSize} key={index}>
+              <Button fullWidth variant='default' key={item}
+            onClick={() => {
+              if(!['New', 'Ready'].includes(item)){
+                sendToSocket(message, {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId, 
+                  status: item
+                })
+              }
+            }}>
+              {iconStatus(item)}{'\u00A0'}<Text>{item}</Text>
+            </Button>
+              </Grid.Col>)}
+          </Grid>
+
         <TextInput placeholder={props.text.statusName[props.leng]}
         value={props.props.status}
         onChange={(event) => {

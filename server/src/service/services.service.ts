@@ -14,6 +14,17 @@ export class ServicesService {
         private userService: UsersService
     ) {}
 
+    async replaceStatusPosition(serviceId: string, index1: number, index2: number){
+        console.log(index1, index2)
+        const item = (await this.serviceMongo.findOne({_id: serviceId}, {statuses: 1, _id: 0})).statuses[index1]
+        console.log(item)
+        if(item){
+            await this.serviceMongo.updateOne({_id: serviceId}, {$pull: {statuses: item}})
+            return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$push: {statuses: {$each: [item], $position: index2}}}, {returnDocument: 'after'})
+        }
+        return await this.serviceMongo.findOne({_id: serviceId})
+    }
+
     async changeColorStatus(serviceId: string, status: string, color: string){
         // return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {colorStatuses: []}, {returnDocument: 'after'})
         console.log(status, color)
