@@ -30,7 +30,7 @@ export const line = [
         screen: NewOrderScreen,
         items: [
             {message: 'createOrder', screenItem: CreateOrderScreen},
-            {message: 'createOrder', screenItem: OrdersScreen},  
+            {message: 'orders', screenItem: OrdersScreen},  
         ]
     },
     {

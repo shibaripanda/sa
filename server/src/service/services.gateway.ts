@@ -23,6 +23,7 @@ import { EditOrderDataDto } from './dto/EditOrderDataDto.dto'
 import { ReplaceOrderDataDto } from './dto/ReplaceOrderDataDto.dto'
 import { EditVariantDto } from './dto/EditVariantDto.dto'
 import { ChangeServiceDataDto } from './dto/ChangeServiceDataDto.dto'
+import { ChangeServiceColorStatusDto } from './dto/ChangeServiceColorStatusDto.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 export class ServicesGateway {
@@ -32,6 +33,16 @@ export class ServicesGateway {
     ) {}
 
   @WebSocketServer() server: Server
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeColorStatus')
+  async changeColorStatus(@MessageBody() payload: ChangeServiceColorStatusDto, @ConnectedSocket() client: Socket,): Promise<void> {
+    const service = await this.serviceSevice.changeColorStatus(payload.serviceId, payload.status, payload.color)
+    console.log(service.colorStatuses)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)

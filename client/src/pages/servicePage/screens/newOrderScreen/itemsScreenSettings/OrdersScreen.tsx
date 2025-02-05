@@ -11,19 +11,17 @@ export function OrdersScreen(props, message) {
   // console.log('activData', activData)
 
   console.log('OrdersScreen')
-  console.log(props.orders[0])
-  console.log('props.screenSize', props.props.screenSize)
+  // console.log(props.orders[0])
+  // console.log('props.screenSize', props.props.screenSize)
 
   const colorOrder = (status) => {
-    if(status === 'New'){
-      return 'green'
-    }
+    return props.service.colorStatuses.find(item => item.status === status) ? props.service.colorStatuses.find(item => item.status === status).color : 'yellow'
   }
 
   if(props.orders.length){
     const rowss = props.orders.map((element) => (
 
-        <Accordion.Item className={classes.item} value={element._id} 
+        <Accordion.Item key={element._id} className={classes.item} value={element._id} 
         style={{
           border: `2px solid ${colorOrder(element._status_)}`
           }}>

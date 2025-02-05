@@ -5,10 +5,8 @@ import { IconSquareX } from '@tabler/icons-react'
 
 export function ChangeLocalService(props, message) {
 
-  // console.log('ChangeLocalService', props, message)
   console.log('ChangeLocalService')
 
-  console.log(props.user.subServiceId)
   return (
     <div>
         <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>

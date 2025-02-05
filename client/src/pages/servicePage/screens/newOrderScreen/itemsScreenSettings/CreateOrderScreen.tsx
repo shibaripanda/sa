@@ -6,7 +6,7 @@ import { SelectField } from './ElementsInput/SelectField.tsx'
 import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
 import { MultSelect } from './ElementsInput/MultSelect.tsx'
 // @ts-ignore
-import classes from './Slider.module.css'
+// import classes from './Slider.module.css'
 
 export function CreateOrderScreen(props, message) {
 

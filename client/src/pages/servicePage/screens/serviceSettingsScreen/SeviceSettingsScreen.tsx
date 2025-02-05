@@ -4,7 +4,7 @@ import React from 'react'
 
 export function SeviceSettingsScreen(props) {
 
-  console.log('SeviceSettingsScreen', props)
+  console.log('SeviceSettingsScreen')
   
   return (
     <>

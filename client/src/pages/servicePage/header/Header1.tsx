@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { Anchor, Burger, Grid, Group, Modal, Switch, TextInput, useMantineColorScheme } from '@mantine/core'
+import { Anchor, Burger, Grid, Group, Modal, Switch, useMantineColorScheme } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 // @ts-ignore
 import classes from './Header1.module.css'
-import { IconBackspace } from '@tabler/icons-react'
 
 export function Header1(props) {
   const [openedModal, { open, close }] = useDisclosure(false)
@@ -18,6 +17,7 @@ export function Header1(props) {
         color: 'red', class: classes.mainLinkExit,
         action: () => {
           sessionStorage.removeItem('activescreen')
+          clearColorScheme()
           props.navigate('/')
         }
       },

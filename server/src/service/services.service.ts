@@ -14,6 +14,16 @@ export class ServicesService {
         private userService: UsersService
     ) {}
 
+    async changeColorStatus(serviceId: string, status: string, color: string){
+        // return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {colorStatuses: []}, {returnDocument: 'after'})
+        console.log(status, color)
+        const res = await this.serviceMongo.findOne({_id: serviceId}, {colorStatuses: 1, _id: 0})
+        if(res.colorStatuses.map(item => item.status).includes(status)){
+            return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$set: {'colorStatuses.$[el].color': color}}, {arrayFilters: [{'el.status': status}], returnDocument: 'after'})
+        }
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {colorStatuses: {color: color, status: status}}}, {returnDocument: 'after'})
+    }
+
     async changeInfoMainService(serviceId: string, newData: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {dataService: newData}, {returnDocument: 'after'})
     }

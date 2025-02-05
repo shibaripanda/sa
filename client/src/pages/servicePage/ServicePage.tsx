@@ -62,6 +62,9 @@ function ServicePage() {
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
+  const [colorStatus, setColorStatus] = useState<object | false>(false)
+
+  const [stateColorList, setStateColorListhandlers] = useListState([])
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -213,7 +216,11 @@ function ServicePage() {
               countLoadOrders: countLoadOrders,
               setCountLoadOrders: setCountLoadOrders,
               openedFilter: openedFilter,
-              openedFilterHandler: openedFilterHandler
+              openedFilterHandler: openedFilterHandler,
+              colorStatus: colorStatus,
+              setColorStatus: setColorStatus,
+              stateColorList: stateColorList,
+              setStateColorListhandlers: setStateColorListhandlers
               }
             )}
           </AppShell.Main>

@@ -16,7 +16,7 @@ export function DragAndDrop(props, message) {
   }
 
   const listBut = (item) => {
-    console.log(item.variant)
+    // console.log(item.variant)
     if(item.variant){
       return (
             <Button

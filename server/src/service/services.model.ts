@@ -22,6 +22,11 @@ interface ServiceDocuments {
   image: {name: string, image: string}[]
 }
 
+interface ColorStatus {
+  status: string,
+  color: string
+}
+
 interface OrderData {
   item: string
   control: boolean
@@ -52,6 +57,11 @@ export const ServiceSchema = new mongoose.Schema({
     statuses: {
       type: Array,
       default: ['New', 'Ready'],
+      require: true
+    },
+    colorStatuses: {
+      type: [],
+      default: [],
       require: true
     },
     orderData: {
@@ -108,6 +118,7 @@ export const ServiceSchema = new mongoose.Schema({
     serviceDocuments: ServiceDocuments[]
     price: Price[],
     orderData: OrderData[]
+    colorStatuses: ColorStatus[]
   }
   
   

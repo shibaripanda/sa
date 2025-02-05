@@ -35,7 +35,6 @@ import { OrderService } from './order.service'
 
     const orders = await this.orderService.getOrders(payload.serviceId, req.user)
     // @ts-expect-error
-
     const res = orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(payload.start, payload.end)
     for(const order of res){
       client.emit('getOrders', order)
