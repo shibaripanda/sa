@@ -6,12 +6,12 @@ import classes from './OrderList.module.css'
 
 export function OrdersScreen(props, message) {
 
-  const activData = props.service.orderData.filter(item => !item.hidden)
+  const activData = props.service.orderData//.filter(item => !item.hidden)
 
   // console.log('activData', activData)
 
   console.log('OrdersScreen')
-  // console.log(props.orders[0])
+  console.log(props.orders[0])
   // console.log('props.screenSize', props.props.screenSize)
 
   const colorOrder = (status) => {

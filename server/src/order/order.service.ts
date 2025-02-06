@@ -13,7 +13,8 @@ export class OrderService {
         private orderMongo: Model<Order>
     ) {}
 
-    async createOrder(serviceId, subServiceId, newOrder, user){
+    async createOrder(serviceId, subServiceId, newOrder, user, service){
+        console.log(service)
         const orderSh = () => {
             const res = {}
             for(const i of newOrder){
@@ -23,6 +24,7 @@ export class OrderService {
         }
         const orderData = () => {
             const res = {
+                _status_: service.statuses[0],
                 _serviceId_: serviceId, 
                 _subServiceId_: subServiceId,
                 _orderServiceId_: rendomNumberOrder({min: 1000, max: 9999}) + '_' + rendomLetteOrder() + rendomLetteOrder() + rendomLetteOrder(),

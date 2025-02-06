@@ -22,7 +22,7 @@ import { OrderService } from './order.service'
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('createOrder')
   async createOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
-    const order = await this.orderService.createOrder(payload.serviceId, payload.subServiceId, payload.newOrder, req.user)
+    const order = await this.orderService.createOrder(payload.serviceId, payload.subServiceId, payload.newOrder, req.user, req.service)
     client.emit('createOrder', order)
   }
 

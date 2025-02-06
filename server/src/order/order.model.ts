@@ -20,7 +20,7 @@ export const OrderSchema = new mongoose.Schema({
   _status_: {
     type: String,
     require: true,
-    default: 'New'
+    default: 'unStatused'
   }
 }, {timestamps: true})
 

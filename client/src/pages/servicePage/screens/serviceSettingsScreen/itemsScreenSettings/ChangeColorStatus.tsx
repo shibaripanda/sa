@@ -1,4 +1,4 @@
-import { Button, ColorPicker, Grid, Group, HoverCard, Text } from '@mantine/core'
+import { Button, Center, ColorPicker, Grid, Group, HoverCard, Text } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
@@ -48,6 +48,19 @@ export function ChangeColorStatus(props, message) {
                 }}>
                 {props.text.save[props.leng]}
               </Button>
+              
+            </Group>
+            <ColorPicker
+              value={props.props.colorStatus.color}
+              onChange={(color) => {
+                console.log(props.props.colorStatus)
+                props.props.setColorStatus({status: item, color: color})
+                console.log(props.props.colorStatus)
+              }}
+              format="hex"
+                swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
+            />
+            <Center>
               <Button size='xs'
                 onClick={() => {
                   // if(!['New', 'Ready'].includes(item)){
@@ -61,17 +74,7 @@ export function ChangeColorStatus(props, message) {
                   {/* {iconStatus(item)}{'\u00A0'} */}
                   <Text>{props.text.delete[props.leng]}</Text>
                 </Button>
-            </Group>
-            <ColorPicker
-              value={props.props.colorStatus.color}
-              onChange={(color) => {
-                console.log(props.props.colorStatus)
-                props.props.setColorStatus({status: item, color: color})
-                console.log(props.props.colorStatus)
-              }}
-              format="hex"
-                swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
-            /> 
+              </Center>
             </HoverCard.Dropdown>
           </HoverCard>
           </div>

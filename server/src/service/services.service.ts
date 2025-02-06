@@ -117,13 +117,13 @@ export class ServicesService {
     }
 
     async changeServiceStatusList(serviceId: string, status: string){
-        if(!['New', 'Ready'].includes(status)){
+        // if(!['New', 'Ready'].includes(status)){
             const statuses = (await this.serviceMongo.findOne({_id: serviceId}, {statuses: 1, _id: 0})).statuses
             if(statuses.includes(status)){
                 return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {statuses: status}}, {returnDocument: 'after'})
             }
             return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {statuses: status}}, {returnDocument: 'after'})
-        }
+        // }
     }
 
     async changeServiceDeviceList(serviceId: string, device: string){

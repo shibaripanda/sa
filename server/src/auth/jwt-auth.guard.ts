@@ -1,19 +1,19 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { ServicesService } from 'src/service/services.service'
 // import { Observable } from 'rxjs'
 import { UsersService } from 'src/user/users.service'
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
     constructor(private jwtService: JwtService,
-        private userService: UsersService
+        private userService: UsersService,
+        private serviceSevice: ServicesService,
     ){}
 
     async canActivate(context: ExecutionContext): Promise<boolean>  {
         const req = context.switchToHttp().getRequest()
-        // console.log(req.handshake.headers.token)
         try{
-            // const authHeader = req.handshake.headers.token
             const authHeader = req.handshake.auth.token.Authorization
             const bearer = authHeader.split(' ')[0]
             const token = authHeader.split(' ')[1]
@@ -22,9 +22,10 @@ export class JwtAuthGuard implements CanActivate {
                 throw new UnauthorizedException({message: 'Нет авторизации1'})
             }
             const userEmail = this.jwtService.verify(token).email
-            // console.log(user)
             req.user = await this.userService.getUserByEmail(userEmail)
-            // console.log('Авторизация true')
+            if(context.switchToWs().getData().serviceId){
+               req.service = await this.serviceSevice.getServiceById(context.switchToWs().getData().serviceId) 
+            }
             return true
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

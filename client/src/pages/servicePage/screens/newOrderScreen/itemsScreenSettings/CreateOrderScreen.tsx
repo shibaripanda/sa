@@ -92,9 +92,9 @@ export function CreateOrderScreen(props, message) {
     //   }
     //   />
     // </div>,
-    butOpenFilter(),
-    <TextInput/>,
     butOpenCreateOrder(),
+    <TextInput/>,
+    butOpenFilter(),
   ]
 
   return (

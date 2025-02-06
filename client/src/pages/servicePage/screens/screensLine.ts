@@ -41,7 +41,7 @@ export const line = [
             {message: 'changeInfoMainService', screenItem: ChangeInfoMainService}, 
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
-            {message: 'changeColorStatus', screenItem: ChangeColorStatus, size: 12},
+            // {message: 'changeColorStatus', screenItem: ChangeColorStatus, size: 12},
             {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12},
             {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12},
             {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12},
