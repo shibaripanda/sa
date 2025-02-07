@@ -27,6 +27,7 @@ export const OrderSchema = new mongoose.Schema({
 
 export interface Order {
     orderServiceId: string
+    _subService_: string
   }
 
 

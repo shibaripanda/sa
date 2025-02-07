@@ -11,6 +11,17 @@ export class UsersService {
         private userMongo: Model<User>
     ) {}
 
+    async changeDataOrderList(serviceId: string, data: string, status: boolean, user: any){
+        const res = await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})
+        if(!res.orderDataShowItems.find(item => item.serviceId === serviceId)){
+            await this.userMongo.updateOne({_id: user._id}, {$addToSet: {orderDataShowItems: {serviceId: serviceId, data: []}}})
+        }
+        if(status){
+           return await this.userMongo.findOneAndUpdate({_id: user._id}, {$addToSet: {'orderDataShowItems.$[el].data': data}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'}) 
+        }
+        return await this.userMongo.findOneAndUpdate({_id: user._id}, {$pull: {'orderDataShowItems.$[el].data': data}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'})
+    }
+
     async deleteServiceFromUsers(serviceId: string){
         return await this.userMongo.updateMany({services_roles: {$elemMatch: {serviceId: serviceId}}}, 
             {$pull: {services_roles: {serviceId: serviceId}}}

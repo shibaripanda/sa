@@ -69,7 +69,7 @@ function ServicePage() {
   const [colorStatus, setColorStatus] = useState<object | false>(false)
 
   const [stateColorList, setStateColorListhandlers] = useListState([])
-  const [stateDataOrderLine, setDataOrderLine] = useListState([])
+  const [stateDataOrderLine, setDataOrderLine] = useListState([false])
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -132,6 +132,10 @@ function ServicePage() {
         authClass.updateServiceAppUsers(data, 'name')
         setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), name: data}))
       }
+      const upUserOrderList = (data: any) => {
+        authClass.updateServiceAppUsers(data, 'orderDataShowItems')
+        setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), orderDataShowItems: data}))
+      }
       const deleteServiceRedirect = () => {
         navigate('/')
       }
@@ -141,6 +145,7 @@ function ServicePage() {
                   {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
                   {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
                   {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
+                  {message: `changeDataOrderList${authClass.getServiceId()}`, handler: upUserOrderList},
                   {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
                 ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))

@@ -33,7 +33,7 @@ import { OrderService } from './order.service'
   async getOrdersCount(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
 
-    const orders = await this.orderService.getOrders(payload.serviceId, req.user)
+    const orders = await this.orderService.getOrders(payload.serviceId, req.user, req.service)
     // @ts-expect-error
     const res = orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(payload.start, payload.end)
     for(const order of res){
@@ -48,7 +48,7 @@ import { OrderService } from './order.service'
   async getOrders(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
 
-    const orders = await this.orderService.getOrders(payload.serviceId, req.user)
+    const orders = await this.orderService.getOrders(payload.serviceId, req.user, req.service)
     // @ts-expect-error
     for(const order of orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))){
       client.emit('getOrders', order)

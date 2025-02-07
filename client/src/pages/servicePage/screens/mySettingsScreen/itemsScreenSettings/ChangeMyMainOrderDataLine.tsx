@@ -1,4 +1,4 @@
-import { Button, Chip, Grid, Group, Text } from '@mantine/core'
+import { Button, Chip, Grid, Group, Space, Text } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
@@ -21,22 +21,23 @@ export function ChangeMyMainOrderDataLine(props, item) {
     {name: props.text.localService[props.leng], data: '_subService_'},
   ])
 
-  if(props.props.stateDataOrderLine.length === 0){
-    props.props.setDataOrderLine.setState(line)
+  const lineActiv = props.user.orderDataShowItems.find(item => item.serviceId === props.user.serviceId) ? props.user.orderDataShowItems.find(item => item.serviceId === props.user.serviceId).data : []
+  
+  if(props.props.stateDataOrderLine[0] === false){
+    props.props.setDataOrderLine.setState(lineActiv)
   }
 
   const activeData = (data) => {
-    console.log(props.user)
-    const res = props.user.orderDataShowItems.find(item => item.serviceId === props.service.serviceId)
+    const res = props.user.orderDataShowItems.find(item => item.serviceId === props.user.serviceId)
     if(res && res.data.includes(data)){
-      return 'green'
+      return true
     }
-    return 'grey'
+    return false
   }
 
   const items = props.props.stateDataOrderLine.map((item, index) => (
 
-    <Draggable key={item.data} index={index} draggableId={item.data}>
+    <Draggable key={item} index={index} draggableId={item}>
       {(provided, snapshot) => (
         <div
           {...provided.draggableProps}
@@ -45,12 +46,12 @@ export function ChangeMyMainOrderDataLine(props, item) {
         >
           <div>
             <IconHandStop/>
-            <Button fullWidth color={activeData(item.data)}>{item.name}</Button>
-            
+            <Button fullWidth>{line.find(a => a.data === item).name}</Button>
           </div>
         </div>
       )}
     </Draggable>
+
   ))
   
   const vertikalHorizontal = (screen) => {
@@ -84,8 +85,30 @@ export function ChangeMyMainOrderDataLine(props, item) {
             )}
           </Droppable>
         </DragDropContext>
-        {/* <Group>{line.map(item => <Chip checked={true} onChange={() => {}}>{item.name}</Chip>)}</Group> */}
-        
+        <Space h="xs" />
+        <hr></hr>
+        <Space h="xs" />
+        <Group>
+          {line.map(item => 
+          <Chip checked={activeData(item.data)} 
+            onChange={() => {
+              sendToSocket('changeDataOrderList', {
+                serviceId: props.user.serviceId, 
+                subServiceId: props.user.subServiceId, 
+                data: item.data,
+                status: !activeData(item.data) 
+              })
+              if(activeData(item.data)){
+                props.props.setDataOrderLine.setState([...props.props.stateDataOrderLine.filter(i => i !== item.data)])
+              }
+              else{
+                props.props.stateDataOrderLine.push(item.data)
+                props.props.setDataOrderLine.setState([...props.props.stateDataOrderLine])
+              }
+            }}>
+            {item.name}
+          </Chip>)}
+        </Group>
     </div>
     )
 }

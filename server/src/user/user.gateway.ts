@@ -12,6 +12,7 @@ import { DeleteServiceUser } from './dto/DeleteServiceUser.dto'
 import { AddDeviceToUser } from './dto/AddDeviceToUser.dto'
 import { AddStatusToUser } from './dto/AddStatusToUser.dto'
 import { UpdateUserData } from './dto/UpdateUserData.dto'
+import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 
@@ -22,6 +23,16 @@ import { UpdateUserData } from './dto/UpdateUserData.dto'
   ) {}
 
   @WebSocketServer() server: Server
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeDataOrderList')
+  async changeDataOrderList(@ConnectedSocket() client: Socket, @MessageBody() payload: UpdateOrderListData, @Request() req: any): Promise<void> {
+    const user = await this.userSevice.changeDataOrderList(payload.serviceId, payload.data, payload.status, req.user)
+    console.log(user.orderDataShowItems)
+    this.server.to(client.id).emit(`changeDataOrderList${payload.serviceId}`, user ? user.orderDataShowItems : [])
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)

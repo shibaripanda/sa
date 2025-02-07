@@ -17,6 +17,11 @@ interface ServicesRoles {
   subServices: SubRoles[]
 }
 
+interface DataList {
+  serviceId: string
+  data: string[]
+}
+
 const roleShema1 = new mongoose.Schema({
   roles: {
     type: Array,
@@ -47,6 +52,15 @@ const roleShema = new mongoose.Schema({
   }
 })
 
+const dataShema = new mongoose.Schema({
+  serviceId: {
+    type: String,
+  },
+  data: {
+    type: Array
+  }
+})
+
 export const UsersSchema = new mongoose.Schema({
   email: {
     type: String, 
@@ -65,7 +79,7 @@ export const UsersSchema = new mongoose.Schema({
     default: []
   },
   orderDataShowItems: {
-    type: Array,
+    type: [dataShema],
     require: true,
     default: []
   }
@@ -77,5 +91,5 @@ export interface User {
   authCode: AuthCode
   services_roles: ServicesRoles[]
   name?: string
-  orderDataShowItems: [] 
+  orderDataShowItems: DataList[] 
 }

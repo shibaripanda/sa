@@ -35,7 +35,6 @@ export class AuthService {
         if(!user) await this.usersService.createUser(data.email.toLowerCase(), newCode, Date.now())
         else await this.usersService.newCodeCreate(data.email.toLowerCase(), newCode, Date.now())
         if(process.env.MODE === 'prod'){
-            console.log('sd')
             await sendEmail(data.email.toLowerCase(), textCode, newCode.toString())
         }
         throw new UnauthorizedException({message: global.appText.codeSendToEmail[data.leng] ? global.appText.codeSendToEmail[data.leng] : global.appText.codeSendToEmail.en})
