@@ -11,15 +11,28 @@ export class UsersService {
         private userMongo: Model<User>
     ) {}
 
-    async changeDataOrderList(serviceId: string, data: string, status: boolean, user: any){
+    async changeDataOrderList(serviceId: string, data: string, status: boolean, user: any, index1: number, index2: number, action: string){
         const res = await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})
         if(!res.orderDataShowItems.find(item => item.serviceId === serviceId)){
             await this.userMongo.updateOne({_id: user._id}, {$addToSet: {orderDataShowItems: {serviceId: serviceId, data: []}}})
         }
-        if(status){
-           return await this.userMongo.findOneAndUpdate({_id: user._id}, {$addToSet: {'orderDataShowItems.$[el].data': data}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'}) 
+        if(action === 'addDelete'){
+            if(status){
+            return await this.userMongo.findOneAndUpdate({_id: user._id}, {$addToSet: {'orderDataShowItems.$[el].data': data}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'}) 
+            }
+            return await this.userMongo.findOneAndUpdate({_id: user._id}, {$pull: {'orderDataShowItems.$[el].data': data}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'})
         }
-        return await this.userMongo.findOneAndUpdate({_id: user._id}, {$pull: {'orderDataShowItems.$[el].data': data}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'})
+        else if(action === 'replace'){
+            const item = (await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})).orderDataShowItems.find(item => item.serviceId === serviceId).data[index1]
+            console.log(item)
+            if(item){
+                // await this.userMongo.updateOne({_id: user._id}, {$pull: {orderDataShowItems: item}})
+                await this.userMongo.findOneAndUpdate({_id: user._id}, {$pull: {'orderDataShowItems.$[el].data': item}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'})
+                // return await this.userMongo.findOneAndUpdate({_id: user._id}, {$push: {orderDataShowItems: {$each: [item], $position: index2}}}, {returnDocument: 'after'})
+                return await this.userMongo.findOneAndUpdate({_id: user._id}, {$push: {'orderDataShowItems.$[el].data': {$each: [item], $position: index2}}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'})
+            }
+            return await this.userMongo.findOne({_id: user._id})
+        }
     }
 
     async deleteServiceFromUsers(serviceId: string){

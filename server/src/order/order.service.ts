@@ -40,18 +40,21 @@ export class OrderService {
     }
 
     async getOrders(serviceId, user, service){
+        
+        // console.log(serviceId, user, service)
         const res = await this.orderMongo.find()
         for(const i of res){
-            i._subService_ = 'rgrgrgrgr'
+            const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
+            i._subService_ = name ? name.name : '--'
         }
         return res
     }
 
-    async getOrder(serviceId){
-        console.log(serviceId)
-        const res = await this.orderMongo.find()
-        console.log(res)
-    }
+    // async getOrder(serviceId){
+    //     console.log(serviceId)
+    //     const res = await this.orderMongo.find()
+    //     console.log(res)
+    // }
 
 
 }

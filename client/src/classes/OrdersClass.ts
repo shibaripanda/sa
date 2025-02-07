@@ -1,13 +1,11 @@
 
 export class OrdersClass {
-    orders: object[]
+    order: object[]
 
-    constructor(orders){
-        this.orders = orders
+    constructor(order){
+        this.order = order
     }
 
-    getOrders(){
-        return this.orders
-    }
+   
 
 }

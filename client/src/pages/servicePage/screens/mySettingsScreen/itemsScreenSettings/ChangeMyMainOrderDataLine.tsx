@@ -4,11 +4,9 @@ import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { IconHandStop } from '@tabler/icons-react'
 
-export function ChangeMyMainOrderDataLine(props, item) {
+export function ChangeMyMainOrderDataLine(props, item1) {
 
   console.log('ChangeMyMainOrderDataLine')
-
-  // stateDataOrderLine setDataOrderLine
 
   const line = props.service.orderData
   .map(item => ({name: item.item, data: item.item}))
@@ -63,14 +61,15 @@ export function ChangeMyMainOrderDataLine(props, item) {
 
   return (
       <div>
-        <Text fw={700} style={{marginBottom: 10}}>{props.text[item.message][props.leng]}</Text>
+        <Text fw={700} style={{marginBottom: 10}}>{props.text[item1.message][props.leng]}</Text>
         <DragDropContext
             onDragEnd={({ destination, source }) => {
-              sendToSocket(item.message, {
+              sendToSocket(item1.message, {
                             serviceId: props.user.serviceId, 
                             subServiceId: props.user.subServiceId, 
                             index1: source.index,
-                            index2: destination?.index || 0 
+                            index2: destination?.index || 0,
+                            action: 'replace'  
                             })
             
               props.props.setDataOrderLine.reorder({ from: source.index, to: destination?.index || 0 })
@@ -92,11 +91,13 @@ export function ChangeMyMainOrderDataLine(props, item) {
           {line.map(item => 
           <Chip checked={activeData(item.data)} 
             onChange={() => {
-              sendToSocket('changeDataOrderList', {
+              console.log('ffffff',item.message)
+              sendToSocket(item1.message, {
                 serviceId: props.user.serviceId, 
                 subServiceId: props.user.subServiceId, 
                 data: item.data,
-                status: !activeData(item.data) 
+                status: !activeData(item.data),
+                action: 'addDelete' 
               })
               if(activeData(item.data)){
                 props.props.setDataOrderLine.setState([...props.props.stateDataOrderLine.filter(i => i !== item.data)])

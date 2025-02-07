@@ -3,6 +3,7 @@ import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
 import classes from './OrderList.module.css'
+import { IconCheck, IconSquareCheck } from '@tabler/icons-react'
 
 export function OrdersScreen(props, message) {
 
@@ -44,6 +45,12 @@ export function OrdersScreen(props, message) {
     return data ? data : '--'
   }
 
+  const checkStatus = (x, y) => {
+    if(x === y){
+      return <IconSquareCheck/>
+    }
+  }
+
   if(props.orders.length){
     const rowss = props.orders.map((element) => (
 
@@ -52,29 +59,22 @@ export function OrdersScreen(props, message) {
           border: `2px solid ${colorOrder(element._status_)}`
           }}>
           <Accordion.Control>
-            <Grid justify="space-between" align="center">
+            <Grid justify="center" align="center" visibleFrom="sm">
               {activData.map((item, index) => 
                 <Grid.Col span={12 / activData.length} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
               )}
             </Grid>
+            <Grid justify="center" align="center" hiddenFrom="sm">
+              {activData.slice(0, 3).map((item, index) => 
+                <Grid.Col span={4} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
+              )}
+            </Grid>
           </Accordion.Control>
           <Accordion.Panel>
-            <Grid>
-              <Grid.Col span={props.props.screenSizeOrderButLine}>
-                <Button fullWidth>1</Button>
-              </Grid.Col>
-              <Grid.Col span={props.props.screenSizeOrderButLine}>
-                <Button fullWidth>2</Button>
-              </Grid.Col>
-              <Grid.Col span={props.props.screenSizeOrderButLine}>
-                <Button fullWidth>3</Button>
-              </Grid.Col>
-              <Grid.Col span={props.props.screenSizeOrderButLine}>
-                <Button fullWidth>4</Button>
-              </Grid.Col>
-              <Grid.Col span={props.props.screenSizeOrderButLine}>
-                <Button fullWidth>4</Button>
-              </Grid.Col>
+            <Grid justify="center" grow>
+              {props.service.statuses.map(item => <Grid.Col span={props.props.screenSizeOrderButLine}>
+                <Button color={colorOrder(item)} fullWidth>{checkStatus(element._status_, item)}{'\u00A0'}{item}</Button>
+              </Grid.Col>)}
             </Grid>
           </Accordion.Panel>
         </Accordion.Item>
@@ -82,9 +82,9 @@ export function OrdersScreen(props, message) {
     ))
     const textBigToSmall = (text) => {
       if(text.length > 15){
-        return <Tooltip label={text}><Text size='xs'>{text.slice(0, 15) + '...'}</Text></Tooltip>
+        return <Tooltip label={text}><Text size='sm'>{text.slice(0, 15) + '...'}</Text></Tooltip>
       }
-      return <Text size='xs'>{text}</Text>
+      return <Text size='sm'>{text}</Text>
     }
  
     return (

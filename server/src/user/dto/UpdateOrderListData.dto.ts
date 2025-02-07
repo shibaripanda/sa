@@ -1,13 +1,26 @@
-import { IsBoolean, IsNotEmpty, IsString, Length } from 'class-validator'
+import { IsNotEmpty, IsString, Length } from 'class-validator'
 
 export class UpdateOrderListData {
 
-    @IsNotEmpty()
-    @IsBoolean()
+    // @IsNotEmpty()
+    // @IsBoolean()
     readonly status: boolean
+
+    // @IsNotEmpty()
+    // @IsNumber()
+    readonly index1: number
+
+    // @IsNotEmpty()
+    // @IsNumber()
+    readonly index2: number
+
 
     @IsNotEmpty()
     @IsString()
+    readonly action: string
+
+    // @IsNotEmpty()
+    // @IsString()
     readonly data: string
 
     @IsNotEmpty()

@@ -27,11 +27,12 @@ import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
-  @SubscribeMessage('changeDataOrderList')
+  @SubscribeMessage('changeMyMainOrderDataLine')
   async changeDataOrderList(@ConnectedSocket() client: Socket, @MessageBody() payload: UpdateOrderListData, @Request() req: any): Promise<void> {
-    const user = await this.userSevice.changeDataOrderList(payload.serviceId, payload.data, payload.status, req.user)
+    console.log(payload.action)
+    const user = await this.userSevice.changeDataOrderList(payload.serviceId, payload.data, payload.status, req.user, payload.index1, payload.index2, payload.action)
     console.log(user.orderDataShowItems)
-    this.server.to(client.id).emit(`changeDataOrderList${payload.serviceId}`, user ? user.orderDataShowItems : [])
+    this.server.to(client.id).emit(`changeMyMainOrderDataLine${payload.serviceId}`, user ? user.orderDataShowItems : [])
   }
 
   @UseGuards(JwtAuthGuard)

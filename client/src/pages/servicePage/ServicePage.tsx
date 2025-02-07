@@ -18,6 +18,7 @@ import { SocketApt } from '../../modules/socket/api/socket-api.ts'
 
 interface Order {
   _id: string
+  _subService_: string
 }
 
 function ServicePage() {
@@ -91,8 +92,8 @@ function ServicePage() {
     ])
   }
   const getOneOrder = async (data: any) => {
+    console.log(data)
     const res = orders.findIndex(item => item._id === data._id)
-    console.log(res)
     if(res > -1){
       orders[res] = data
     }
@@ -145,7 +146,7 @@ function ServicePage() {
                   {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
                   {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
                   {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
-                  {message: `changeDataOrderList${authClass.getServiceId()}`, handler: upUserOrderList},
+                  {message: `changeMyMainOrderDataLine${authClass.getServiceId()}`, handler: upUserOrderList},
                   {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
                 ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
