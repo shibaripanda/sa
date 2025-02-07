@@ -7,6 +7,7 @@ export interface User {
     token: string
     _id: string
     serviceId: string
+    orderDataShowItems: {serviceId: string, data: string[]}[]
 }
 
 export class UserClass {
@@ -20,6 +21,7 @@ export class UserClass {
     userRoles: string[]
     subServiceId: string
     serviceId: string
+    orderDataShowItems: {serviceId: string, data: string[]}[]
     
     constructor(data: User){
 
@@ -32,6 +34,7 @@ export class UserClass {
         this.userRoles = data.roles.roles
         this.subServiceId = data.roles.subServiceId
         this.serviceId = data.serviceId
+        this.orderDataShowItems = data.orderDataShowItems
 
     }
 

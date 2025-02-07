@@ -2,15 +2,13 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { User } from './user.model'
-import { ServicesService } from 'src/service/services.service'
 
 @Injectable()
 export class UsersService {
 
     constructor(
         @InjectModel('User') 
-        private userMongo: Model<User>,            
-        private serviceMongo: ServicesService
+        private userMongo: Model<User>
     ) {}
 
     async deleteServiceFromUsers(serviceId: string){

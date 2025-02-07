@@ -63,6 +63,11 @@ export const UsersSchema = new mongoose.Schema({
     type: [roleShema], 
     require: true, 
     default: []
+  },
+  orderDataShowItems: {
+    type: Array,
+    require: true,
+    default: []
   }
 }, {timestamps: true})
 
@@ -71,5 +76,6 @@ export interface User {
   email: string
   authCode: AuthCode
   services_roles: ServicesRoles[]
-  name?: string 
+  name?: string
+  orderDataShowItems: [] 
 }

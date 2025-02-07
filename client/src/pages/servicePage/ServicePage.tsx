@@ -16,6 +16,10 @@ import { useDisclosure, useListState } from '@mantine/hooks'
 import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
 import { SocketApt } from '../../modules/socket/api/socket-api.ts'
 
+interface Order {
+  _id: string
+}
+
 function ServicePage() {
   
   const navigate = useNavigate()
@@ -57,7 +61,7 @@ function ServicePage() {
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
-  const [orders, setOrders] = useState<object[]>([])
+  const [orders, setOrders] = useState<Order[]>([])
   const [countLoadOrders, setCountLoadOrders] = useState([0, 10])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
@@ -65,6 +69,7 @@ function ServicePage() {
   const [colorStatus, setColorStatus] = useState<object | false>(false)
 
   const [stateColorList, setStateColorListhandlers] = useListState([])
+  const [stateDataOrderLine, setDataOrderLine] = useListState([])
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -86,7 +91,14 @@ function ServicePage() {
     ])
   }
   const getOneOrder = async (data: any) => {
-    orders.push(data)
+    const res = orders.findIndex(item => item._id === data._id)
+    console.log(res)
+    if(res > -1){
+      orders[res] = data
+    }
+    else{
+      orders.push(data)
+    }
     SocketApt.socket?.once('getOrders', (data) => {
       getOneOrder(data)
     })
@@ -220,7 +232,9 @@ function ServicePage() {
               colorStatus: colorStatus,
               setColorStatus: setColorStatus,
               stateColorList: stateColorList,
-              setStateColorListhandlers: setStateColorListhandlers
+              setStateColorListhandlers: setStateColorListhandlers,
+              stateDataOrderLine: stateDataOrderLine,
+              setDataOrderLine: setDataOrderLine
               }
             )}
           </AppShell.Main>

@@ -104,5 +104,10 @@ export const textArray: LengData[] = [
     {rutext: 'Данные компании', index: 'changeInfoMainService', info_data: 'данные компании', update: false},
     {rutext: 'Отмена', index: 'cancel', info_data: 'отмена', update: false},
     {rutext: 'Цвета статусов', index: 'changeColorStatus', info_data: 'цвета статусов', update: false},
+    {rutext: 'Настройка вида заказа', index: 'changeMyMainOrderDataLine', info_data: 'настройка вида  заказа', update: false},
+    {rutext: 'Локальный сервис', index: 'localService', info_data: 'локальный сервис', update: false},
+    {rutext: 'Статус', index: 'status', info_data: 'статус', update: false},
+    {rutext: 'Создан', index: 'created', info_data: 'создан', update: false},
+    {rutext: 'Изменён', index: 'edited', info_data: 'изменён', update: false},
     
 ]

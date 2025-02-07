@@ -8,7 +8,6 @@ import { UpdateUserRoleDto } from './dto/updateUserRole.dto'
 import { WSValidationPipe } from 'src/modules/wsPipeValid'
 import { RolesGuard } from 'src/auth/roles.guard'
 import { GetServiceUsersDto } from './dto/GetServiceUsers.dto'
-import { ServicesService } from 'src/service/services.service'
 import { DeleteServiceUser } from './dto/DeleteServiceUser.dto'
 import { AddDeviceToUser } from './dto/AddDeviceToUser.dto'
 import { AddStatusToUser } from './dto/AddStatusToUser.dto'
@@ -19,7 +18,6 @@ import { UpdateUserData } from './dto/UpdateUserData.dto'
   export class UserGateway  {
 
   constructor(
-    private serviceMongo: ServicesService,
     private userSevice: UsersService
   ) {}
 

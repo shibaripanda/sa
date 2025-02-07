@@ -1,4 +1,4 @@
-import { Button, Center, ColorPicker, Grid, Group, Text, TextInput, HoverCard } from '@mantine/core'
+import { Button, ColorPicker, Grid, Group, Text, TextInput, HoverCard } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { upFirstString } from '../../../../../modules/upFirstString.ts'

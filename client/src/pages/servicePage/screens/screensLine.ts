@@ -22,7 +22,7 @@ import { ChangeServiceOrderDataList } from "./serviceSettingsScreen/itemsScreenS
 import { CreateOrderScreen } from "./newOrderScreen/itemsScreenSettings/CreateOrderScreen.tsx";
 import { ChangeInfoMainService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeInfoMainService.tsx";
 import { OrdersScreen } from "./newOrderScreen/itemsScreenSettings/OrdersScreen.tsx";
-import { ChangeColorStatus } from "./serviceSettingsScreen/itemsScreenSettings/ChangeColorStatus.tsx";
+import { ChangeMyMainOrderDataLine } from "./mySettingsScreen/itemsScreenSettings/ChangeMyMainOrderDataLine.tsx";
 
 export const line = [
     {
@@ -41,7 +41,6 @@ export const line = [
             {message: 'changeInfoMainService', screenItem: ChangeInfoMainService}, 
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
-            // {message: 'changeColorStatus', screenItem: ChangeColorStatus, size: 12},
             {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12},
             {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12},
             {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12},
@@ -79,6 +78,16 @@ export const line = [
         screen: MySettingsScreen,
         items: [
             {
+                message: 'changeMyMainOrderDataLine', 
+                screenItem: ChangeMyMainOrderDataLine, 
+                setData: 'setUserName', 
+                newData: 'userName', 
+                data: 'name', 
+                title: 'name', 
+                res: 'newUserName',
+                size: 12
+            },
+            {
                 message: 'changeMyName', 
                 screenItem: ChangeMyName, 
                 setData: 'setUserName', 
@@ -87,7 +96,6 @@ export const line = [
                 title: 'name', 
                 res: 'newUserName'
             },
-            
         ]
     }
 ]
