@@ -1,9 +1,10 @@
-import { Accordion, Button, Center, Container, Grid, Text, Tooltip } from '@mantine/core'
+import { Accordion, Button, Center, Container, Grid, Space, Table, Text, Tooltip } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
 import classes from './OrderList.module.css'
-import { IconCheck, IconSquareCheck } from '@tabler/icons-react'
+import { IconSquareCheck } from '@tabler/icons-react'
+import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function OrdersScreen(props, message) {
 
@@ -51,6 +52,32 @@ export function OrdersScreen(props, message) {
     }
   }
 
+  const dataForTable = (data) => {
+    const res = []
+    for(const i in data){
+      const field = line.find(item => item.data === i)
+      if(field){
+        res.push(
+          <Table.Tr key={i}>
+            <Table.Th w={350}>{field.name}</Table.Th>
+            <Table.Td>{specData(data[i], i)}</Table.Td>
+          </Table.Tr>
+        )
+      }
+      else{
+        if(i[0] !== '_' && data[i]){
+          res.push(
+            <Table.Tr key={i}>
+              <Table.Th w={350}>{i}</Table.Th>
+              <Table.Td>{specData(data[i], i)}</Table.Td>
+            </Table.Tr>
+          )
+        }
+      } 
+    }
+    return res
+  }
+
   if(props.orders.length){
     const rowss = props.orders.map((element) => (
 
@@ -73,9 +100,34 @@ export function OrdersScreen(props, message) {
           <Accordion.Panel>
             <Grid justify="center" grow>
               {props.service.statuses.map(item => <Grid.Col span={props.props.screenSizeOrderButLine}>
-                <Button color={colorOrder(item)} fullWidth>{checkStatus(element._status_, item)}{'\u00A0'}{item}</Button>
+                <Button 
+                  color={colorOrder(item)} 
+                  fullWidth
+                  onClick={() => {
+                    sendToSocket('editOrderStatus', {
+                      serviceId: props.user.serviceId, 
+                      subServiceId: props.user.subServiceId,
+                      orderId: element._id,
+                      newStatus: item
+                    })
+                    console.log(element._id, item)
+                  }}
+                >
+                  {checkStatus(element._status_, item)}{'\u00A0'}{item}
+                </Button>
               </Grid.Col>)}
             </Grid>
+            
+            {/* <Space h='md'/> */}
+            <hr color={colorOrder(element._status_)}></hr>
+            <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+              <Table.Tbody>
+                {dataForTable(element)}
+              </Table.Tbody>
+            </Table>
+            {/* <Space h='md'/> */}
+            <hr color={colorOrder(element._status_)}></hr>
+            
           </Accordion.Panel>
         </Accordion.Item>
 

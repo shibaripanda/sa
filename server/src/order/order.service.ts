@@ -13,6 +13,30 @@ export class OrderService {
         private orderMongo: Model<Order>
     ) {}
 
+    async editOrderStatus(serviceId, subServiceId, orderId, newStatus, user, service){
+        const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId, _subServiceId_: subServiceId}, {_status_: 1, _id: 0})
+        if(old){
+            const updated = await this.orderMongo.findOneAndUpdate(
+                {_id: orderId, _serviceId_: serviceId, _subServiceId_: subServiceId}, 
+                {_status_: newStatus, $push: {
+                    history: {
+                        user: user.name ? user.name + ' (' + user.email + ')' : user.email,
+                        userId: user._id,
+                        edit: '_status_',
+                        old: old._status_ ? old._status_ : '',
+                        new: newStatus,
+                        date: Date.now()
+                        }
+                    }
+                }, 
+                {returnDocument: 'after'})
+            const name = service.subServices.find(item => item.subServiceId === updated._subServiceId_)
+            updated._subService_ = name ? name.name : '--'
+            return updated
+        }
+        return false   
+    }
+
     async createOrder(serviceId, subServiceId, newOrder, user, service){
         console.log(service)
         const orderSh = () => {

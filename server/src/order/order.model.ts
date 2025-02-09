@@ -25,6 +25,11 @@ export const OrderSchema = new mongoose.Schema({
     type: String,
     require: true,
     default: 'x'
+  },
+  _history_: {
+    type: Array,
+    require: true,
+    default: []
   }
 }, {timestamps: true})
 
@@ -36,7 +41,7 @@ export interface Order {
     _manager_: string
     _status_: string
     _subService_: string
-    // createdAt: any
+    _history_: []
   }
 
 
