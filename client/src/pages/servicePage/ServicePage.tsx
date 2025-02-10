@@ -69,6 +69,7 @@ function ServicePage() {
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
   const [colorStatus, setColorStatus] = useState<object | false>(false)
   const [dataInformation, setDataInformation] = useState('')
+  const [newWork, setNewWork] = useState({serv: '', master: '', varanty: null, subCost: null, cost: null, parts: []})
 
   const [stateColorList, setStateColorListhandlers] = useListState([])
   const [stateDataOrderLine, setDataOrderLine] = useListState([false])
@@ -243,7 +244,9 @@ function ServicePage() {
               stateDataOrderLine: stateDataOrderLine,
               setDataOrderLine: setDataOrderLine,
               dataInformation: dataInformation,
-              setDataInformation: setDataInformation
+              setDataInformation: setDataInformation,
+              newWork: newWork,
+              setNewWork: setNewWork
               }
             )}
           </AppShell.Main>
