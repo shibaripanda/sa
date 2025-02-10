@@ -68,6 +68,7 @@ function ServicePage() {
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
   const [colorStatus, setColorStatus] = useState<object | false>(false)
+  const [dataInformation, setDataInformation] = useState('')
 
   const [stateColorList, setStateColorListhandlers] = useListState([])
   const [stateDataOrderLine, setDataOrderLine] = useListState([false])
@@ -240,7 +241,9 @@ function ServicePage() {
               stateColorList: stateColorList,
               setStateColorListhandlers: setStateColorListhandlers,
               stateDataOrderLine: stateDataOrderLine,
-              setDataOrderLine: setDataOrderLine
+              setDataOrderLine: setDataOrderLine,
+              dataInformation: dataInformation,
+              setDataInformation: setDataInformation
               }
             )}
           </AppShell.Main>

@@ -20,8 +20,19 @@ import { OrderService } from './order.service'
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('addInformationOrder')
+  async addInformationOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    console.log(payload)
+    const order = await this.orderService.addInformationOrder(payload.serviceId, payload.subServiceId, payload.orderId, payload.data, req.user, req.service)
+    if(order) client.emit('getOrders', order)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('editOrderStatus')
   async editOrderStatus(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    console.log(payload)
     const order = await this.orderService.editOrderStatus(payload.serviceId, payload.subServiceId, payload.orderId, payload.newStatus, req.user, req.service)
     if(order) client.emit('getOrders', order)
   }

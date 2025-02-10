@@ -30,6 +30,11 @@ export const OrderSchema = new mongoose.Schema({
     type: Array,
     require: true,
     default: []
+  },
+  _information_: {
+    type: Array,
+    require: true,
+    default: []
   }
 }, {timestamps: true})
 
