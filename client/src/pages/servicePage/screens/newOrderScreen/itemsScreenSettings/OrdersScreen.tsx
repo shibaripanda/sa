@@ -187,17 +187,64 @@ export function OrdersScreen(props, message) {
     }
     return <Text size='sm'>{text}</Text>
   }
-  const profit = (profit) => {
-    if(profit > -1){
-      return <Text c='green'>+ {profit}</Text>
+  const profit = (cost, subCost) => {
+
+    const sizeFont = (text) => {
+      const l = text.toString().length
+      if(l < 5) return 'xl'
+      else if(l < 8) return 'md'
+      else if(l < 11) return 'sm'
+      return 'xs'
     }
-    return <Text c='red'>{profit}</Text>
+    if(cost || cost === 0){
+      const res = cost - (subCost ? subCost : 0)
+      console.log('res', res)
+      if(res === 0){
+        return <Text size={sizeFont(res)} c='yellow'>{res}</Text>
+      }
+      else if(res > -1){
+        return <Text size={sizeFont(res)} c='green'>+ {res}</Text>
+      }
+      else if(res){
+        return <Text size={sizeFont(res)} c='red'>{res}</Text>
+      }
+    }
+    return '--'
+  }
+  const total = () => {
+   
+    const sumCost = () => {
+      let totalRes = props.props.newWork.cost ? props.props.newWork.cost : 0
+      if(props.props.newWork.parts.length){
+        for(const i of props.props.newWork.parts){
+          totalRes = totalRes + (i.cost ? i.cost : 0)
+        }
+      }
+      return totalRes
+    }
+
+    const sumSub = () => {
+      let totalRes = props.props.newWork.subCost ? props.props.newWork.subCost : 0
+      if(props.props.newWork.parts.length){
+        for(const i of props.props.newWork.parts){
+          totalRes = totalRes + (i.subCost ? i.subCost : 0)
+        }
+      }
+      return totalRes
+    }
+
+    console.log(sumSub(), sumCost())
+    return {
+      sumSub: sumSub(),
+      sumCost: sumCost(),
+      sumProfit: profit(sumCost(), sumSub())
+    }
   }
   const parts = () => {
     if(props.props.newWork.parts.length){
       return props.props.newWork.parts.map((item, index) => 
-      <Grid align="center">
-        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 0.5 : 0}>
+      <Grid justify="center" align="center">
+        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 0.4 : 0}>
           <Center>
             <IconSquareX color='red' onClick={() => {
               props.props.newWork.parts.splice(index, 1)
@@ -205,7 +252,7 @@ export function OrdersScreen(props, message) {
             }}/>
           </Center>
         </Grid.Col>
-        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 5 : 12}>
+        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 5.1 : 12}>
           <TextInput value={props.props.newWork.parts[index].part} placeholder='Запчасть'
             onChange={(event) => {
               props.props.newWork.parts[index].part = event.target.value
@@ -213,36 +260,52 @@ export function OrdersScreen(props, message) {
             }}/>
         </Grid.Col>
         <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 0.5 : 0}>
-          <Center>
-            <Checkbox color='grey' onClick={() => {
-              // props.props.newWork.parts.splice(index, 1)
-              // props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
-            }}/>
-          </Center>
+          <Checkbox color='grey' checked={props.props.newWork.parts[index].link}
+            onChange={(event) => {
+            props.props.newWork.parts[index].link = event.currentTarget.checked
+            props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
+          }}/>
         </Grid.Col>
-        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
-        <NumberInput value={props.props.newWork.parts[index].varanty} placeholder='Гарантия' 
+        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
+          <NumberInput value={props.props.newWork.parts[index].varanty} placeholder='Гарантия' 
             onChange={(event) => {
               props.props.newWork.parts[index].varanty = event
               props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
             }}/>
         </Grid.Col>
-        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
-          <NumberInput value={props.props.newWork.parts[index].varanty} placeholder='Себестоимость' 
+        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
+          <NumberInput value={props.props.newWork.parts[index].subCost} placeholder='Себестоимость' 
             onChange={(event) => {
-              props.props.newWork.parts[index].varanty = event
+              props.props.newWork.parts[index].subCost = event
               props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
             }}/>
         </Grid.Col>
-        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
+        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
           <NumberInput value={props.props.newWork.parts[index].cost} placeholder='Стоимость' 
             onChange={(event) => {
               props.props.newWork.parts[index].cost = event
               props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
             }}/>
         </Grid.Col>
+        <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
+              {profit(props.props.newWork.parts[index].cost, props.props.newWork.parts[index].subCost)}
+            </Grid.Col>
       </Grid>)
     }
+  }
+
+  const activButAddNewWork = (data) => {
+    if(!data.work || !data.varanty || !data.cost || !data.master){
+      return true
+    }
+    if(data.parts.length){
+      for(const i of data.parts){
+        if(!i.part || !i.cost || !i.varanty){
+          return true
+        }
+      }
+    }
+    return false
   }
 
   const bottomSideData = (order) => {
@@ -263,7 +326,7 @@ export function OrdersScreen(props, message) {
               <Button fullWidth variant='default'>Закрыть по гарантии</Button>,
               <Button fullWidth variant='default'>Закрыть по отказу</Button>
             ]
-            .map(item => <Grid.Col span={props.props.screenSizeOrderButLine}>{item}</Grid.Col>)}
+            .map((item, index) => <Grid.Col key={index} span={props.props.screenSizeOrderButLine}>{item}</Grid.Col>)}
           </Grid>
           
         </Tabs.Panel>
@@ -294,46 +357,65 @@ export function OrdersScreen(props, message) {
             </Grid.Col>
           </Grid>
           <Space h={10}/>
-          {[...order._information_].reverse().join(', ')}
+          {[...order._information_].reverse().map((item, index) => <div key={index}>{item}</div>)}
         </Tabs.Panel>
 
         <Tabs.Panel value={props.text.works[props.leng]} pt="xs">
           <Grid justify="center" align="center">
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 6 : 12}>
+            <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 6 : 12}>
+              Название 
+            </Grid.Col>
+            <Grid.Col key={'Гарантия'} span={props.props.screenSizeOrderButLine < 12 ? 1.6: 12}>
+              Гарантия
+            </Grid.Col>
+            <Grid.Col key={'Себестоимость'} span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
+              Себестоимость {total().sumSub !== 0 ? total().sumSub : ''}
+            </Grid.Col>
+            <Grid.Col key={'Стоимость'} span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
+              Стоимость {total().sumCost !== 0 ? total().sumCost : ''}
+            </Grid.Col>
+            <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
+              {total().sumProfit}
+            </Grid.Col>
+          </Grid>
+
+          <Grid justify="center" align="center">
+            <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 6 : 12}>
               <TextInput value={props.props.newWork.work} placeholder='Услуга'
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, work: event.target.value})
                 }}/>
             </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.6: 12}>
+            <Grid.Col key={'Гарантия'} span={props.props.screenSizeOrderButLine < 12 ? 1.6: 12}>
               <NumberInput value={props.props.newWork.varanty} placeholder='Гарантия' 
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, varanty: event})
                 }}/>
             </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
+            <Grid.Col key={'Себестоимость'} span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
               <NumberInput value={props.props.newWork.subCost} placeholder='Себестоимость' 
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, subCost: event})
                 }}/>
             </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
+            <Grid.Col key={'Стоимость'} span={props.props.screenSizeOrderButLine < 12 ? 1.6 : 12}>
               <NumberInput value={props.props.newWork.cost} placeholder='Стоимость' 
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, cost: event})
                 }}/>
             </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
-              {props.props.newWork.subCost && props.props.newWork.cost ? profit(props.props.newWork.cost - props.props.newWork.subCost) : '--'}
+            <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
+              {profit(props.props.newWork.cost, props.props.newWork.subCost)}
             </Grid.Col>
           </Grid>
+
           {parts()}
-          <Space h='md'/>
-          <Grid>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 0.5 : 12}>
-              
-            </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 2.5 : 12}>
+
+          <Space h='xl'/>
+
+          <Grid justify="center" align="center">
+
+            <Grid.Col key={props.text.addPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
               <Button variant='default' fullWidth
                 onClick={() => {
                   props.props.newWork.parts.push({part: '', varanty: null, subCost: null, cost: null, link: false})
@@ -343,7 +425,7 @@ export function OrdersScreen(props, message) {
               </Button>
             </Grid.Col>
 
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
+            <Grid.Col key={props.text.cancel[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
               <Button variant='default' fullWidth
                 onClick={() => {
                   props.props.setNewWork({serv: '', master: '', varanty: null, cost: null, parts: []})
@@ -352,74 +434,32 @@ export function OrdersScreen(props, message) {
               </Button>
             </Grid.Col>
 
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
+            <Grid.Col key={'master'} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
               <TextInput value={props.props.newWork.master} placeholder='Мастер' 
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, master: event.target.value})
                 }}/>
             </Grid.Col>
 
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
+            <Grid.Col key={props.text.add[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
               <Button fullWidth variant='default'
+                disabled={activButAddNewWork(props.props.newWork)}
                 onClick={() => {
-                  // if(props.props.dataInformation){
-                  //   sendToSocket('addInformationOrder', {
-                  //     serviceId: props.user.serviceId, 
-                  //     subServiceId: props.user.subServiceId,
-                  //     orderId: order._id,
-                  //     data: props.props.dataInformation
-                  //   })
-                  //   props.props.setDataInformation('')
-                  // }
+                    sendToSocket('addNewWork', {
+                      serviceId: props.user.serviceId, 
+                      subServiceId: props.user.subServiceId,
+                      orderId: order._id,
+                      work: props.props.newWork
+                    })
+                    props.props.setNewWork({serv: '', master: '', varanty: null, cost: null, parts: []})
                 }}>
               {props.text.add[props.leng]}
               </Button>
             </Grid.Col>
 
           </Grid>
-          {/* <Grid>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 6 : 12}>
-              <TextInput value={props.props.dataInformation} placeholder='Услуга и\или запчасть'
-                onChange={(event) => {
-                  props.props.setDataInformation(event.target.value)
-                }}/>
-            </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.5 : 12}>
-              <TextInput value={props.props.dataInformation} placeholder='Мастер' 
-                onChange={(event) => {
-                  props.props.setDataInformation(event.target.value)
-                }}/>
-            </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.5 : 12}>
-              <NumberInput value={props.props.dataInformation} placeholder='Гарантия' 
-                onChange={(event) => {
-                  props.props.setDataInformation(event)
-                }}/>
-            </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.5 : 12}>
-              <NumberInput value={props.props.dataInformation} placeholder='Стоимость' 
-                onChange={(event) => {
-                  props.props.setDataInformation(event)
-                }}/>
-            </Grid.Col>
-            <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 1.5 : 12}>
-              <Button fullWidth variant='default'
-                onClick={() => {
-                  if(props.props.dataInformation){
-                    sendToSocket('addInformationOrder', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      orderId: order._id,
-                      data: props.props.dataInformation
-                    })
-                    props.props.setDataInformation('')
-                  }
-                }}>
-              {props.text.add[props.leng]}
-              </Button>
-            </Grid.Col>
-          </Grid> */}
-          <Space h={10}/>
+
+          <Space h='xl'/>
           {[...order._information_].reverse().join(', ')}
         </Tabs.Panel>
 
@@ -451,7 +491,7 @@ export function OrdersScreen(props, message) {
         </Accordion.Control>
         <Accordion.Panel>
           <Grid justify="center" grow>
-            {props.service.statuses.map(item => <Grid.Col span={props.props.screenSizeOrderButLine}>
+            {props.service.statuses.map(item => <Grid.Col key={item} span={props.props.screenSizeOrderButLine}>
               <Button 
                 color={colorOrder(item)} 
                 fullWidth
