@@ -16,6 +16,8 @@ import { useDisclosure, useListState } from '@mantine/hooks'
 import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
 import { SocketApt } from '../../modules/socket/api/socket-api.ts'
 
+export const emptyWork = {work: '', master: '', varanty: NaN, subCost: NaN, cost: NaN, parts: []}
+
 interface Order {
   _id: string
   _subService_: string
@@ -69,7 +71,7 @@ function ServicePage() {
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
   const [colorStatus, setColorStatus] = useState<object | false>(false)
   const [dataInformation, setDataInformation] = useState('')
-  const [newWork, setNewWork] = useState({serv: '', master: '', varanty: null, subCost: null, cost: null, parts: []})
+  const [newWork, setNewWork] = useState(structuredClone(emptyWork))
 
   const [stateColorList, setStateColorListhandlers] = useListState([])
   const [stateDataOrderLine, setDataOrderLine] = useListState([false])
@@ -94,7 +96,6 @@ function ServicePage() {
     ])
   }
   const getOneOrder = async (data: any) => {
-    console.log(data)
     const res = orders.findIndex(item => item._id === data._id)
     if(res > -1){
       orders[res] = data
