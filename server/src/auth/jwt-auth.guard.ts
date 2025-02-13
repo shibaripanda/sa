@@ -24,7 +24,10 @@ export class JwtAuthGuard implements CanActivate {
             const userEmail = this.jwtService.verify(token).email
             req.user = await this.userService.getUserByEmail(userEmail)
             if(context.switchToWs().getData().serviceId){
-               req.service = await this.serviceSevice.getServiceById(context.switchToWs().getData().serviceId) 
+                const users = await this.userService.getServiceLocalUsers(context.switchToWs().getData().serviceId, context.switchToWs().getData().subServiceId)
+                const service = await this.serviceSevice.getServiceById(context.switchToWs().getData().serviceId)
+                service.localUsers = users.map(item => ({ name: item.name, email: item.email, id: item._id.toString()}))
+                req.service = service
             }
             return true
         }

@@ -1,4 +1,4 @@
-import { Accordion, Badge, Button, Center, Checkbox, Container, Grid, Group, NumberInput, SegmentedControl, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
+import { Accordion, Badge, Button, Center, Checkbox, Combobox, Container, Grid, Group, NumberInput, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
@@ -14,7 +14,7 @@ export function OrdersScreen(props, message) {
   console.log('OrdersScreen')
   console.log(props.orders[0])
   console.log('parts', props.props.newWork)
-  console.log('emptyWork', emptyWork)
+  console.log('service', props.service)
 
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
@@ -483,13 +483,15 @@ export function OrdersScreen(props, message) {
                 }}/>
             </Grid.Col>
             <Grid.Col key={'Мастер'} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
-              <TextInput value={props.props.newWork.master} placeholder='Мастер' error={!props.props.newWork.master}
+              <Select value={props.props.newWork.master} placeholder='Мастер' error={!props.props.newWork.master}
+                data={props.service.localUsers.map(item => ({label: item.name ? item.name + ' (' + item.email + ')' : item.email, value: item.id}))}
                 onChange={(event) => {
-                  props.props.setNewWork({...props.props.newWork, master: event.target.value})
+                  props.props.setNewWork({...props.props.newWork, master: event})
                 }}/>
             </Grid.Col>
             <Grid.Col key={'Гарантия'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
               <NumberInput value={props.props.newWork.varanty} placeholder='Гарантия' 
+                // data={[1, 7, 14, 30, 60, 90, 120, 365].map(item => ({label: `${item} `, value: item}))}
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, varanty: event})
                 }}/>

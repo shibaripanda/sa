@@ -15,7 +15,7 @@ export class RolesGuard implements CanActivate {
   async canActivate(context: ExecutionContextHost): Promise<boolean> {
 
     const req = context.switchToWs()
-
+    console.log('- RoleGuard', req.getPattern())
     const token = req.getClient().handshake.auth.token.Authorization.split(' ')[1]
     const userEmail = this.jwtService.verify(token).email
     const user = await this.userService.getUserByEmail(userEmail)

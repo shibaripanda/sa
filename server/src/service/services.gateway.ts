@@ -219,9 +219,10 @@ export class ServicesGateway {
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('getServiceById')
-  async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto): Promise<any> {
-    const service = await this.serviceSevice.getServiceById(payload.serviceId)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+  async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto, @Request() reg: any): Promise<any> {
+    console.log('Gateway getServiceById')
+    // const service = await this.serviceSevice.getServiceById(payload.serviceId)
+    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, reg.service)
   }
 
   @UseGuards(JwtAuthGuard)

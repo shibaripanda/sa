@@ -153,7 +153,7 @@ function ServicePage() {
                   {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
                 ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
-      sendToSocket('getServiceById', {serviceId: authClass.getServiceId()})
+      sendToSocket('getServiceById', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
       // sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
       sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: countLoadOrders[0], end: countLoadOrders[1]})
     }

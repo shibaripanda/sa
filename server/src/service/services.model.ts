@@ -39,6 +39,12 @@ interface OrderData {
   number: boolean
 }
 
+interface LocalUsers {
+  name: string | undefined, 
+  email: string, 
+  id: string
+}
+
 export const ServiceSchema = new mongoose.Schema({
     name: {
       type: String, 
@@ -100,6 +106,11 @@ export const ServiceSchema = new mongoose.Schema({
       type: String, 
       default: '',
       require: true
+    },
+    localUsers: {
+      type: Array,
+      default: [],
+      require: true
     }
   }, {timestamps: true})
 
@@ -119,6 +130,7 @@ export const ServiceSchema = new mongoose.Schema({
     price: Price[],
     orderData: OrderData[]
     colorStatuses: ColorStatus[]
+    localUsers: LocalUsers[]
   }
   
   
