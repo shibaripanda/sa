@@ -265,7 +265,13 @@ export function OrdersScreen(props, message) {
             props.props.newWork.parts[index].link = event.currentTarget.checked
             props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
           }}/> Объединить с услугой</Group> */}
-          <SegmentedControl fullWidth data={['apart', 'mix', 'hide']} />
+          <SegmentedControl value={item.link} fullWidth
+            onChange={(event) => {
+              item.link = event
+              props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
+            }}  
+            data={['apart', 'mix', 'hide']} 
+            />
         </Grid.Col>
         <Grid.Col key={'varanty'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
           <NumberInput value={item.varanty} placeholder='Гарантия' 
@@ -339,6 +345,59 @@ export function OrdersScreen(props, message) {
       return 'red'
     }
     return 'green'
+  }
+  const workForClientLook = (data) => {
+    console.log('cost', data.cost)
+    if(JSON.stringify(props.props.newWork) !== JSON.stringify(structuredClone(emptyWork))){
+
+      const work = data.work + data.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')
+
+      const cost = data.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, data.cost)
+
+      const varanty = [...data.parts.
+      filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
+      .map(item => item.varanty), data.varanty ? data.varanty : 0]
+      .sort((a, b) => b - a)
+      
+      return (
+        <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+          <Table.Tbody>
+            <Table.Tr>
+              <Table.Td width={'70%'}>
+                {work}
+              </Table.Td>
+              <Table.Td width={'15%'}>
+                <Center>
+                  {varanty[0]}
+                </Center>
+              </Table.Td>
+              <Table.Td width={'15%'}>
+                <Center>
+                  {cost}
+                </Center>
+              </Table.Td>
+            </Table.Tr>
+            {data.parts.filter(item => 'apart' === item.link).map(item => 
+              <Table.Tr>
+              <Table.Td width={'70%'}>
+                {item.part ? item.part : '--'}
+              </Table.Td>
+              <Table.Td width={'15%'}>
+                <Center>
+                  {item.varanty ? item.varanty : 0}
+                </Center>
+              </Table.Td>
+              <Table.Td width={'15%'}>
+                <Center>
+                  {item.cost ? item.cost : 0}
+                </Center>
+              </Table.Td>
+            </Table.Tr>
+            )}
+          </Table.Tbody>
+        </Table>
+      )
+    }
   }
 
   const bottomSideData = (order) => {
@@ -462,8 +521,9 @@ export function OrdersScreen(props, message) {
               <Button variant='default' fullWidth
                 disabled={activButAddNewWork(props.props.newWork)}
                 onClick={async () => {
-                  // await props.props.newWork.parts.push({part: '', varanty: NaN, subCost: NaN, cost: NaN, link: false})
-                  await props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts, {part: '', varanty: NaN, subCost: NaN, cost: NaN, link: false}]})
+                  await props.props.setNewWork(
+                    {...props.props.newWork, parts: [...props.props.newWork.parts, {part: '', varanty: NaN, subCost: NaN, cost: NaN, link: 'apart'}]}
+                  )
                 }}>
                 {props.text.addPart[props.leng]}
               </Button>
@@ -498,6 +558,8 @@ export function OrdersScreen(props, message) {
           </Grid>
 
           <Space h='xl'/>
+
+          {workForClientLook(props.props.newWork)}
           {/* {[...order._information_].reverse().join(', ')} */}
         </Tabs.Panel>
 
