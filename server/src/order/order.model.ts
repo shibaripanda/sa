@@ -1,5 +1,38 @@
 import * as mongoose from 'mongoose'
 
+export const Work = new mongoose.Schema({
+  work: {
+    type: String,
+    default: 'work',
+    require: true
+  },
+  master: {
+    type: String,
+    default: 'noname',
+    require: true
+  },
+  subCost: {
+    type: Number,
+    default: 0,
+    require: true
+  },
+  cost: {
+    type: Number,
+    default: 0,
+    require: true
+  },
+  parts: {
+    type: Array,
+    default: [],
+    require: true
+  },
+  varanty: {
+    type: Number,
+    default: 0,
+    require: true
+  }
+}, {timestamps: true})
+
 export const OrderSchema = new mongoose.Schema({
   _orderServiceId_: {
     type: String,
@@ -35,6 +68,11 @@ export const OrderSchema = new mongoose.Schema({
     type: Array,
     require: true,
     default: []
+  },
+  _work_: {
+    type: [Work],
+    require: true,
+    default: []
   }
 }, {timestamps: true})
 
@@ -47,6 +85,7 @@ export interface Order {
     _status_: string
     _subService_: string
     _history_: []
+    _work_: []
   }
 
 

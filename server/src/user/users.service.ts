@@ -48,6 +48,21 @@ export class UsersService {
         return await this.userMongo.findOne({_id: _id})
     }
 
+    async getLocalUsers(serviceId: string, subServiceId: string){
+        const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
+        if(users){
+            for(const i of users){
+                i.services_roles = i.services_roles.filter(item => item.serviceId === serviceId)
+                for(const a of i.services_roles){
+                    a.subServices = a.subServices.filter(item => item.subServiceId === subServiceId)
+                }
+            }
+            const res = users.map(item => ({ name: item.name, email: item.email, id: item._id.toString()}))
+            return res 
+        }
+        return []
+    }
+
     async getServiceLocalUsers(serviceId: string, subServiceId: string){
         const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
         if(users){

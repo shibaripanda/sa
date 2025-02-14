@@ -1,9 +1,9 @@
-import { Accordion, Badge, Button, Center, Checkbox, Combobox, Container, Grid, Group, NumberInput, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
+import { Accordion, Anchor, Badge, Button, Center, Checkbox, Container, Grid, isNumberLike, NumberInput, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
 import classes from './OrderList.module.css'
-import { IconEyeClosed, IconSquareCheck, IconSquareX } from '@tabler/icons-react'
+import { IconSquareCheck, IconSquareX } from '@tabler/icons-react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { emptyWork } from '../../../ServicePage.tsx'
 
@@ -260,11 +260,6 @@ export function OrdersScreen(props, message) {
             }}/>
         </Grid.Col>
         <Grid.Col key={'hide'} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 0}>
-          {/* <Group><Checkbox color='grey' checked={props.props.newWork.parts[index].link}
-            onChange={(event) => {
-            props.props.newWork.parts[index].link = event.currentTarget.checked
-            props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
-          }}/> Объединить с услугой</Group> */}
           <SegmentedControl value={item.link} fullWidth
             onChange={(event) => {
               item.link = event
@@ -300,7 +295,6 @@ export function OrdersScreen(props, message) {
       </Grid>)
     }
   }
-
   const activButAddNewWork = (data) => {
     if(!data.work || !data.cost || !data.master){
       return true
@@ -360,6 +354,8 @@ export function OrdersScreen(props, message) {
       .sort((a, b) => b - a)
       
       return (
+        <div>
+        <Space h='xl'/>
         <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
           <Table.Tbody>
             <Table.Tr>
@@ -396,6 +392,158 @@ export function OrdersScreen(props, message) {
             )}
           </Table.Tbody>
         </Table>
+        </div>
+      )
+    }
+  }
+  const existWorks = (order) => {
+    console.log('_work_', order._work_)
+    if(order._work_.length){
+
+      const allOrders = () => {
+        if(activButAddNewWork(props.props.newWork)){
+          return [...order._work_]
+        }
+        else return [...order._work_, props.props.newWork]
+      }
+      const title = (data) => { 
+        return data.work + data.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')
+      }
+      const cost = (data) => { 
+        return data.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, data.cost)
+      }
+      const varanty = (data) => {
+        return [...data.parts
+          .filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
+          .map(item => item.varanty), data.varanty ? data.varanty : 0]
+          .sort((a, b) => b - a)
+      }
+      const parts = (work) => {
+        if(work.parts.filter(item => 'apart' === item.link).length){
+          return (
+            work.parts.filter(w => 'apart' === w.link).map(part => 
+              <Table.Tr>
+                <Table.Td>
+                  {part.part ? part.part : '--'}
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {part.varanty ? part.varanty : 0}
+                  </Center>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {part.cost ? part.cost : 0}
+                  </Center>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    ---
+                  </Center>
+                </Table.Td>
+              </Table.Tr>
+            )
+          )
+        }
+      }
+      const totalCost = () => {
+        let total = allOrders().reduce((acc, item) => acc + item.cost, 0)
+        for(const i of allOrders()){
+          total = total + i.parts.reduce((acc, item) => acc + item.cost, 0)
+        }
+        return total
+      }
+      const newWorkOld = (work) => {
+        if(work._id){
+          return (
+            <Anchor c='red' onClick={() => {
+              sendToSocket('deleteWork', {
+                serviceId: props.user.serviceId, 
+                subServiceId: props.user.subServiceId,
+                orderId: order._id,
+                work: work
+              })
+            }}>
+              {props.text.delete[props.leng]}
+            </Anchor>
+          )
+        }
+        return (
+          <Anchor c='green' onClick={() => {
+            sendToSocket('addNewWork', {
+              serviceId: props.user.serviceId, 
+              subServiceId: props.user.subServiceId,
+              orderId: order._id,
+              work: {...props.props.newWork, total: total().sumCost}
+            })
+            props.props.setNewWork(structuredClone(emptyWork))
+          }}>
+            {props.text.add[props.leng]}
+          </Anchor>
+        )
+      }
+      
+      return (
+        <div>
+          <Space h='sm'/>
+          <hr color={colorOrder(order._status_)}></hr>
+          <Space h='sm'/>
+          <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+            <Table.Tbody> 
+            {allOrders().map(work =>
+              <>
+                <Table.Tr>
+                  <Table.Td width={'70%'}>
+                    {title(work)}
+                  </Table.Td>
+                  <Table.Td width={'10%'}>
+                    <Center>
+                      {varanty(work)}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td width={'10%'}>
+                    <Center>
+                      {cost(work)}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td width={'10%'}>
+                    <Center>
+                      {newWorkOld(work)}
+                    </Center>
+                  </Table.Td>
+                </Table.Tr>
+                {parts(work)}
+              </>
+              )
+            }
+            <Table.Tr>
+                <Table.Td>
+                </Table.Td>
+                <Table.Td>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {totalCost()}
+                  </Center>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    <Anchor c='red' onClick={() => {
+                      sendToSocket('deleteAllWork', {
+                        serviceId: props.user.serviceId, 
+                        subServiceId: props.user.subServiceId,
+                        orderId: order._id
+                      })
+                    }}>
+                      Delete all
+                    </Anchor>
+                  </Center>
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+          <Space h='sm'/>
+        </div>
       )
     }
   }
@@ -518,7 +666,6 @@ export function OrdersScreen(props, message) {
           <Space h='xl'/>
 
           <Grid key={'control panel'} justify="center" align="center">
-
             <Grid.Col key={props.text.addPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
               <Button variant='default' fullWidth
                 disabled={activButAddNewWork(props.props.newWork)}
@@ -530,7 +677,6 @@ export function OrdersScreen(props, message) {
                 {props.text.addPart[props.leng]}
               </Button>
             </Grid.Col>
-
             <Grid.Col key={props.text.clear[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
               <Button variant='default' fullWidth
                 disabled={JSON.stringify(props.props.newWork) === JSON.stringify(structuredClone(emptyWork))}
@@ -540,7 +686,6 @@ export function OrdersScreen(props, message) {
                   {props.text.clear[props.leng]}
               </Button>
             </Grid.Col>
-
             <Grid.Col key={props.text.add[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
               <Button fullWidth variant='default' c={!activButAddNewWork(props.props.newWork) ? 'green' : ''}
                 disabled={activButAddNewWork(props.props.newWork)}
@@ -549,20 +694,19 @@ export function OrdersScreen(props, message) {
                       serviceId: props.user.serviceId, 
                       subServiceId: props.user.subServiceId,
                       orderId: order._id,
-                      work: props.props.newWork
+                      work: {...props.props.newWork, total: total().sumCost}
                     })
                     props.props.setNewWork(structuredClone(emptyWork))
                 }}>
               {props.text.add[props.leng]}
               </Button>
             </Grid.Col>
-
           </Grid>
 
-          <Space h='xl'/>
-
           {workForClientLook(props.props.newWork)}
-          {/* {[...order._information_].reverse().join(', ')} */}
+
+          {existWorks(order)}
+
         </Tabs.Panel>
 
         <Tabs.Panel value={props.text.history[props.leng]} pt="xs">
@@ -613,8 +757,9 @@ export function OrdersScreen(props, message) {
           </Grid>
           {bottomSideData(element)}
           <hr color={colorOrder(element._status_)}></hr>
+          <Space h='sm'/>
           {dataForTable(element)}
-          <hr color={colorOrder(element._status_)}></hr>
+          {/* <hr color={colorOrder(element._status_)}></hr> */}
           
         </Accordion.Panel>
       </Accordion.Item>

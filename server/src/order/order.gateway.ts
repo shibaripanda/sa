@@ -20,6 +20,26 @@ import { OrderService } from './order.service'
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deleteWork')
+  async deleteWork(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    console.log(payload)
+    const order = await this.orderService.deleteWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
+    if(order) client.emit('getOrders', order)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('addNewWork')
+  async addNewWork(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    console.log(payload)
+    const order = await this.orderService.addNewWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
+    if(order) client.emit('getOrders', order)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('addInformationOrder')
   async addInformationOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)

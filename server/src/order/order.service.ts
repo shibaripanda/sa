@@ -13,6 +13,56 @@ export class OrderService {
         private orderMongo: Model<Order>
     ) {}
 
+    async deleteWork(serviceId, subServiceId, orderId, work, user, service){
+        const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
+        if(old){
+            const updated = await this.orderMongo.findOneAndUpdate(
+                {_id: orderId, _serviceId_: serviceId}, 
+                {$push: {
+                    _history_: {
+                        user: user.name ? user.name + ' (' + user.email + ')' : user.email,
+                        userId: user._id,
+                        edit: '_work_',
+                        old: '',
+                        new: work.work + ' ' + work.total + ' ' + service.localUsers.find(item => item.id === work.master).email,
+                        date: Date.now()
+                        }
+                    },
+                    $pull: {_work_: {_id: work._id}}
+                }, 
+                {returnDocument: 'after'})
+            const name = service.subServices.find(item => item.subServiceId === updated._subServiceId_)
+            updated._subService_ = name ? name.name : '--'
+            return updated
+        }
+        return false   
+    }
+
+    async addNewWork(serviceId, subServiceId, orderId, work, user, service){
+        const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
+        if(old){
+            const updated = await this.orderMongo.findOneAndUpdate(
+                {_id: orderId, _serviceId_: serviceId}, 
+                {$push: {
+                    _history_: {
+                        user: user.name ? user.name + ' (' + user.email + ')' : user.email,
+                        userId: user._id,
+                        edit: '_work_',
+                        old: '',
+                        new: work.work + ' ' + work.total + ' ' + service.localUsers.find(item => item.id === work.master).email,
+                        date: Date.now()
+                        },
+                    _work_: work
+                    }
+                }, 
+                {returnDocument: 'after'})
+            const name = service.subServices.find(item => item.subServiceId === updated._subServiceId_)
+            updated._subService_ = name ? name.name : '--'
+            return updated
+        }
+        return false   
+    }
+
     async addInformationOrder(serviceId, subServiceId, orderId, data, user, service){
         const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
         if(old){
