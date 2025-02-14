@@ -76,6 +76,8 @@ function ServicePage() {
   const [stateColorList, setStateColorListhandlers] = useListState([])
   const [stateDataOrderLine, setDataOrderLine] = useListState([false])
 
+  const [viewWork, setViewWork] = useState('Manager view')
+
   const authClass = new AuthClass()
   const textClass = new TextClass()
 
@@ -247,7 +249,9 @@ function ServicePage() {
               dataInformation: dataInformation,
               setDataInformation: setDataInformation,
               newWork: newWork,
-              setNewWork: setNewWork
+              setNewWork: setNewWork,
+              viewWork: viewWork,
+              setViewWork: setViewWork
               }
             )}
           </AppShell.Main>

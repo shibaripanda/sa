@@ -1,4 +1,4 @@
-import { Accordion, Anchor, Badge, Button, Center, Checkbox, Container, Grid, isNumberLike, NumberInput, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
+import { Accordion, Anchor, Badge, Button, Center, Checkbox, Container, Grid, Group, isNumberLike, NumberInput, Paper, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
@@ -412,6 +412,9 @@ export function OrdersScreen(props, message) {
       const cost = (data) => { 
         return data.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, data.cost)
       }
+      const subCost = (data) => { 
+        return data.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + (item.subCost ? item.subCost : 0), data.subCost ? data.subCost : 0)
+      }
       const varanty = (data) => {
         return [...data.parts
           .filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
@@ -446,6 +449,67 @@ export function OrdersScreen(props, message) {
           )
         }
       }
+      const partsManager = (work) => {
+        if(work.parts.filter(item => 'apart' === item.link).length){
+          return (
+            work.parts.filter(w => 'apart' === w.link).map(part => 
+              <Table.Tr>
+                <Table.Td>
+                  {part.part ? part.part : '--'}
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    --
+                  </Center>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {part.varanty ? part.varanty : 0}
+                  </Center>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {part.subCost ? part.subCost : 0}
+                  </Center>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {part.cost ? part.cost : 0}
+                  </Center>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    ---
+                  </Center>
+                </Table.Td>
+              </Table.Tr>
+            )
+          )
+        }
+      }
+      const partsClient = (work) => {
+        if(work.parts.filter(item => 'apart' === item.link).length){
+          return (
+            work.parts.filter(w => 'apart' === w.link).map(part => 
+              <Table.Tr>
+                <Table.Td>
+                  {part.part ? part.part : '--'}
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {part.varanty ? part.varanty : 0}
+                  </Center>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {part.cost ? part.cost : 0}
+                  </Center>
+                </Table.Td>
+              </Table.Tr>
+            )
+          )
+        }
+      }
       const totalCost = () => {
         let total = allOrders().reduce((acc, item) => acc + item.cost, 0)
         for(const i of allOrders()){
@@ -453,10 +517,31 @@ export function OrdersScreen(props, message) {
         }
         return total
       }
+      const totalSubCost = () => {
+        let total = allOrders().reduce((acc, item) => acc + (item.subCost ? item.subCost : 0), 0)
+        for(const i of allOrders()){
+          total = total + i.parts.reduce((acc, item) => acc + (item.subCost ? item.subCost : 0), 0)
+        }
+        return total
+      }
+      const totalExistCost = () => {
+        let total = order._work_.reduce((acc, item) => acc + item.cost, 0)
+        for(const i of order._work_){
+          total = total + i.parts.reduce((acc, item) => acc + item.cost, 0)
+        }
+        return total
+      }
+      const totalExistSubCost = () => {
+        let total = order._work_.reduce((acc, item) => acc + (item.subCost ? item.subCost : 0), 0)
+        for(const i of order._work_){
+          total = total + i.parts.reduce((acc, item) => acc + (item.subCost ? item.subCost : 0), 0)
+        }
+        return total
+      }
       const newWorkOld = (work) => {
         if(work._id){
           return (
-            <Anchor c='red' onClick={() => {
+            <Anchor size='sm' c='red' onClick={() => {
               sendToSocket('deleteWork', {
                 serviceId: props.user.serviceId, 
                 subServiceId: props.user.subServiceId,
@@ -469,7 +554,7 @@ export function OrdersScreen(props, message) {
           )
         }
         return (
-          <Anchor c='green' onClick={() => {
+          <Anchor size='sm' c='green' onClick={() => {
             sendToSocket('addNewWork', {
               serviceId: props.user.serviceId, 
               subServiceId: props.user.subServiceId,
@@ -482,69 +567,314 @@ export function OrdersScreen(props, message) {
           </Anchor>
         )
       }
+      const profitMain = () => {
+        const nalog = 20
+        const fee = totalExistCost() / 100 * nalog
+        const res = (totalExistCost() - totalExistSubCost()) - fee
+        if(res === 0){
+          return <Text c='yellow' size='1.5vmax'>{res}</Text>
+        }
+        else if(res < 0){
+          return <Text c='red' size='1.5vmax'>{res}</Text>
+        }
+        return <Text c='green' size='1.5vmax'>+{res}</Text>
+      }
       
-      return (
-        <div>
-          <Space h='sm'/>
-          <hr color={colorOrder(order._status_)}></hr>
-          <Space h='sm'/>
-          <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
-            <Table.Tbody> 
-            {allOrders().map(work =>
-              <>
+      if(props.props.viewWork === 'Manager view'){
+        return (
+          <div>
+            <Space h='sm'/>
+            <hr color={colorOrder(order._status_)}></hr>
+            <Space h='xs'/>
+            <Grid>
+              <Grid.Col span={12}>
+                <Group justify="space-between" align="center">
+                  <SegmentedControl
+                  value={props.props.viewWork} 
+                  data={['Manager view', 'Client view', 'Edit']}
+                  onChange={props.props.setViewWork}/>
+                  {profitMain()}
+                </Group>
+                <Space h='xs'/>
+                <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+                <Table.Tbody>
+
                 <Table.Tr>
-                  <Table.Td width={'70%'}>
-                    {title(work)}
-                  </Table.Td>
-                  <Table.Td width={'10%'}>
-                    <Center>
-                      {varanty(work)}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td width={'10%'}>
-                    <Center>
-                      {cost(work)}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td width={'10%'}>
-                    <Center>
-                      {newWorkOld(work)}
-                    </Center>
-                  </Table.Td>
-                </Table.Tr>
-                {parts(work)}
-              </>
-              )
-            }
-            <Table.Tr>
-                <Table.Td>
-                </Table.Td>
-                <Table.Td>
-                </Table.Td>
-                <Table.Td>
-                  <Center>
-                    {totalCost()}
-                  </Center>
-                </Table.Td>
-                <Table.Td>
-                  <Center>
-                    <Anchor c='red' onClick={() => {
-                      sendToSocket('deleteAllWork', {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: props.user.subServiceId,
-                        orderId: order._id
-                      })
-                    }}>
-                      Delete all
-                    </Anchor>
-                  </Center>
-                </Table.Td>
-              </Table.Tr>
-            </Table.Tbody>
-          </Table>
-          <Space h='sm'/>
-        </div>
-      )
+                    <Table.Td>
+                      <Center>
+                        {props.text.servOrPart[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {props.text.master[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {props.text.varanty[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                       {props.text.subCost[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                       {props.text.cost[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      
+                    </Table.Td>
+                  </Table.Tr>
+
+                {allOrders().map(work =>
+                  <>
+                    <Table.Tr>
+                      <Table.Td width={'40%'}>
+                        {title(work)}
+                      </Table.Td>
+                      <Table.Td width={'20%'}>
+                        {props.service.localUsers.find(item => item.id === work.master) ? 
+                        (props.service.localUsers.find(item => item.id === work.master).name ? 
+                        props.service.localUsers.find(item => item.id === work.master).name + ' (' + props.service.localUsers.find(item => item.id === work.master).email + ')' : props.service.localUsers.find(item => item.id === work.master).email) : '--'
+                      }
+                      </Table.Td>
+                      <Table.Td width={'10%'}>
+                        <Center>
+                          {varanty(work)}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td width={'10%'}>
+                        <Center>
+                          {subCost(work)}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td width={'10%'}>
+                        <Center>
+                          {cost(work)}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td width={'10%'}>
+                        <Center>
+                          {newWorkOld(work)}
+                        </Center>
+                      </Table.Td>
+                    </Table.Tr>
+                    {partsManager(work)}
+                  </>
+                  )
+                }
+                <Table.Tr>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {totalSubCost()}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {totalCost()}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        <Anchor size='sm' c='red' onClick={() => {
+                          sendToSocket('deleteAllWork', {
+                            serviceId: props.user.serviceId, 
+                            subServiceId: props.user.subServiceId,
+                            orderId: order._id
+                          })
+                        }}>
+                          {props.text.deleteAll[props.leng]}
+                        </Anchor>
+                      </Center>
+                    </Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
+                </Table>
+              </Grid.Col>
+            </Grid>
+            <Space h='sm'/>
+          </div>
+        )
+      }
+      else if(props.props.viewWork === 'Client view'){
+        return (
+          <div>
+            <Space h='sm'/>
+            <hr color={colorOrder(order._status_)}></hr>
+            <Space h='xs'/>
+            <Grid>
+              <Grid.Col span={12}>
+                <Group justify="space-between" align="center">
+                  <SegmentedControl
+                  value={props.props.viewWork} 
+                  data={['Manager view', 'Client view', 'Edit']}
+                  onChange={props.props.setViewWork}/>
+                  {profitMain()}
+                </Group>
+                <Space h='xs'/>
+                <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+                <Table.Tbody>
+                <Table.Tr>
+                    <Table.Td>
+                      <Center>
+                        {props.text.servOrPart[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {props.text.varanty[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                       {props.text.cost[props.leng]}
+                      </Center>
+                    </Table.Td>
+                  </Table.Tr> 
+                {allOrders().map(work =>
+                  <>
+                    <Table.Tr>
+                      <Table.Td width={'70%'}>
+                        {title(work)}
+                      </Table.Td>
+                      <Table.Td width={'15%'}>
+                        <Center>
+                          {varanty(work)}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td width={'15%'}>
+                        <Center>
+                          {cost(work)}
+                        </Center>
+                      </Table.Td>
+                      {/* <Table.Td width={'10%'}>
+                        <Center>
+                          {newWorkOld(work)}
+                        </Center>
+                      </Table.Td> */}
+                    </Table.Tr>
+                    {partsClient(work)}
+                  </>
+                  )
+                }
+                <Table.Tr>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {totalCost()}
+                      </Center>
+                    </Table.Td>
+                    {/* <Table.Td>
+                      <Center>
+                        <Anchor c='red' onClick={() => {
+                          sendToSocket('deleteAllWork', {
+                            serviceId: props.user.serviceId, 
+                            subServiceId: props.user.subServiceId,
+                            orderId: order._id
+                          })
+                        }}>
+                          Delete all
+                        </Anchor>
+                      </Center>
+                    </Table.Td> */}
+                  </Table.Tr>
+                </Table.Tbody>
+                </Table>
+              </Grid.Col>
+            </Grid>
+            <Space h='sm'/>
+          </div>
+        )
+      }
+      else if(props.props.viewWork === 'Edit'){
+        return (
+          <div>
+            <Space h='sm'/>
+            <hr color={colorOrder(order._status_)}></hr>
+            <Space h='xs'/>
+            <Grid>
+              <Grid.Col span={12}>
+                <Group justify="space-between" align="center">
+                  <SegmentedControl
+                  value={props.props.viewWork} 
+                  data={['Manager view', 'Client view', 'Edit']}
+                  onChange={props.props.setViewWork}/>
+                  {profitMain()}
+                </Group>
+                <Space h='xs'/>
+                <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+                <Table.Tbody> 
+                {allOrders().map(work =>
+                  <>
+                    <Table.Tr>
+                      <Table.Td width={'70%'}>
+                        {title(work)}
+                      </Table.Td>
+                      <Table.Td width={'10%'}>
+                        <Center>
+                          {varanty(work)}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td width={'10%'}>
+                        <Center>
+                          {cost(work)}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td width={'10%'}>
+                        <Center>
+                          {newWorkOld(work)}
+                        </Center>
+                      </Table.Td>
+                    </Table.Tr>
+                    {parts(work)}
+                  </>
+                  )
+                }
+                <Table.Tr>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {totalCost()}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        <Anchor size='sm' c='red' onClick={() => {
+                          sendToSocket('deleteAllWork', {
+                            serviceId: props.user.serviceId, 
+                            subServiceId: props.user.subServiceId,
+                            orderId: order._id
+                          })
+                        }}>
+                          Delete all
+                        </Anchor>
+                      </Center>
+                    </Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
+                </Table>
+              </Grid.Col>
+            </Grid>
+            <Space h='sm'/>
+          </div>
+        )
+      }
     }
   }
 
@@ -554,8 +884,8 @@ export function OrdersScreen(props, message) {
 
         <Tabs.List>
           <Tabs.Tab value={props.text.information[props.leng]}>{props.text.information[props.leng]}</Tabs.Tab>
-          <Tabs.Tab value={props.text.history[props.leng]}>{props.text.history[props.leng]}</Tabs.Tab>
           <Tabs.Tab value={props.text.works[props.leng]}>{props.text.works[props.leng]}</Tabs.Tab>
+          <Tabs.Tab value={props.text.history[props.leng]}>{props.text.history[props.leng]}</Tabs.Tab>
           <Tabs.Tab value={props.text.close[props.leng]} ml="auto">{props.text.close[props.leng]}</Tabs.Tab>
         </Tabs.List>
 
@@ -703,7 +1033,7 @@ export function OrdersScreen(props, message) {
             </Grid.Col>
           </Grid>
 
-          {workForClientLook(props.props.newWork)}
+          {/* {workForClientLook(props.props.newWork)} */}
 
           {existWorks(order)}
 
