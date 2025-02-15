@@ -13,6 +13,31 @@ export class OrderService {
         private orderMongo: Model<Order>
     ) {}
 
+    async deleteAllWork(serviceId, subServiceId, orderId, work, user, service){
+        const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
+        if(old){
+            const updated = await this.orderMongo.findOneAndUpdate(
+                {_id: orderId, _serviceId_: serviceId}, 
+                {$push: {
+                    _history_: {
+                        user: user.name ? user.name + ' (' + user.email + ')' : user.email,
+                        userId: user._id,
+                        edit: '_work_',
+                        old: '',
+                        new: 'Delete all works',
+                        date: Date.now()
+                        }
+                    },
+                    _work_: []
+                }, 
+                {returnDocument: 'after'})
+            const name = service.subServices.find(item => item.subServiceId === updated._subServiceId_)
+            updated._subService_ = name ? name.name : '--'
+            return updated
+        }
+        return false   
+    }
+
     async deleteWork(serviceId, subServiceId, orderId, work, user, service){
         const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
         if(old){

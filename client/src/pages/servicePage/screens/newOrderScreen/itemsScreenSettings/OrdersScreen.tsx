@@ -1,4 +1,4 @@
-import { Accordion, Anchor, Badge, Button, Center, Checkbox, Container, Grid, Group, isNumberLike, NumberInput, Paper, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
+import { Accordion, Anchor, Badge, Button, Center, Container, Grid, Group, NumberInput, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
@@ -9,12 +9,9 @@ import { emptyWork } from '../../../ServicePage.tsx'
 
 export function OrdersScreen(props, message) {
 
-  // const [textInput, setTextInput] = useState('') 
-
   console.log('OrdersScreen')
-  console.log(props.orders[0])
-  console.log('parts', props.props.newWork)
-  console.log('service', props.service)
+  console.log('_New Work', props.props.newWork)
+  console.log('_Service', props.service)
 
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
@@ -269,21 +266,21 @@ export function OrdersScreen(props, message) {
             />
         </Grid.Col>
         <Grid.Col key={'varanty'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-          <NumberInput value={item.varanty} placeholder='Гарантия' 
+          <NumberInput value={item.varanty} placeholder={props.text.varanty[props.leng]} 
             onChange={(event) => {
               item.varanty = event
               props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
             }}/>
         </Grid.Col>
         <Grid.Col key={'subCost'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-          <NumberInput value={item.subCost} placeholder='Себестоимость' 
+          <NumberInput value={item.subCost} placeholder={props.text.subCost[props.leng]} 
             onChange={(event) => {
               item.subCost = event
               props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
             }}/>
         </Grid.Col>
         <Grid.Col key={'cost'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-          <NumberInput value={item.cost} placeholder='Стоимость' error={!item.cost} 
+          <NumberInput value={item.cost} placeholder={props.text.cost[props.leng]} error={!item.cost} 
             onChange={(event) => {
               item.cost = event
               props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
@@ -340,62 +337,62 @@ export function OrdersScreen(props, message) {
     }
     return 'green'
   }
-  const workForClientLook = (data) => {
-    console.log('cost', data.cost)
-    if(JSON.stringify(props.props.newWork) !== JSON.stringify(structuredClone(emptyWork))){
+  // const workForClientLook = (data) => {
+  //   console.log('cost', data.cost)
+  //   if(JSON.stringify(props.props.newWork) !== JSON.stringify(structuredClone(emptyWork))){
 
-      const work = data.work + data.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')
+  //     const work = data.work + data.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')
 
-      const cost = data.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, data.cost)
+  //     const cost = data.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, data.cost)
 
-      const varanty = [...data.parts.
-      filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
-      .map(item => item.varanty), data.varanty ? data.varanty : 0]
-      .sort((a, b) => b - a)
+  //     const varanty = [...data.parts.
+  //     filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
+  //     .map(item => item.varanty), data.varanty ? data.varanty : 0]
+  //     .sort((a, b) => b - a)
       
-      return (
-        <div>
-        <Space h='xl'/>
-        <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
-          <Table.Tbody>
-            <Table.Tr>
-              <Table.Td width={'70%'}>
-                {work}
-              </Table.Td>
-              <Table.Td width={'15%'}>
-                <Center>
-                  {varanty[0]}
-                </Center>
-              </Table.Td>
-              <Table.Td width={'15%'}>
-                <Center>
-                  {cost}
-                </Center>
-              </Table.Td>
-            </Table.Tr>
-            {data.parts.filter(item => 'apart' === item.link).map(item => 
-              <Table.Tr>
-              <Table.Td width={'70%'}>
-                {item.part ? item.part : '--'}
-              </Table.Td>
-              <Table.Td width={'15%'}>
-                <Center>
-                  {item.varanty ? item.varanty : 0}
-                </Center>
-              </Table.Td>
-              <Table.Td width={'15%'}>
-                <Center>
-                  {item.cost ? item.cost : 0}
-                </Center>
-              </Table.Td>
-            </Table.Tr>
-            )}
-          </Table.Tbody>
-        </Table>
-        </div>
-      )
-    }
-  }
+  //     return (
+  //       <div>
+  //       <Space h='xl'/>
+  //       <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+  //         <Table.Tbody>
+  //           <Table.Tr>
+  //             <Table.Td width={'70%'}>
+  //               {work}
+  //             </Table.Td>
+  //             <Table.Td width={'15%'}>
+  //               <Center>
+  //                 {varanty[0]}
+  //               </Center>
+  //             </Table.Td>
+  //             <Table.Td width={'15%'}>
+  //               <Center>
+  //                 {cost}
+  //               </Center>
+  //             </Table.Td>
+  //           </Table.Tr>
+  //           {data.parts.filter(item => 'apart' === item.link).map(item => 
+  //             <Table.Tr>
+  //             <Table.Td width={'70%'}>
+  //               {item.part ? item.part : '--'}
+  //             </Table.Td>
+  //             <Table.Td width={'15%'}>
+  //               <Center>
+  //                 {item.varanty ? item.varanty : 0}
+  //               </Center>
+  //             </Table.Td>
+  //             <Table.Td width={'15%'}>
+  //               <Center>
+  //                 {item.cost ? item.cost : 0}
+  //               </Center>
+  //             </Table.Td>
+  //           </Table.Tr>
+  //           )}
+  //         </Table.Tbody>
+  //       </Table>
+  //       </div>
+  //     )
+  //   }
+  // }
   const existWorks = (order) => {
     console.log('_work_', order._work_)
     if(order._work_.length){
@@ -421,34 +418,34 @@ export function OrdersScreen(props, message) {
           .map(item => item.varanty), data.varanty ? data.varanty : 0]
           .sort((a, b) => b - a)
       }
-      const parts = (work) => {
-        if(work.parts.filter(item => 'apart' === item.link).length){
-          return (
-            work.parts.filter(w => 'apart' === w.link).map(part => 
-              <Table.Tr>
-                <Table.Td>
-                  {part.part ? part.part : '--'}
-                </Table.Td>
-                <Table.Td>
-                  <Center>
-                    {part.varanty ? part.varanty : 0}
-                  </Center>
-                </Table.Td>
-                <Table.Td>
-                  <Center>
-                    {part.cost ? part.cost : 0}
-                  </Center>
-                </Table.Td>
-                <Table.Td>
-                  <Center>
-                    ---
-                  </Center>
-                </Table.Td>
-              </Table.Tr>
-            )
-          )
-        }
-      }
+      // const parts = (work) => {
+      //   if(work.parts.filter(item => 'apart' === item.link).length){
+      //     return (
+      //       work.parts.filter(w => 'apart' === w.link).map(part => 
+      //         <Table.Tr>
+      //           <Table.Td>
+      //             {part.part ? part.part : '--'}
+      //           </Table.Td>
+      //           <Table.Td>
+      //             <Center>
+      //               {part.varanty ? part.varanty : 0}
+      //             </Center>
+      //           </Table.Td>
+      //           <Table.Td>
+      //             <Center>
+      //               {part.cost ? part.cost : 0}
+      //             </Center>
+      //           </Table.Td>
+      //           <Table.Td>
+      //             <Center>
+      //               ---
+      //             </Center>
+      //           </Table.Td>
+      //         </Table.Tr>
+      //       )
+      //     )
+      //   }
+      // }
       const partsManager = (work) => {
         if(work.parts.filter(item => 'apart' === item.link).length){
           return (
@@ -579,6 +576,76 @@ export function OrdersScreen(props, message) {
         }
         return <Text c='green' size='1.5vmax'>+{res}</Text>
       }
+      const butDeleteAll = (order) => {
+        if(order._work_.length > 1){
+          return (
+            <Anchor size='sm' c='red' onClick={() => {
+              sendToSocket('deleteAllWork', {
+                serviceId: props.user.serviceId, 
+                subServiceId: props.user.subServiceId,
+                orderId: order._id
+              })
+            }}>
+              {props.text.deleteAll[props.leng]}
+            </Anchor>
+          )
+        }
+      }
+      const partsEdit = (work) => {
+        if(work.parts.length){
+          return work.parts.map((item, index) => 
+          <Grid key={`part panel${index}`} justify="center" align="center">
+            <Grid.Col key={'delete'} span={props.props.screenSizeOrderButLine < 12 ? 0.4 : 0}>
+              <Center>
+                <IconSquareX color='red' onClick={() => {
+                  // props.props.newWork.parts.splice(index, 1)
+                  // props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
+                }}/>
+              </Center>
+            </Grid.Col>
+            <Grid.Col key={'part'} span={props.props.screenSizeOrderButLine < 12 ? 5.1 : 12}>
+              <TextInput value={item.part} placeholder='Запчасть' error={!item.part}
+                onChange={(event) => {
+                  item.part = event.target.value
+                  props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+                }}/>
+            </Grid.Col>
+            <Grid.Col key={'hide'} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 0}>
+              <SegmentedControl value={item.link} fullWidth
+                onChange={(event) => {
+                  item.link = event
+                  props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
+                }}  
+                data={['apart', 'mix', 'hide']} 
+                />
+            </Grid.Col>
+            <Grid.Col key={'varanty'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+              <NumberInput value={item.varanty} placeholder={props.text.varanty[props.leng]}
+                onChange={(event) => {
+                  item.varanty = event
+                  props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+                }}/>
+            </Grid.Col>
+            <Grid.Col key={'subCost'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+              <NumberInput value={item.subCost} placeholder={props.text.subCost[props.leng]} 
+                onChange={(event) => {
+                  item.subCost = event
+                  props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+                }}/>
+            </Grid.Col>
+            <Grid.Col key={'cost'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+              <NumberInput value={item.cost} placeholder={props.text.cost[props.leng]} error={!item.cost} 
+                onChange={(event) => {
+                  item.cost = event
+                  props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+                }}/>
+            </Grid.Col>
+            <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
+              {profit(item.cost, item.subCost)}
+            </Grid.Col>
+          </Grid>)
+        }
+      }
       
       if(props.props.viewWork === 'Manager view'){
         return (
@@ -600,35 +667,35 @@ export function OrdersScreen(props, message) {
                 <Table.Tbody>
 
                 <Table.Tr>
-                    <Table.Td>
-                      <Center>
-                        {props.text.servOrPart[props.leng]}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                        {props.text.master[props.leng]}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                        {props.text.varanty[props.leng]}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                       {props.text.subCost[props.leng]}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                       {props.text.cost[props.leng]}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      
-                    </Table.Td>
-                  </Table.Tr>
+                  <Table.Td>
+                    <Center>
+                      {props.text.servOrPart[props.leng]}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {props.text.master[props.leng]}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {props.text.varanty[props.leng]}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {props.text.subCost[props.leng]}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {props.text.cost[props.leng]}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td>
+                    
+                  </Table.Td>
+                </Table.Tr>
 
                 {allOrders().map(work =>
                   <>
@@ -686,7 +753,8 @@ export function OrdersScreen(props, message) {
                     </Table.Td>
                     <Table.Td>
                       <Center>
-                        <Anchor size='sm' c='red' onClick={() => {
+                        {butDeleteAll(order)}
+                        {/* <Anchor size='sm' c='red' onClick={() => {
                           sendToSocket('deleteAllWork', {
                             serviceId: props.user.serviceId, 
                             subServiceId: props.user.subServiceId,
@@ -694,10 +762,10 @@ export function OrdersScreen(props, message) {
                           })
                         }}>
                           {props.text.deleteAll[props.leng]}
-                        </Anchor>
+                        </Anchor> */}
                       </Center>
                     </Table.Td>
-                  </Table.Tr>
+                </Table.Tr>
                 </Table.Tbody>
                 </Table>
               </Grid.Col>
@@ -805,79 +873,84 @@ export function OrdersScreen(props, message) {
             <Space h='sm'/>
             <hr color={colorOrder(order._status_)}></hr>
             <Space h='xs'/>
-            <Grid>
-              <Grid.Col span={12}>
-                <Group justify="space-between" align="center">
-                  <SegmentedControl
-                  value={props.props.viewWork} 
-                  data={['Manager view', 'Client view', 'Edit']}
-                  onChange={props.props.setViewWork}/>
-                  {profitMain()}
-                </Group>
-                <Space h='xs'/>
-                <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
-                <Table.Tbody> 
-                {allOrders().map(work =>
-                  <>
-                    <Table.Tr>
-                      <Table.Td width={'70%'}>
-                        {title(work)}
-                      </Table.Td>
-                      <Table.Td width={'10%'}>
-                        <Center>
-                          {varanty(work)}
-                        </Center>
-                      </Table.Td>
-                      <Table.Td width={'10%'}>
-                        <Center>
-                          {cost(work)}
-                        </Center>
-                      </Table.Td>
-                      <Table.Td width={'10%'}>
-                        <Center>
-                          {newWorkOld(work)}
-                        </Center>
-                      </Table.Td>
-                    </Table.Tr>
-                    {parts(work)}
-                  </>
-                  )
-                }
-                <Table.Tr>
-                    <Table.Td>
-                    </Table.Td>
-                    <Table.Td>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                        {totalCost()}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                        <Anchor size='sm' c='red' onClick={() => {
-                          sendToSocket('deleteAllWork', {
-                            serviceId: props.user.serviceId, 
-                            subServiceId: props.user.subServiceId,
-                            orderId: order._id
-                          })
-                        }}>
-                          Delete all
-                        </Anchor>
-                      </Center>
-                    </Table.Td>
-                  </Table.Tr>
-                </Table.Tbody>
-                </Table>
-              </Grid.Col>
-            </Grid>
+            <Group justify="space-between" align="center">
+              <SegmentedControl
+              value={props.props.viewWork} 
+              data={['Manager view', 'Client view', 'Edit']}
+              onChange={props.props.setViewWork}/>
+              {profitMain()}
+            </Group>
+            <Space h='xs'/>
+            <Grid key={item._id} justify="center" align="center">
+                <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
+                  <Badge variant="dot" color={activDotWork(item)}>{props.text.servOrPart[props.leng]}</Badge>
+                </Grid.Col>
+                <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
+                  <Badge variant="dot" color={activDotMaster(item)}>{props.text.master[props.leng]}</Badge>
+                </Grid.Col>
+                <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2: 12}>
+                  <Badge variant="dot" color="grey">{props.text.varanty[props.leng]}</Badge>
+                </Grid.Col>
+                <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+                  <Badge variant="dot" color="grey">{total().sumSub !== 0 ? total().sumSub : ''} {props.text.subCost[props.leng]}</Badge> 
+                </Grid.Col>
+                <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+                  <Badge variant="dot" color={activDotCost(item)}>{total().sumCost !== 0 ? total().sumCost : ''} {props.text.cost[props.leng]}</Badge> 
+                </Grid.Col>
+                <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
+                  {total().sumProfit}
+                </Grid.Col>
+              </Grid>
+            {order._work_.map((item, index)=>
+            <div key={item._id}>
+
+              <Grid key={'input panel'} justify="center" align="center">
+                <Grid.Col key={props.text.servOrPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
+                  <TextInput value={item.work} placeholder={props.text.servOrPart[props.leng]} error={!item.work}
+                    onChange={(event) => {
+                      // props.props.setNewWork({...props.props.newWork, work: event.target.value})
+                    }}/>
+                </Grid.Col>
+                <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
+                  <Select value={item.master} placeholder={props.text.master[props.leng]} error={!item.master}
+                    data={props.service.localUsers.map(item => ({label: item.name ? item.name + ' (' + item.email + ')' : item.email, value: item.id}))}
+                    onChange={(event) => {
+                      // props.props.setNewWork({...props.props.newWork, master: event})
+                    }}/>
+                </Grid.Col>
+                <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+                  <NumberInput value={item.varanty} placeholder={props.text.varanty[props.leng]} 
+                    // data={[1, 7, 14, 30, 60, 90, 120, 365].map(item => ({label: `${item} `, value: item}))}
+                    onChange={(event) => {
+                      // props.props.setNewWork({...props.props.newWork, varanty: event})
+                    }}/>
+                </Grid.Col>
+                <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+                  <NumberInput value={item.subCost} placeholder={props.text.subCost[props.leng]}
+                    onChange={(event) => {
+                      // props.props.setNewWork({...props.props.newWork, subCost: event})
+                    }}/>
+                </Grid.Col>
+                <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+                  <NumberInput value={item.cost} placeholder={props.text.cost[props.leng]} error={!item.cost}
+                    onChange={(event) => {
+                      // props.props.setNewWork({...props.props.newWork, cost: event})
+                    }}/>
+                </Grid.Col>
+                <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
+                  {profit(item.cost, item.subCost)}
+                </Grid.Col>
+              </Grid>
+              {partsEdit(item)}
+            </div>
+            )}
+
             <Space h='sm'/>
           </div>
         )
       }
     }
   }
-
   const bottomSideData = (order) => {
     return (
       <Tabs defaultValue={props.text.information[props.leng]} color={colorOrder(order._status_)}>
@@ -933,55 +1006,54 @@ export function OrdersScreen(props, message) {
         <Tabs.Panel value={props.text.works[props.leng]} pt="xs">
 
           <Grid key={'title panel'} justify="center" align="center">
-            <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
-              <Badge variant="dot" color={activDotWork(props.props.newWork)}>Название</Badge>
+            <Grid.Col key={'Service'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
+              <Badge variant="dot" color={activDotWork(props.props.newWork)}>{props.text.servOrPart[props.leng]}</Badge>
             </Grid.Col>
-            <Grid.Col key={'Мастер'} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
-              <Badge variant="dot" color={activDotMaster(props.props.newWork)}>Мастер</Badge>
+            <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
+              <Badge variant="dot" color={activDotMaster(props.props.newWork)}>{props.text.master[props.leng]}</Badge>
             </Grid.Col>
-            <Grid.Col key={'Гарантия'} span={props.props.screenSizeOrderButLine < 12 ? 1.2: 12}>
-              <Badge variant="dot" color="grey">Гарантия</Badge>
+            <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2: 12}>
+              <Badge variant="dot" color="grey">{props.text.varanty[props.leng]}</Badge>
             </Grid.Col>
-            <Grid.Col key={'Себестоимость'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-              <Badge variant="dot" color="grey">{total().sumSub !== 0 ? total().sumSub : ''} Себестоимость</Badge> 
+            <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+              <Badge variant="dot" color="grey">{total().sumSub !== 0 ? total().sumSub : ''} {props.text.subCost[props.leng]}</Badge> 
             </Grid.Col>
-            <Grid.Col key={'Стоимость'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-              <Badge variant="dot" color={activDotCost(props.props.newWork)}>{total().sumCost !== 0 ? total().sumCost : ''} Стоимость</Badge> 
+            <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+              <Badge variant="dot" color={activDotCost(props.props.newWork)}>{total().sumCost !== 0 ? total().sumCost : ''} {props.text.cost[props.leng]}</Badge> 
             </Grid.Col>
             <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
               {total().sumProfit}
             </Grid.Col>
           </Grid>
-
           <Grid key={'input panel'} justify="center" align="center">
-            <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
+            <Grid.Col key={'Service'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
               <TextInput value={props.props.newWork.work} placeholder='Услуга' error={!props.props.newWork.work}
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, work: event.target.value})
                 }}/>
             </Grid.Col>
-            <Grid.Col key={'Мастер'} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
-              <Select value={props.props.newWork.master} placeholder='Мастер' error={!props.props.newWork.master}
+            <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
+              <Select value={props.props.newWork.master} placeholder={props.text.master[props.leng]} error={!props.props.newWork.master}
                 data={props.service.localUsers.map(item => ({label: item.name ? item.name + ' (' + item.email + ')' : item.email, value: item.id}))}
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, master: event})
                 }}/>
             </Grid.Col>
-            <Grid.Col key={'Гарантия'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-              <NumberInput value={props.props.newWork.varanty} placeholder='Гарантия' 
+            <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+              <NumberInput value={props.props.newWork.varanty} placeholder={props.text.varanty[props.leng]} 
                 // data={[1, 7, 14, 30, 60, 90, 120, 365].map(item => ({label: `${item} `, value: item}))}
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, varanty: event})
                 }}/>
             </Grid.Col>
-            <Grid.Col key={'Себестоимость'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-              <NumberInput value={props.props.newWork.subCost} placeholder='Себестоимость' 
+            <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+              <NumberInput value={props.props.newWork.subCost} placeholder={props.text.subCost[props.leng]}
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, subCost: event})
                 }}/>
             </Grid.Col>
-            <Grid.Col key={'Стоимость'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-              <NumberInput value={props.props.newWork.cost} placeholder='Стоимость' error={!props.props.newWork.cost}
+            <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+              <NumberInput value={props.props.newWork.cost} placeholder={props.text.cost[props.leng]} error={!props.props.newWork.cost}
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, cost: event})
                 }}/>
@@ -990,11 +1062,8 @@ export function OrdersScreen(props, message) {
               {profit(props.props.newWork.cost, props.props.newWork.subCost)}
             </Grid.Col>
           </Grid>
-
           {parts()}
-
           <Space h='xl'/>
-
           <Grid key={'control panel'} justify="center" align="center">
             <Grid.Col key={props.text.addPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
               <Button variant='default' fullWidth
@@ -1032,8 +1101,6 @@ export function OrdersScreen(props, message) {
               </Button>
             </Grid.Col>
           </Grid>
-
-          {/* {workForClientLook(props.props.newWork)} */}
 
           {existWorks(order)}
 
@@ -1089,8 +1156,6 @@ export function OrdersScreen(props, message) {
           <hr color={colorOrder(element._status_)}></hr>
           <Space h='sm'/>
           {dataForTable(element)}
-          {/* <hr color={colorOrder(element._status_)}></hr> */}
-          
         </Accordion.Panel>
       </Accordion.Item>
     ))
