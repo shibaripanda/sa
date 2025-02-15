@@ -27,7 +27,6 @@ export function CreateOrderScreen(props, message) {
     }
     return <MultSelectCreate props={{...props, field: item}}/>
   }
-
   const createOrder = () => {
     const newOrder = []
     for(const i of activData){
@@ -39,23 +38,16 @@ export function CreateOrderScreen(props, message) {
     }
     return newOrder
   }
-
   const disabledCreateButton = () => {
     // @ts-ignore
     const fullItems = createOrder().filter(item => !item.data && item.control)
     return fullItems.length ? true : false
   }
-
   const disabledClearButton = () => {
     // @ts-ignore
     const fullItems = createOrder().filter(item => !item.data)
     return fullItems.length === createOrder().length
   }
-
-  // for(const i of activData){
-  //   console.log('control', i.item, sessionStorage.getItem(`docInput_${i.item}`))
-  // }
-
   const switchFilterOrNewOrder = (set) => {
       if(set === 'filter'){
         props.props.openedFilterHandler.toggle()
@@ -66,14 +58,12 @@ export function CreateOrderScreen(props, message) {
         props.props.openedNewOrderHandler.toggle()
       }
   }
-
   const butOpenCreateOrder = () => {
     if(!props.props.openedNewOrder){
       return <Button fullWidth color='green' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text[message][props.leng]}</Button>
     }
     return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text.cancel[props.leng]}</Button>
   }
-
   const butOpenFilter = () => {
     if(!props.props.openedFilter){
       return <Button fullWidth onClick={() => switchFilterOrNewOrder('filter')}>Filter</Button>

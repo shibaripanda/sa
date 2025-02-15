@@ -34,20 +34,17 @@ export class UsersService {
             return await this.userMongo.findOne({_id: user._id})
         }
     }
-
     async deleteServiceFromUsers(serviceId: string){
         return await this.userMongo.updateMany({services_roles: {$elemMatch: {serviceId: serviceId}}}, 
             {$pull: {services_roles: {serviceId: serviceId}}}
         )
     }
-
     async changeMyName(_id: string, newUserName: string){
         if(newUserName){
            return await this.userMongo.findOneAndUpdate({_id: _id}, {name: newUserName}, {returnDocument: 'after'}) 
         }
         return await this.userMongo.findOne({_id: _id})
     }
-
     async getLocalUsers(serviceId: string, subServiceId: string){
         const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
         if(users){
@@ -62,7 +59,6 @@ export class UsersService {
         }
         return []
     }
-
     async getServiceLocalUsers(serviceId: string, subServiceId: string){
         const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
         if(users){
@@ -82,7 +78,6 @@ export class UsersService {
         }
         return []
     }
-
     async addStatusToUser(email: string, serviceId: string, subServiceId: string, status: string){
         const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === serviceId)
         if(roles){
@@ -107,7 +102,6 @@ export class UsersService {
             }
         }
     }
-
     async addDeviceToUser(email: string, serviceId: string, subServiceId: string, device: string){
         const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === serviceId)
         if(roles){
@@ -132,11 +126,9 @@ export class UsersService {
             }
         }
     }
-
     async deleteUserFromService(email: string, serviceId: string){
         await this.userMongo.updateOne({email: email}, {$pull: {services_roles: {serviceId: serviceId}}})
     }
-
     async getServiceUsers(serviceId: string){
         const users = await this.userMongo.find({services_roles: {$elemMatch: {serviceId: serviceId}}}, {email: 1, services_roles: 1, name: 1})
         if(users){
@@ -147,27 +139,21 @@ export class UsersService {
         }
         return []
     }
-
     async getUserRolesByUserId(_id: string){
         return (await this.userMongo.findOne({_id: _id}, {services_roles: 1}))
     }
-
     async newCodeCreate(email: string, code: number, time: number){
         await this.userMongo.updateOne({email: email}, {authCode: {code: code, time: time}})
     }
-
     async createUser(email: string, code: number, time: number){
         await this.userMongo.create({email: email, authCode: {code: code, time: time}})
     }
-
     async getUserByEmail(email: string){
         return await this.userMongo.findOne({email: email})
     }
-
     async getUserById(_id){
         return await this.userMongo.findOne({_id: _id})
     }
-
     async addRoleToUser(email: string, serviceId: string, role: string, subServiceId: string){
         const user = await this.userMongo.findOne({email: email})
         // const newService = await this.serviceMongo.getServiceById(serviceId)

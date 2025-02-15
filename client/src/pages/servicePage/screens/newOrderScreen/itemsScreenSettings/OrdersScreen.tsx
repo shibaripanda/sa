@@ -10,8 +10,6 @@ import { emptyWork } from '../../../ServicePage.tsx'
 export function OrdersScreen(props, message) {
 
   console.log('OrdersScreen')
-  // console.log('_New Work', props.props.newWork)
-  // console.log('_Service', props.service)
 
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
@@ -337,62 +335,6 @@ export function OrdersScreen(props, message) {
     }
     return 'green'
   }
-  // const workForClientLook = (data) => {
-  //   console.log('cost', data.cost)
-  //   if(JSON.stringify(props.props.newWork) !== JSON.stringify(structuredClone(emptyWork))){
-
-  //     const work = data.work + data.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')
-
-  //     const cost = data.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, data.cost)
-
-  //     const varanty = [...data.parts.
-  //     filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
-  //     .map(item => item.varanty), data.varanty ? data.varanty : 0]
-  //     .sort((a, b) => b - a)
-      
-  //     return (
-  //       <div>
-  //       <Space h='xl'/>
-  //       <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
-  //         <Table.Tbody>
-  //           <Table.Tr>
-  //             <Table.Td width={'70%'}>
-  //               {work}
-  //             </Table.Td>
-  //             <Table.Td width={'15%'}>
-  //               <Center>
-  //                 {varanty[0]}
-  //               </Center>
-  //             </Table.Td>
-  //             <Table.Td width={'15%'}>
-  //               <Center>
-  //                 {cost}
-  //               </Center>
-  //             </Table.Td>
-  //           </Table.Tr>
-  //           {data.parts.filter(item => 'apart' === item.link).map(item => 
-  //             <Table.Tr>
-  //             <Table.Td width={'70%'}>
-  //               {item.part ? item.part : '--'}
-  //             </Table.Td>
-  //             <Table.Td width={'15%'}>
-  //               <Center>
-  //                 {item.varanty ? item.varanty : 0}
-  //               </Center>
-  //             </Table.Td>
-  //             <Table.Td width={'15%'}>
-  //               <Center>
-  //                 {item.cost ? item.cost : 0}
-  //               </Center>
-  //             </Table.Td>
-  //           </Table.Tr>
-  //           )}
-  //         </Table.Tbody>
-  //       </Table>
-  //       </div>
-  //     )
-  //   }
-  // }
   const existWorks = (order) => {
     // console.log('_work_', order._work_)
     if(order._work_.length){
