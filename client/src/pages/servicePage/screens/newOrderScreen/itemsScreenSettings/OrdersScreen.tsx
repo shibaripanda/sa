@@ -881,7 +881,7 @@ export function OrdersScreen(props, message) {
               {profitMain()}
             </Group>
             <Space h='xs'/>
-            <Grid key={item._id} justify="center" align="center">
+            <Grid key={'titel panel edit'} justify="center" align="center">
                 <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
                   <Badge variant="dot" color={activDotWork(item)}>{props.text.servOrPart[props.leng]}</Badge>
                 </Grid.Col>
