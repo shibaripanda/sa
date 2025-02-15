@@ -76,6 +76,8 @@ function ServicePage() {
   const [stateColorList, setStateColorListhandlers] = useListState([])
   const [stateDataOrderLine, setDataOrderLine] = useListState([false])
 
+  const [orderAcord, setOrderAcord] = useState<string | null>(null)
+
   const [viewWork, setViewWork] = useState('Manager view')
 
   const authClass = new AuthClass()
@@ -100,10 +102,10 @@ function ServicePage() {
   const getOneOrder = async (data: any) => {
     const res = orders.findIndex(item => item._id === data._id)
     if(res > -1){
-      orders[res] = data
+      orders[res] = {...data, _updateTime_: Date.now()}
     }
     else{
-      orders.push(data)
+      orders.push({...data, _updateTime_: Date.now()})
     }
     SocketApt.socket?.once('getOrders', (data) => {
       getOneOrder(data)
@@ -147,13 +149,13 @@ function ServicePage() {
       }
       
       getFromSocket([
-                  {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
-                  {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
-                  {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
-                  {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
-                  {message: `changeMyMainOrderDataLine${authClass.getServiceId()}`, handler: upUserOrderList},
-                  {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
-                ])
+        {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
+        {message: `getServiceUsers${authClass.getServiceId()}`, handler: setUsers},
+        {message: `getServiceLocalUsers${authClass.getServiceId()}`, handler: setUsersLocal},
+        {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
+        {message: `changeMyMainOrderDataLine${authClass.getServiceId()}`, handler: upUserOrderList},
+        {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
+      ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
       // sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
@@ -251,7 +253,9 @@ function ServicePage() {
               newWork: newWork,
               setNewWork: setNewWork,
               viewWork: viewWork,
-              setViewWork: setViewWork
+              setViewWork: setViewWork,
+              orderAcord: orderAcord,
+              setOrderAcord: setOrderAcord
               }
             )}
           </AppShell.Main>

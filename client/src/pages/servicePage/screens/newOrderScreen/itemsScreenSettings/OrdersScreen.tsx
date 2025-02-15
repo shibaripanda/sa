@@ -10,8 +10,8 @@ import { emptyWork } from '../../../ServicePage.tsx'
 export function OrdersScreen(props, message) {
 
   console.log('OrdersScreen')
-  console.log('_New Work', props.props.newWork)
-  console.log('_Service', props.service)
+  // console.log('_New Work', props.props.newWork)
+  // console.log('_Service', props.service)
 
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
@@ -394,7 +394,7 @@ export function OrdersScreen(props, message) {
   //   }
   // }
   const existWorks = (order) => {
-    console.log('_work_', order._work_)
+    // console.log('_work_', order._work_)
     if(order._work_.length){
 
       const allOrders = () => {
@@ -731,40 +731,30 @@ export function OrdersScreen(props, message) {
                       </Table.Td>
                     </Table.Tr>
                     {partsManager(work)}
-                  </>
-                  )
+                  </>)
                 }
                 <Table.Tr>
-                    <Table.Td>
-                    </Table.Td>
-                    <Table.Td>
-                    </Table.Td>
-                    <Table.Td>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                        {totalSubCost()}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                        {totalCost()}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                        {butDeleteAll(order)}
-                        {/* <Anchor size='sm' c='red' onClick={() => {
-                          sendToSocket('deleteAllWork', {
-                            serviceId: props.user.serviceId, 
-                            subServiceId: props.user.subServiceId,
-                            orderId: order._id
-                          })
-                        }}>
-                          {props.text.deleteAll[props.leng]}
-                        </Anchor> */}
-                      </Center>
-                    </Table.Td>
+                  <Table.Td>
+                  </Table.Td>
+                  <Table.Td>
+                  </Table.Td>
+                  <Table.Td>
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {totalSubCost()}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {totalCost()}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {butDeleteAll(order)}
+                    </Center>
+                  </Table.Td>
                 </Table.Tr>
                 </Table.Tbody>
                 </Table>
@@ -956,6 +946,7 @@ export function OrdersScreen(props, message) {
       <Tabs defaultValue={props.text.information[props.leng]} color={colorOrder(order._status_)}>
 
         <Tabs.List>
+          <Tabs.Tab value='time' disabled>{props.text.updated[props.leng]}: {specData(order._updateTime_, 'updatedAt')}</Tabs.Tab>
           <Tabs.Tab value={props.text.information[props.leng]}>{props.text.information[props.leng]}</Tabs.Tab>
           <Tabs.Tab value={props.text.works[props.leng]}>{props.text.works[props.leng]}</Tabs.Tab>
           <Tabs.Tab value={props.text.history[props.leng]}>{props.text.history[props.leng]}</Tabs.Tab>
@@ -1113,25 +1104,9 @@ export function OrdersScreen(props, message) {
       </Tabs>
     )
   }
-
-  if(props.orders.length){
-    const rowss = props.orders.map((element) => (
-      <Accordion.Item key={element._id} className={classes.item} value={element._id} 
-        style={{
-          border: `2px solid ${colorOrder(element._status_)}`
-        }}>
-        <Accordion.Control>
-          <Grid justify="center" align="center" visibleFrom="sm">
-            {activData.map((item, index) => 
-              <Grid.Col span={12 / activData.length} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
-            )}
-          </Grid>
-          <Grid justify="center" align="center" hiddenFrom="sm">
-            {activData.slice(0, 3).map((item, index) => 
-              <Grid.Col span={4} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
-            )}
-          </Grid>
-        </Accordion.Control>
+  const acordControl = (element) => {
+    if(props.props.orderAcord === element._id){
+      return (
         <Accordion.Panel>
           <Grid justify="center" grow>
             {props.service.statuses.map(item => <Grid.Col key={item} span={props.props.screenSizeOrderButLine}>
@@ -1152,11 +1127,35 @@ export function OrdersScreen(props, message) {
               </Button>
             </Grid.Col>)}
           </Grid>
+          <Space h='xs'/>
           {bottomSideData(element)}
           <hr color={colorOrder(element._status_)}></hr>
           <Space h='sm'/>
           {dataForTable(element)}
         </Accordion.Panel>
+      )
+    }
+  }
+
+  if(props.orders.length){
+    const rowss = props.orders.map((element) => (
+      <Accordion.Item key={element._id} className={classes.item} value={element._id} 
+        style={{
+          border: `2px solid ${colorOrder(element._status_)}`
+        }}>
+        <Accordion.Control>
+          <Grid justify="center" align="center" visibleFrom="sm">
+            {activData.map((item, index) => 
+              <Grid.Col span={12 / activData.length} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
+            )}
+          </Grid>
+          <Grid justify="center" align="center" hiddenFrom="sm">
+            {activData.slice(0, 3).map((item, index) => 
+              <Grid.Col span={4} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
+            )}
+          </Grid>
+        </Accordion.Control>
+        {acordControl(element)}
       </Accordion.Item>
     ))
     
@@ -1168,7 +1167,21 @@ export function OrdersScreen(props, message) {
             )}
         </Grid>
         <Container size="100%" className={classes.wrapper}>
-          <Accordion variant="separated" chevron={false}>
+          <Accordion 
+            value={props.props.orderAcord} 
+            onChange={(event) => {
+              if(event){
+                  console.log('request', event)
+                  sendToSocket('getOrder', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  orderId: event
+                })
+              }
+              props.props.setOrderAcord(event)
+            }} 
+            variant="separated" 
+            chevron={false}>
             {rowss}
           </Accordion>
         </Container>

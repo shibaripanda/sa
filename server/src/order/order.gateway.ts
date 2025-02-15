@@ -103,19 +103,14 @@ import { OrderService } from './order.service'
   //   }
   // }
 
-  // @UseGuards(JwtAuthGuard)
-  // @UseGuards(RolesGuard)
-  // @UsePipes(new WSValidationPipe())
-  // @SubscribeMessage('getOrder')
-  // async getOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
-  //   console.log(payload)
-
-  //   await this.orderService.getOrder(payload)
-    // const users = await this.userSevice.getServiceUsers(payload.serviceId)
-    // this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
-    // const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
-    // this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
-  // }
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('getOrder')
+  async getOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+    const order = await this.orderService.getOrder(payload.orderId)
+    if(order) client.emit('getOrders', order)
+  }
 
 
 }

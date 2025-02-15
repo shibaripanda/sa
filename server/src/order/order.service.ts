@@ -37,7 +37,6 @@ export class OrderService {
         }
         return false   
     }
-
     async deleteWork(serviceId, subServiceId, orderId, work, user, service){
         const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
         if(old){
@@ -62,7 +61,6 @@ export class OrderService {
         }
         return false   
     }
-
     async addNewWork(serviceId, subServiceId, orderId, work, user, service){
         const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
         if(old){
@@ -87,7 +85,6 @@ export class OrderService {
         }
         return false   
     }
-
     async addInformationOrder(serviceId, subServiceId, orderId, data, user, service){
         const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
         if(old){
@@ -112,7 +109,6 @@ export class OrderService {
         }
         return false   
     }
-
     async editOrderStatus(serviceId, subServiceId, orderId, newStatus, user, service){
         const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId}, {_status_: 1, _id: 0})
         if(old){
@@ -136,7 +132,6 @@ export class OrderService {
         }
         return false   
     }
-
     async createOrder(serviceId, subServiceId, newOrder, user, service){
         console.log(service)
         const orderSh = () => {
@@ -162,7 +157,6 @@ export class OrderService {
         OrderSchema.add(orderSh())
         return await this.orderMongo.create(orderData())
     }
-
     async getOrders(serviceId, user, service){
         
         // console.log(serviceId, user, service)
@@ -173,12 +167,9 @@ export class OrderService {
         }
         return res
     }
-
-    // async getOrder(serviceId){
-    //     console.log(serviceId)
-    //     const res = await this.orderMongo.find()
-    //     console.log(res)
-    // }
+    async getOrder(orderId){
+        return await this.orderMongo.findOne({_id: orderId})
+    }
 
 
 }

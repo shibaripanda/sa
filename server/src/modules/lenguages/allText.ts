@@ -121,5 +121,6 @@ export const textArray: LengData[] = [
     {rutext: 'Затраты', index: 'subCost', info_data: 'затраты', update: false},
     {rutext: 'Стоимость', index: 'cost', info_data: 'стоимость', update: false},
     {rutext: 'Удалить всё', index: 'deleteAll', info_data: 'удалить всё', update: false},
+    {rutext: 'Обновлено', index: 'updated', info_data: 'обновлено', update: false},
     
 ]
