@@ -883,19 +883,19 @@ export function OrdersScreen(props, message) {
             <Space h='xs'/>
             <Grid key={'titel panel edit'} justify="center" align="center">
                 <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
-                  <Badge variant="dot" color={activDotWork(item)}>{props.text.servOrPart[props.leng]}</Badge>
+                  <Badge color={colorOrder(order._status_)}>{props.text.servOrPart[props.leng]}</Badge>
                 </Grid.Col>
                 <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
-                  <Badge variant="dot" color={activDotMaster(item)}>{props.text.master[props.leng]}</Badge>
+                  <Badge color={colorOrder(order._status_)}>{props.text.master[props.leng]}</Badge>
                 </Grid.Col>
                 <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2: 12}>
-                  <Badge variant="dot" color="grey">{props.text.varanty[props.leng]}</Badge>
+                  <Badge color={colorOrder(order._status_)}>{props.text.varanty[props.leng]}</Badge>
                 </Grid.Col>
                 <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-                  <Badge variant="dot" color="grey">{total().sumSub !== 0 ? total().sumSub : ''} {props.text.subCost[props.leng]}</Badge> 
+                  <Badge color={colorOrder(order._status_)}>{props.text.subCost[props.leng]}</Badge> 
                 </Grid.Col>
                 <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-                  <Badge variant="dot" color={activDotCost(item)}>{total().sumCost !== 0 ? total().sumCost : ''} {props.text.cost[props.leng]}</Badge> 
+                  <Badge color={colorOrder(order._status_)}>{props.text.cost[props.leng]}</Badge> 
                 </Grid.Col>
                 <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
                   {total().sumProfit}
