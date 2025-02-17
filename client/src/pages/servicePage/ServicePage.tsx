@@ -79,6 +79,7 @@ function ServicePage() {
   const [orderAcord, setOrderAcord] = useState<string | null>(null)
 
   const [viewWork, setViewWork] = useState('Manager view')
+  const [editedWork, setEditedWork] = useState(false)
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -100,6 +101,7 @@ function ServicePage() {
     ])
   }
   const getOneOrder = async (data: any) => {
+    console.log('orders', orders.length, orderAcord)
     const res = orders.findIndex(item => item._id === data._id)
     if(res > -1){
       orders[res] = {...data, _updateTime_: Date.now()}
@@ -107,20 +109,31 @@ function ServicePage() {
     else{
       orders.push({...data, _updateTime_: Date.now()})
     }
+
+    // console.log('orderAcord', orderAcord)
+
+    // const or = 
+    // console.log('test', orderAcord, data._id, orderAcord === data._id)
+    // if(orderAcord && orderAcord === data._id){
+    //   console.log('ddd', orderAcord === data._id)
+    //   // setEditedWork(data)
+
+    //   editedWork
+    // }
     SocketApt.socket?.once('getOrders', (data) => {
       getOneOrder(data)
     })
     setOrders([...orders])
   }
-  const getCountOfOrders = (start, end) => {
-    orders.splice(0)
-    setOrders([])
-    SocketApt.socket?.removeListener('getOrders')
-    SocketApt.socket?.once('getOrders', (data) => {
-      getOneOrder(data)
-    })
-    sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: start, end: end})
-  }
+  // const getCountOfOrders = (start, end) => {
+  //   orders.splice(0)
+  //   setOrders([])
+  //   SocketApt.socket?.removeListener('getOrders')
+  //   SocketApt.socket?.once('getOrders', (data) => {
+  //     getOneOrder(data)
+  //   })
+  //   sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: start, end: end})
+  // }
 
   const getTexLengUserService = async () => {
     
@@ -237,7 +250,7 @@ function ServicePage() {
               openedNewOrder: openedNewOrder,
               openedNewOrderHandler: openedNewOrderHandler,
               getAndPrintNewOrder: getAndPrintNewOrder,
-              getCountOfOrders: getCountOfOrders,
+              // getCountOfOrders: getCountOfOrders,
               countLoadOrders: countLoadOrders,
               setCountLoadOrders: setCountLoadOrders,
               openedFilter: openedFilter,
@@ -255,7 +268,9 @@ function ServicePage() {
               viewWork: viewWork,
               setViewWork: setViewWork,
               orderAcord: orderAcord,
-              setOrderAcord: setOrderAcord
+              setOrderAcord: setOrderAcord,
+              editedWork: editedWork,
+              setEditedWork: setEditedWork
               }
             )}
           </AppShell.Main>

@@ -10,6 +10,7 @@ import { emptyWork } from '../../../ServicePage.tsx'
 export function OrdersScreen(props, message) {
 
   console.log('OrdersScreen')
+  console.log('or', props.props.orderAcord)
 
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
@@ -339,6 +340,10 @@ export function OrdersScreen(props, message) {
     // console.log('_work_', order._work_)
     if(order._work_.length){
 
+      if(props.props.orderAcord){
+        
+      }
+
       const allOrders = () => {
         if(activButAddNewWork(props.props.newWork)){
           return [...order._work_]
@@ -540,8 +545,8 @@ export function OrdersScreen(props, message) {
             <Grid.Col key={'delete'} span={props.props.screenSizeOrderButLine < 12 ? 0.4 : 0}>
               <Center>
                 <IconSquareX color='red' onClick={() => {
-                  // props.props.newWork.parts.splice(index, 1)
-                  // props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
+                  props.props.editedWork.parts.splice(index, 1)
+                  props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
                 }}/>
               </Center>
             </Grid.Col>
@@ -549,14 +554,14 @@ export function OrdersScreen(props, message) {
               <TextInput value={item.part} placeholder='Запчасть' error={!item.part}
                 onChange={(event) => {
                   item.part = event.target.value
-                  props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+                  props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
                 }}/>
             </Grid.Col>
             <Grid.Col key={'hide'} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 0}>
               <SegmentedControl value={item.link} fullWidth
                 onChange={(event) => {
                   item.link = event
-                  props.props.setNewWork({...props.props.newWork, parts: props.props.newWork.parts})
+                  props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
                 }}  
                 data={['apart', 'mix', 'hide']} 
                 />
@@ -565,21 +570,21 @@ export function OrdersScreen(props, message) {
               <NumberInput value={item.varanty} placeholder={props.text.varanty[props.leng]}
                 onChange={(event) => {
                   item.varanty = event
-                  props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+                  props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
                 }}/>
             </Grid.Col>
             <Grid.Col key={'subCost'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
               <NumberInput value={item.subCost} placeholder={props.text.subCost[props.leng]} 
                 onChange={(event) => {
                   item.subCost = event
-                  props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+                  props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
                 }}/>
             </Grid.Col>
             <Grid.Col key={'cost'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
               <NumberInput value={item.cost} placeholder={props.text.cost[props.leng]} error={!item.cost} 
                 onChange={(event) => {
                   item.cost = event
-                  props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+                  props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
                 }}/>
             </Grid.Col>
             <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
@@ -639,9 +644,9 @@ export function OrdersScreen(props, message) {
                   </Table.Td>
                 </Table.Tr>
 
-                {allOrders().map(work =>
+                {allOrders().map((work, index) =>
                   <>
-                    <Table.Tr>
+                    <Table.Tr key={index}>
                       <Table.Td width={'40%'}>
                         {title(work)}
                       </Table.Td>
@@ -800,6 +805,8 @@ export function OrdersScreen(props, message) {
         )
       }
       else if(props.props.viewWork === 'Edit'){
+        // props.props.setEditedWork(order)
+        // props.props.editedWork = order
         return (
           <div>
             <Space h='sm'/>
@@ -814,59 +821,58 @@ export function OrdersScreen(props, message) {
             </Group>
             <Space h='xs'/>
             <Grid key={'titel panel edit'} justify="center" align="center">
-                <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
-                  <Badge color={colorOrder(order._status_)}>{props.text.servOrPart[props.leng]}</Badge>
-                </Grid.Col>
-                <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
-                  <Badge color={colorOrder(order._status_)}>{props.text.master[props.leng]}</Badge>
-                </Grid.Col>
-                <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2: 12}>
-                  <Badge color={colorOrder(order._status_)}>{props.text.varanty[props.leng]}</Badge>
-                </Grid.Col>
-                <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-                  <Badge color={colorOrder(order._status_)}>{props.text.subCost[props.leng]}</Badge> 
-                </Grid.Col>
-                <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-                  <Badge color={colorOrder(order._status_)}>{props.text.cost[props.leng]}</Badge> 
-                </Grid.Col>
-                <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
-                  {total().sumProfit}
-                </Grid.Col>
-              </Grid>
-            {order._work_.map((item, index)=>
+              <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
+                <Badge color={colorOrder(order._status_)}>{props.text.servOrPart[props.leng]}</Badge>
+              </Grid.Col>
+              <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
+                <Badge color={colorOrder(order._status_)}>{props.text.master[props.leng]}</Badge>
+              </Grid.Col>
+              <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2: 12}>
+                <Badge color={colorOrder(order._status_)}>{props.text.varanty[props.leng]}</Badge>
+              </Grid.Col>
+              <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+                <Badge color={colorOrder(order._status_)}>{props.text.subCost[props.leng]}</Badge> 
+              </Grid.Col>
+              <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
+                <Badge color={colorOrder(order._status_)}>{props.text.cost[props.leng]}</Badge> 
+              </Grid.Col>
+              <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
+                {total().sumProfit}
+              </Grid.Col>
+            </Grid>
+            {props.props.editedWork._work_.map((item, index)=>
             <div key={item._id}>
-
               <Grid key={'input panel'} justify="center" align="center">
                 <Grid.Col key={props.text.servOrPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
                   <TextInput value={item.work} placeholder={props.text.servOrPart[props.leng]} error={!item.work}
                     onChange={(event) => {
-                      // props.props.setNewWork({...props.props.newWork, work: event.target.value})
+                      props.props.setEditedWork({...props.props.editedWork, work: event.target.value})
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
                   <Select value={item.master} placeholder={props.text.master[props.leng]} error={!item.master}
                     data={props.service.localUsers.map(item => ({label: item.name ? item.name + ' (' + item.email + ')' : item.email, value: item.id}))}
                     onChange={(event) => {
-                      // props.props.setNewWork({...props.props.newWork, master: event})
+                      props.props.setEditedWork({...props.props.editedWork, master: event})
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
                   <NumberInput value={item.varanty} placeholder={props.text.varanty[props.leng]} 
                     // data={[1, 7, 14, 30, 60, 90, 120, 365].map(item => ({label: `${item} `, value: item}))}
                     onChange={(event) => {
-                      // props.props.setNewWork({...props.props.newWork, varanty: event})
+                      props.props.setEditedWork({...props.props.editedWork, varanty: event})
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
                   <NumberInput value={item.subCost} placeholder={props.text.subCost[props.leng]}
                     onChange={(event) => {
-                      // props.props.setNewWork({...props.props.newWork, subCost: event})
+                      props.props.setEditedWork({...props.props.editedWork, subCost: event})
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
                   <NumberInput value={item.cost} placeholder={props.text.cost[props.leng]} error={!item.cost}
                     onChange={(event) => {
-                      // props.props.setNewWork({...props.props.newWork, cost: event})
+                      props.props.setEditedWork({...props.props.editedWork, cost: event})
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
@@ -876,7 +882,6 @@ export function OrdersScreen(props, message) {
               {partsEdit(item)}
             </div>
             )}
-
             <Space h='sm'/>
           </div>
         )
@@ -1112,15 +1117,18 @@ export function OrdersScreen(props, message) {
           <Accordion 
             value={props.props.orderAcord} 
             onChange={(event) => {
-              if(event){
-                  console.log('request', event)
-                  sendToSocket('getOrder', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  orderId: event
-                })
-              }
               props.props.setOrderAcord(event)
+              if(event){
+                
+                console.log('request', event)
+                sendToSocket('getOrder', {
+                    serviceId: props.user.serviceId, 
+                    subServiceId: props.user.subServiceId,
+                    orderId: event
+                  }
+                )
+              }
+              
             }} 
             variant="separated" 
             chevron={false}>
