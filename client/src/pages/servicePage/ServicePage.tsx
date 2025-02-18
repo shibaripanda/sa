@@ -79,7 +79,7 @@ function ServicePage() {
   const [orderAcord, setOrderAcord] = useState<string | null>(null)
 
   const [viewWork, setViewWork] = useState('Manager view')
-  const [editedWork, setEditedWork] = useState(false)
+  const [editedWork, setEditedWork] = useState<any | false>(false)
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -102,27 +102,23 @@ function ServicePage() {
   }
   const getOneOrder = async (data: any) => {
     console.log('orders', orders.length, orderAcord)
+    const time = Date.now()
     const res = orders.findIndex(item => item._id === data._id)
     if(res > -1){
-      orders[res] = {...data, _updateTime_: Date.now()}
+      orders[res] = {...data, _updateTime_: time}
     }
     else{
-      orders.push({...data, _updateTime_: Date.now()})
+      orders.push({...data, _updateTime_: time})
     }
-
-    // console.log('orderAcord', orderAcord)
-
-    // const or = 
-    // console.log('test', orderAcord, data._id, orderAcord === data._id)
-    // if(orderAcord && orderAcord === data._id){
-    //   console.log('ddd', orderAcord === data._id)
-    //   // setEditedWork(data)
-
-    //   editedWork
-    // }
-    SocketApt.socket?.once('getOrders', (data) => {
-      getOneOrder(data)
+    console.log(orderAcord)
+    setOrderAcord((current) => {
+      if(current === data._id){
+        console.log('up')
+        setEditedWork([...orders.find(item => item._id === current)._work_])
+      }
+      return current
     })
+    SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
     setOrders([...orders])
   }
   // const getCountOfOrders = (start, end) => {

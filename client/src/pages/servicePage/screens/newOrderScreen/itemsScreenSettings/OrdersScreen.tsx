@@ -10,7 +10,8 @@ import { emptyWork } from '../../../ServicePage.tsx'
 export function OrdersScreen(props, message) {
 
   console.log('OrdersScreen')
-  console.log('or', props.props.orderAcord)
+  console.log('editedWork', props.props.editedWork)
+  console.log(props.orders.find(item => item._id === props.props.orderAcord) ? props.orders.find(item => item._id === props.props.orderAcord)['_work_'] : 'ee')
 
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
@@ -337,12 +338,8 @@ export function OrdersScreen(props, message) {
     return 'green'
   }
   const existWorks = (order) => {
-    // console.log('_work_', order._work_)
-    if(order._work_.length){
 
-      if(props.props.orderAcord){
-        
-      }
+    if(order._work_.length){
 
       const allOrders = () => {
         if(activButAddNewWork(props.props.newWork)){
@@ -805,8 +802,7 @@ export function OrdersScreen(props, message) {
         )
       }
       else if(props.props.viewWork === 'Edit'){
-        // props.props.setEditedWork(order)
-        // props.props.editedWork = order
+        console.log(order._work_)
         return (
           <div>
             <Space h='sm'/>
@@ -840,13 +836,16 @@ export function OrdersScreen(props, message) {
                 {total().sumProfit}
               </Grid.Col>
             </Grid>
-            {props.props.editedWork._work_.map((item, index)=>
+            {props.props.editedWork.map((item, index)=>
             <div key={item._id}>
               <Grid key={'input panel'} justify="center" align="center">
                 <Grid.Col key={props.text.servOrPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
                   <TextInput value={item.work} placeholder={props.text.servOrPart[props.leng]} error={!item.work}
                     onChange={(event) => {
-                      props.props.setEditedWork({...props.props.editedWork, work: event.target.value})
+                      item.work = event.target.value
+                      console.log('ddd')
+                      // props.props.editedWork._work_[index].work = event.target.value
+                      props.props.setEditedWork([...props.props.editedWork])
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
@@ -882,6 +881,8 @@ export function OrdersScreen(props, message) {
               {partsEdit(item)}
             </div>
             )}
+            <Button disabled={JSON.stringify(order._work_) === JSON.stringify(props.props.editedWork)}> SD</Button>
+            <Button disabled={order._work_ === props.props.editedWork}> SD</Button>
             <Space h='sm'/>
           </div>
         )
@@ -1117,10 +1118,11 @@ export function OrdersScreen(props, message) {
           <Accordion 
             value={props.props.orderAcord} 
             onChange={(event) => {
-              props.props.setOrderAcord(event)
+              
               if(event){
-                
-                console.log('request', event)
+                props.props.setEditedWork([...props.orders.find(item => item._id === event)._work_])
+
+                console.log('ffff', props.props.editedWork === props.orders.find(item => item._id === event)._work_)
                 sendToSocket('getOrder', {
                     serviceId: props.user.serviceId, 
                     subServiceId: props.user.subServiceId,
@@ -1128,7 +1130,7 @@ export function OrdersScreen(props, message) {
                   }
                 )
               }
-              
+              props.props.setOrderAcord(event)
             }} 
             variant="separated" 
             chevron={false}>
