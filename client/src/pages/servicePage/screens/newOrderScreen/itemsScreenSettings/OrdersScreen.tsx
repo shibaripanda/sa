@@ -543,7 +543,8 @@ export function OrdersScreen(props, message) {
               <Center>
                 <IconSquareX color='red' onClick={() => {
                   props.props.editedWork.parts.splice(index, 1)
-                  props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
+                  // props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
+                  props.props.setEditedWork([...props.props.editedWork])
                 }}/>
               </Center>
             </Grid.Col>
@@ -551,14 +552,16 @@ export function OrdersScreen(props, message) {
               <TextInput value={item.part} placeholder='Запчасть' error={!item.part}
                 onChange={(event) => {
                   item.part = event.target.value
-                  props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
+                  // props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
+                  props.props.setEditedWork([...props.props.editedWork])
                 }}/>
             </Grid.Col>
             <Grid.Col key={'hide'} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 0}>
               <SegmentedControl value={item.link} fullWidth
                 onChange={(event) => {
                   item.link = event
-                  props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
+                  // props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
+                  props.props.setEditedWork([...props.props.editedWork])
                 }}  
                 data={['apart', 'mix', 'hide']} 
                 />
@@ -567,21 +570,24 @@ export function OrdersScreen(props, message) {
               <NumberInput value={item.varanty} placeholder={props.text.varanty[props.leng]}
                 onChange={(event) => {
                   item.varanty = event
-                  props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
+                  // props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
+                  props.props.setEditedWork([...props.props.editedWork])
                 }}/>
             </Grid.Col>
             <Grid.Col key={'subCost'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
               <NumberInput value={item.subCost} placeholder={props.text.subCost[props.leng]} 
                 onChange={(event) => {
                   item.subCost = event
-                  props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
+                  // props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
+                  props.props.setEditedWork([...props.props.editedWork])
                 }}/>
             </Grid.Col>
             <Grid.Col key={'cost'} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
               <NumberInput value={item.cost} placeholder={props.text.cost[props.leng]} error={!item.cost} 
                 onChange={(event) => {
                   item.cost = event
-                  props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
+                  // props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
+                  props.props.setEditedWork([...props.props.editedWork])
                 }}/>
             </Grid.Col>
             <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
@@ -802,7 +808,7 @@ export function OrdersScreen(props, message) {
         )
       }
       else if(props.props.viewWork === 'Edit'){
-        console.log(order._work_)
+        // console.log(order._work_)
         return (
           <div>
             <Space h='sm'/>
@@ -816,7 +822,7 @@ export function OrdersScreen(props, message) {
               {profitMain()}
             </Group>
             <Space h='xs'/>
-            <Grid key={'titel panel edit'} justify="center" align="center">
+            {/* <Grid key={'titel panel edit'} justify="center" align="center">
               <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
                 <Badge color={colorOrder(order._status_)}>{props.text.servOrPart[props.leng]}</Badge>
               </Grid.Col>
@@ -835,7 +841,7 @@ export function OrdersScreen(props, message) {
               <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
                 {total().sumProfit}
               </Grid.Col>
-            </Grid>
+            </Grid> */}
             {props.props.editedWork.map((item, index)=>
             <div key={item._id}>
               <Grid key={'input panel'} justify="center" align="center">
@@ -844,7 +850,6 @@ export function OrdersScreen(props, message) {
                     onChange={(event) => {
                       item.work = event.target.value
                       console.log('ddd')
-                      // props.props.editedWork._work_[index].work = event.target.value
                       props.props.setEditedWork([...props.props.editedWork])
                     }}/>
                 </Grid.Col>
@@ -852,26 +857,30 @@ export function OrdersScreen(props, message) {
                   <Select value={item.master} placeholder={props.text.master[props.leng]} error={!item.master}
                     data={props.service.localUsers.map(item => ({label: item.name ? item.name + ' (' + item.email + ')' : item.email, value: item.id}))}
                     onChange={(event) => {
-                      props.props.setEditedWork({...props.props.editedWork, master: event})
+                      item.master = event
+                      props.props.setEditedWork([...props.props.editedWork])
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
                   <NumberInput value={item.varanty} placeholder={props.text.varanty[props.leng]} 
                     // data={[1, 7, 14, 30, 60, 90, 120, 365].map(item => ({label: `${item} `, value: item}))}
                     onChange={(event) => {
-                      props.props.setEditedWork({...props.props.editedWork, varanty: event})
+                      item.varanty = event
+                      props.props.setEditedWork([...props.props.editedWork])
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
                   <NumberInput value={item.subCost} placeholder={props.text.subCost[props.leng]}
                     onChange={(event) => {
-                      props.props.setEditedWork({...props.props.editedWork, subCost: event})
+                      item.subCost = event
+                      props.props.setEditedWork([...props.props.editedWork])
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
                   <NumberInput value={item.cost} placeholder={props.text.cost[props.leng]} error={!item.cost}
                     onChange={(event) => {
-                      props.props.setEditedWork({...props.props.editedWork, cost: event})
+                      item.cost = event
+                      props.props.setEditedWork([...props.props.editedWork])
                     }}/>
                 </Grid.Col>
                 <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
@@ -881,8 +890,19 @@ export function OrdersScreen(props, message) {
               {partsEdit(item)}
             </div>
             )}
-            <Button disabled={JSON.stringify(order._work_) === JSON.stringify(props.props.editedWork)}> SD</Button>
-            <Button disabled={order._work_ === props.props.editedWork}> SD</Button>
+            <Space h='sm'/>
+            <Button disabled={JSON.stringify(order._work_) === JSON.stringify(props.props.editedWork)}
+              onClick={() => {
+                sendToSocket('updateOrderWork', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  orderId: order._id,
+                  work: props.props.editedWork
+                })
+              }}
+            > 
+            {props.text.save[props.leng]}
+            </Button>
             <Space h='sm'/>
           </div>
         )
@@ -1118,11 +1138,8 @@ export function OrdersScreen(props, message) {
           <Accordion 
             value={props.props.orderAcord} 
             onChange={(event) => {
-              
               if(event){
-                props.props.setEditedWork([...props.orders.find(item => item._id === event)._work_])
-
-                console.log('ffff', props.props.editedWork === props.orders.find(item => item._id === event)._work_)
+                props.props.setEditedWork([])
                 sendToSocket('getOrder', {
                     serviceId: props.user.serviceId, 
                     subServiceId: props.user.subServiceId,

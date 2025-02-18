@@ -79,7 +79,7 @@ function ServicePage() {
   const [orderAcord, setOrderAcord] = useState<string | null>(null)
 
   const [viewWork, setViewWork] = useState('Manager view')
-  const [editedWork, setEditedWork] = useState<any | false>(false)
+  const [editedWork, setEditedWork] = useState<any[] | false>(false)
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -101,7 +101,7 @@ function ServicePage() {
     ])
   }
   const getOneOrder = async (data: any) => {
-    console.log('orders', orders.length, orderAcord)
+    // console.log('orders', orders.length, orderAcord)
     const time = Date.now()
     const res = orders.findIndex(item => item._id === data._id)
     if(res > -1){
@@ -110,11 +110,11 @@ function ServicePage() {
     else{
       orders.push({...data, _updateTime_: time})
     }
-    console.log(orderAcord)
+    // console.log(orderAcord)
     setOrderAcord((current) => {
       if(current === data._id){
-        console.log('up')
-        setEditedWork([...orders.find(item => item._id === current)._work_])
+        // console.log('up')
+        setEditedWork(structuredClone(data._work_))
       }
       return current
     })
@@ -175,7 +175,7 @@ function ServicePage() {
     }
   }
  
-  if(text && leng && user && service){
+  if(text && leng && user && service && orders){
     const screen = new ScreenLine({text, leng, user, service, orders})
     return (
         <AppShell header={{ height: 77 }}>
