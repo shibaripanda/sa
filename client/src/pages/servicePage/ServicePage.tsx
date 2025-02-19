@@ -65,7 +65,7 @@ function ServicePage() {
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
   const [orders, setOrders] = useState<Order[]>([])
-  const [countLoadOrders, setCountLoadOrders] = useState([0, 10])
+  const [countLoadOrders, setCountLoadOrders] = useState([0, 100])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
@@ -91,35 +91,62 @@ function ServicePage() {
 
   const addNewOrder = (data: any) => {
     console.log('orders', orders.length)
-    setOrders([data, ...orders])
+    setOrders([{...data, _updateTime_: Date.now()}, ...orders])
+    setOrderAcord(data._id)
     setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
     openedPrintHandlers.open()
   }
   const getAndPrintNewOrder = async () => {
-    getFromSocket([
-      {message: `createOrder`, handler: addNewOrder}
-    ])
+    SocketApt.socket?.once(`createOrder`, (data) => addNewOrder(data))
+    // getFromSocket([
+    //   {message: `createOrder`, handler: addNewOrder}
+    // ])
   }
+  // const getOneOrder = async (data: any) => {
+  //   // console.log('orders', orders.length, orderAcord)
+  //   const time = Date.now()
+  //   const res = orders.findIndex(item => item._id === data._id)
+  //   console.log(res)
+  //   if(res > -1){
+  //     orders[res] = {...data, _updateTime_: time}
+  //   }
+  //   else{
+  //     orders.push({...data, _updateTime_: time})
+  //     // orders.splice(0, 0, {...data, _updateTime_: time})
+  //   }
+  //   // console.log(orderAcord)
+  //   setOrderAcord((current) => {
+  //     if(current === data._id){
+  //       // console.log('up')
+  //       setEditedWork(structuredClone(data._work_))
+  //     }
+  //     return current
+  //   })
+  //   SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
+  //   setOrders([...orders])
+  // }
   const getOneOrder = async (data: any) => {
-    // console.log('orders', orders.length, orderAcord)
-    const time = Date.now()
-    const res = orders.findIndex(item => item._id === data._id)
-    if(res > -1){
-      orders[res] = {...data, _updateTime_: time}
-    }
-    else{
-      orders.push({...data, _updateTime_: time})
-    }
-    // console.log(orderAcord)
-    setOrderAcord((current) => {
-      if(current === data._id){
-        // console.log('up')
-        setEditedWork(structuredClone(data._work_))
+
+    setOrders((ex) => {
+      const time = Date.now()
+      const res = ex.findIndex(item => item._id === data._id)
+      console.log(res)
+      if(res > -1){
+        ex[res] = {...data, _updateTime_: time}
       }
-      return current
+      else{
+        ex.push({...data, _updateTime_: time})
+      }
+      setOrderAcord((current) => {
+        if(current === data._id){
+          setEditedWork(structuredClone(data._work_))
+        }
+        return current
+      })
+      
+      return [...ex]
     })
     SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
-    setOrders([...orders])
   }
   // const getCountOfOrders = (start, end) => {
   //   orders.splice(0)

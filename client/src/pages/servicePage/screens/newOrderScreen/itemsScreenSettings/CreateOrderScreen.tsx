@@ -17,14 +17,18 @@ export function CreateOrderScreen(props, message) {
 
   const fieldCheck = (item) => {
     if(!item.variant || item.number){
+      // console.log('handinput')
       return  <HandTextInput props={{...props, field: item}}/>
     }
     if(item.onlyVariants){
       if(item.multiVariants){
+        // console.log('multiselect')
         return <MultSelect props={{...props, field: item}}/>
       }
+      // console.log('select')
       return <SelectField props={{...props, field: item}}/>
     }
+    // console.log('multiselectcreate')
     return <MultSelectCreate props={{...props, field: item}}/>
   }
   const createOrder = () => {

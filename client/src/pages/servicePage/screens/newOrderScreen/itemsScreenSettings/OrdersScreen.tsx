@@ -292,6 +292,23 @@ export function OrdersScreen(props, message) {
       </Grid>)
     }
   }
+  const activButEditWork = (data, order) => {
+    for(const i of data){
+      if(!i.work || !i.cost || !i.master){
+        console.log('s', true)
+        return true
+      }
+      if(i.parts.length){
+        for(const y of i.parts){
+          if(!y.part || !y.cost){
+            return true
+          }
+        }
+      }
+    }
+    console.log('d', false)
+    return JSON.stringify(order) === JSON.stringify(props.props.editedWork)
+  }
   const activButAddNewWork = (data) => {
     if(!data.work || !data.cost || !data.master){
       return true
@@ -337,7 +354,49 @@ export function OrdersScreen(props, message) {
     }
     return 'green'
   }
-  const existWorks = (order) => {
+
+  const controlNewWorkButtonsPanel = (order) => {
+    return (
+      <Grid key={'control panel'} justify="flex-start" align="center">
+        <Grid.Col key={props.text.addPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
+          <Button variant='default' fullWidth
+            disabled={activButAddNewWork(props.props.newWork)}
+            onClick={async () => {
+              await props.props.setNewWork(
+                {...props.props.newWork, parts: [...props.props.newWork.parts, {part: '', varanty: NaN, subCost: NaN, cost: NaN, link: 'apart'}]}
+              )
+            }}>
+            {props.text.addPart[props.leng]}
+          </Button>
+        </Grid.Col>
+        <Grid.Col key={props.text.clear[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
+          <Button variant='default' fullWidth
+            disabled={JSON.stringify(props.props.newWork) === JSON.stringify(structuredClone(emptyWork))}
+            onClick={() => {
+              props.props.setNewWork(structuredClone(emptyWork))
+            }}>
+              {props.text.clear[props.leng]}
+          </Button>
+        </Grid.Col>
+        <Grid.Col key={props.text.add[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
+          <Button fullWidth variant='default' c={!activButAddNewWork(props.props.newWork) ? 'green' : ''}
+            disabled={activButAddNewWork(props.props.newWork)}
+            onClick={() => {
+                sendToSocket('addNewWork', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  orderId: order._id,
+                  work: {...props.props.newWork, total: total().sumCost}
+                })
+                props.props.setNewWork(structuredClone(emptyWork))
+            }}>
+          {props.text.add[props.leng]}
+          </Button>
+        </Grid.Col>
+      </Grid>
+    )
+  }
+  const orderWorksPanel = (order) => {
 
     if(order._work_.length){
 
@@ -362,34 +421,6 @@ export function OrdersScreen(props, message) {
           .map(item => item.varanty), data.varanty ? data.varanty : 0]
           .sort((a, b) => b - a)
       }
-      // const parts = (work) => {
-      //   if(work.parts.filter(item => 'apart' === item.link).length){
-      //     return (
-      //       work.parts.filter(w => 'apart' === w.link).map(part => 
-      //         <Table.Tr>
-      //           <Table.Td>
-      //             {part.part ? part.part : '--'}
-      //           </Table.Td>
-      //           <Table.Td>
-      //             <Center>
-      //               {part.varanty ? part.varanty : 0}
-      //             </Center>
-      //           </Table.Td>
-      //           <Table.Td>
-      //             <Center>
-      //               {part.cost ? part.cost : 0}
-      //             </Center>
-      //           </Table.Td>
-      //           <Table.Td>
-      //             <Center>
-      //               ---
-      //             </Center>
-      //           </Table.Td>
-      //         </Table.Tr>
-      //       )
-      //     )
-      //   }
-      // }
       const partsManager = (work) => {
         if(work.parts.filter(item => 'apart' === item.link).length){
           return (
@@ -536,23 +567,23 @@ export function OrdersScreen(props, message) {
         }
       }
       const partsEdit = (work) => {
-        if(work.parts.length){
-          return work.parts.map((item, index) => 
+        if(work.length){
+          return work.map((item, index) => 
           <Grid key={`part panel${index}`} justify="center" align="center">
+            <Grid.Col key={'delete1'} span={props.props.screenSizeOrderButLine < 12 ? 0.4 : 0}>
+            </Grid.Col>
             <Grid.Col key={'delete'} span={props.props.screenSizeOrderButLine < 12 ? 0.4 : 0}>
               <Center>
                 <IconSquareX color='red' onClick={() => {
-                  props.props.editedWork.parts.splice(index, 1)
-                  // props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
+                  work.splice(index, 1)
                   props.props.setEditedWork([...props.props.editedWork])
                 }}/>
               </Center>
             </Grid.Col>
-            <Grid.Col key={'part'} span={props.props.screenSizeOrderButLine < 12 ? 5.1 : 12}>
+            <Grid.Col key={'part'} span={props.props.screenSizeOrderButLine < 12 ? 4.7 : 12}>
               <TextInput value={item.part} placeholder='Запчасть' error={!item.part}
                 onChange={(event) => {
                   item.part = event.target.value
-                  // props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
                   props.props.setEditedWork([...props.props.editedWork])
                 }}/>
             </Grid.Col>
@@ -560,7 +591,6 @@ export function OrdersScreen(props, message) {
               <SegmentedControl value={item.link} fullWidth
                 onChange={(event) => {
                   item.link = event
-                  // props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
                   props.props.setEditedWork([...props.props.editedWork])
                 }}  
                 data={['apart', 'mix', 'hide']} 
@@ -570,7 +600,6 @@ export function OrdersScreen(props, message) {
               <NumberInput value={item.varanty} placeholder={props.text.varanty[props.leng]}
                 onChange={(event) => {
                   item.varanty = event
-                  // props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
                   props.props.setEditedWork([...props.props.editedWork])
                 }}/>
             </Grid.Col>
@@ -578,7 +607,6 @@ export function OrdersScreen(props, message) {
               <NumberInput value={item.subCost} placeholder={props.text.subCost[props.leng]} 
                 onChange={(event) => {
                   item.subCost = event
-                  // props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
                   props.props.setEditedWork([...props.props.editedWork])
                 }}/>
             </Grid.Col>
@@ -586,7 +614,6 @@ export function OrdersScreen(props, message) {
               <NumberInput value={item.cost} placeholder={props.text.cost[props.leng]} error={!item.cost} 
                 onChange={(event) => {
                   item.cost = event
-                  // props.props.setEditedWork({...props.props.editedWork, parts: [...props.props.editedWork.parts]})
                   props.props.setEditedWork([...props.props.editedWork])
                 }}/>
             </Grid.Col>
@@ -614,99 +641,97 @@ export function OrdersScreen(props, message) {
                 </Group>
                 <Space h='xs'/>
                 <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
-                <Table.Tbody>
-
-                <Table.Tr>
-                  <Table.Td>
-                    <Center>
-                      {props.text.servOrPart[props.leng]}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td>
-                    <Center>
-                      {props.text.master[props.leng]}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td>
-                    <Center>
-                      {props.text.varanty[props.leng]}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td>
-                    <Center>
-                      {props.text.subCost[props.leng]}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td>
-                    <Center>
-                      {props.text.cost[props.leng]}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td>
-                    
-                  </Table.Td>
-                </Table.Tr>
-
-                {allOrders().map((work, index) =>
-                  <>
-                    <Table.Tr key={index}>
-                      <Table.Td width={'40%'}>
-                        {title(work)}
-                      </Table.Td>
-                      <Table.Td width={'20%'}>
-                        {props.service.localUsers.find(item => item.id === work.master) ? 
-                        (props.service.localUsers.find(item => item.id === work.master).name ? 
-                        props.service.localUsers.find(item => item.id === work.master).name + ' (' + props.service.localUsers.find(item => item.id === work.master).email + ')' : props.service.localUsers.find(item => item.id === work.master).email) : '--'
-                      }
-                      </Table.Td>
-                      <Table.Td width={'10%'}>
+                  <Table.Tbody>
+                    <Table.Tr>
+                      <Table.Td>
                         <Center>
-                          {varanty(work)}
+                          {props.text.servOrPart[props.leng]}
                         </Center>
                       </Table.Td>
-                      <Table.Td width={'10%'}>
+                      <Table.Td>
                         <Center>
-                          {subCost(work)}
+                          {props.text.master[props.leng]}
                         </Center>
                       </Table.Td>
-                      <Table.Td width={'10%'}>
+                      <Table.Td>
                         <Center>
-                          {cost(work)}
+                          {props.text.varanty[props.leng]}
                         </Center>
                       </Table.Td>
-                      <Table.Td width={'10%'}>
+                      <Table.Td>
                         <Center>
-                          {newWorkOld(work)}
+                          {props.text.subCost[props.leng]}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td>
+                        <Center>
+                          {props.text.cost[props.leng]}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td>
+                        
+                      </Table.Td>
+                    </Table.Tr>
+                    {allOrders().map((work, index) =>
+                      <>
+                        <Table.Tr key={index}>
+                          <Table.Td width={'40%'}>
+                            {title(work)}
+                          </Table.Td>
+                          <Table.Td width={'20%'}>
+                            {props.service.localUsers.find(item => item.id === work.master) ? 
+                            (props.service.localUsers.find(item => item.id === work.master).name ? 
+                            props.service.localUsers.find(item => item.id === work.master).name + ' (' + props.service.localUsers.find(item => item.id === work.master).email + ')' : props.service.localUsers.find(item => item.id === work.master).email) : '--'
+                          }
+                          </Table.Td>
+                          <Table.Td width={'10%'}>
+                            <Center>
+                              {varanty(work)}
+                            </Center>
+                          </Table.Td>
+                          <Table.Td width={'10%'}>
+                            <Center>
+                              {subCost(work)}
+                            </Center>
+                          </Table.Td>
+                          <Table.Td width={'10%'}>
+                            <Center>
+                              {cost(work)}
+                            </Center>
+                          </Table.Td>
+                          <Table.Td width={'10%'}>
+                            <Center>
+                              {newWorkOld(work)}
+                            </Center>
+                          </Table.Td>
+                        </Table.Tr>
+                        {partsManager(work)}
+                      </>
+                    )}
+                    <Table.Tr>
+                      <Table.Td>
+                      </Table.Td>
+                      <Table.Td>
+                      </Table.Td>
+                      <Table.Td>
+                      </Table.Td>
+                      <Table.Td>
+                        <Center>
+                          {totalSubCost()}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td>
+                        <Center>
+                          {totalCost()}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td>
+                        <Center>
+                          {butDeleteAll(order)}
                         </Center>
                       </Table.Td>
                     </Table.Tr>
-                    {partsManager(work)}
-                  </>)
-                }
-                <Table.Tr>
-                  <Table.Td>
-                  </Table.Td>
-                  <Table.Td>
-                  </Table.Td>
-                  <Table.Td>
-                  </Table.Td>
-                  <Table.Td>
-                    <Center>
-                      {totalSubCost()}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td>
-                    <Center>
-                      {totalCost()}
-                    </Center>
-                  </Table.Td>
-                  <Table.Td>
-                    <Center>
-                      {butDeleteAll(order)}
-                    </Center>
-                  </Table.Td>
-                </Table.Tr>
-                </Table.Tbody>
+                  </Table.Tbody>
                 </Table>
               </Grid.Col>
             </Grid>
@@ -749,33 +774,33 @@ export function OrdersScreen(props, message) {
                       </Center>
                     </Table.Td>
                   </Table.Tr> 
-                {allOrders().map(work =>
-                  <>
-                    <Table.Tr>
-                      <Table.Td width={'70%'}>
-                        {title(work)}
-                      </Table.Td>
-                      <Table.Td width={'15%'}>
-                        <Center>
-                          {varanty(work)}
-                        </Center>
-                      </Table.Td>
-                      <Table.Td width={'15%'}>
-                        <Center>
-                          {cost(work)}
-                        </Center>
-                      </Table.Td>
-                      {/* <Table.Td width={'10%'}>
-                        <Center>
-                          {newWorkOld(work)}
-                        </Center>
-                      </Table.Td> */}
-                    </Table.Tr>
-                    {partsClient(work)}
-                  </>
-                  )
-                }
-                <Table.Tr>
+                  {allOrders().map(work =>
+                    <>
+                      <Table.Tr>
+                        <Table.Td width={'70%'}>
+                          {title(work)}
+                        </Table.Td>
+                        <Table.Td width={'15%'}>
+                          <Center>
+                            {varanty(work)}
+                          </Center>
+                        </Table.Td>
+                        <Table.Td width={'15%'}>
+                          <Center>
+                            {cost(work)}
+                          </Center>
+                        </Table.Td>
+                        {/* <Table.Td width={'10%'}>
+                          <Center>
+                            {newWorkOld(work)}
+                          </Center>
+                        </Table.Td> */}
+                      </Table.Tr>
+                      {partsClient(work)}
+                    </>
+                    )
+                  }
+                  <Table.Tr>
                     <Table.Td>
                     </Table.Td>
                     <Table.Td>
@@ -785,19 +810,6 @@ export function OrdersScreen(props, message) {
                         {totalCost()}
                       </Center>
                     </Table.Td>
-                    {/* <Table.Td>
-                      <Center>
-                        <Anchor c='red' onClick={() => {
-                          sendToSocket('deleteAllWork', {
-                            serviceId: props.user.serviceId, 
-                            subServiceId: props.user.subServiceId,
-                            orderId: order._id
-                          })
-                        }}>
-                          Delete all
-                        </Anchor>
-                      </Center>
-                    </Table.Td> */}
                   </Table.Tr>
                 </Table.Tbody>
                 </Table>
@@ -808,7 +820,6 @@ export function OrdersScreen(props, message) {
         )
       }
       else if(props.props.viewWork === 'Edit'){
-        // console.log(order._work_)
         return (
           <div>
             <Space h='sm'/>
@@ -822,30 +833,19 @@ export function OrdersScreen(props, message) {
               {profitMain()}
             </Group>
             <Space h='xs'/>
-            {/* <Grid key={'titel panel edit'} justify="center" align="center">
-              <Grid.Col key={'Услуга'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
-                <Badge color={colorOrder(order._status_)}>{props.text.servOrPart[props.leng]}</Badge>
-              </Grid.Col>
-              <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
-                <Badge color={colorOrder(order._status_)}>{props.text.master[props.leng]}</Badge>
-              </Grid.Col>
-              <Grid.Col key={props.text.varanty[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2: 12}>
-                <Badge color={colorOrder(order._status_)}>{props.text.varanty[props.leng]}</Badge>
-              </Grid.Col>
-              <Grid.Col key={props.text.subCost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-                <Badge color={colorOrder(order._status_)}>{props.text.subCost[props.leng]}</Badge> 
-              </Grid.Col>
-              <Grid.Col key={props.text.cost[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.2 : 12}>
-                <Badge color={colorOrder(order._status_)}>{props.text.cost[props.leng]}</Badge> 
-              </Grid.Col>
-              <Grid.Col key={'profit'} span={props.props.screenSizeOrderButLine < 12 ? 1 : 12}>
-                {total().sumProfit}
-              </Grid.Col>
-            </Grid> */}
             {props.props.editedWork.map((item, index)=>
             <div key={item._id}>
               <Grid key={'input panel'} justify="center" align="center">
-                <Grid.Col key={props.text.servOrPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
+                <Grid.Col key={'delete'} span={props.props.screenSizeOrderButLine < 12 ? 0.4 : 0}>
+                  <Center>
+                    <IconSquareX color='red' onClick={() => {
+                      props.props.editedWork.splice(index, 1)
+                      // props.props.setEditedWork({...props.props.editedWork, parts: props.props.editedWork.parts})
+                      props.props.setEditedWork([...props.props.editedWork])
+                    }}/>
+                  </Center>
+                </Grid.Col>
+                <Grid.Col key={props.text.servOrPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 5.1 : 12}>
                   <TextInput value={item.work} placeholder={props.text.servOrPart[props.leng]} error={!item.work}
                     onChange={(event) => {
                       item.work = event.target.value
@@ -887,11 +887,12 @@ export function OrdersScreen(props, message) {
                   {profit(item.cost, item.subCost)}
                 </Grid.Col>
               </Grid>
-              {partsEdit(item)}
+              {partsEdit(item.parts)}
             </div>
             )}
             <Space h='sm'/>
-            <Button disabled={JSON.stringify(order._work_) === JSON.stringify(props.props.editedWork)}
+            <Button
+              disabled={activButEditWork(props.props.editedWork, order._work_)}
               onClick={() => {
                 sendToSocket('updateOrderWork', {
                   serviceId: props.user.serviceId, 
@@ -909,6 +910,7 @@ export function OrdersScreen(props, message) {
       }
     }
   }
+  
   const bottomSideData = (order) => {
     return (
       <Tabs defaultValue={props.text.information[props.leng]} color={colorOrder(order._status_)}>
@@ -930,6 +932,79 @@ export function OrdersScreen(props, message) {
             ]
             .map((item, index) => <Grid.Col key={index} span={props.props.screenSizeOrderButLine}>{item}</Grid.Col>)}
           </Grid>
+          <Space h='lg'/>
+          <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+          <Table.Tbody>
+            <Table.Tr>
+                    <Table.Td>
+                      <Center>
+                        {props.text.servOrPart[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {props.text.varanty[props.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                       {props.text.cost[props.leng]}
+                      </Center>
+                    </Table.Td>
+            </Table.Tr> 
+            {order._work_.map(work =>
+                <>
+                  <Table.Tr>
+                    <Table.Td width={'70%'}>
+                      {work.work + work.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')}
+                    </Table.Td>
+                    <Table.Td width={'15%'}>
+                      <Center>
+                        {[...work.parts
+                          .filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
+                          .map(item => item.varanty), work.varanty ? work.varanty : 0]
+                          .sort((a, b) => b - a)}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td width={'15%'}>
+                      <Center>
+                        {work.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, work.cost)}
+                      </Center>
+                    </Table.Td>
+                  </Table.Tr>
+                  {work.parts.filter(w => 'apart' === w.link).map(part => 
+                    <Table.Tr>
+                      <Table.Td>
+                        {part.part ? part.part : '--'}
+                      </Table.Td>
+                      <Table.Td>
+                        <Center>
+                          {part.varanty ? part.varanty : 0}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td>
+                        <Center>
+                          {part.cost ? part.cost : 0}
+                        </Center>
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
+                </>
+                )
+              }
+            <Table.Tr>
+              <Table.Td>
+              </Table.Td>
+              <Table.Td>
+              </Table.Td>
+              <Table.Td>
+                <Center>
+                  {order._work_.reduce((acc, work) => acc + work.cost + work.parts.reduce((acc, part) => acc + part.cost, 0), 0)}
+                </Center>
+              </Table.Td>
+            </Table.Tr>
+          </Table.Tbody>
+          </Table>
           
         </Tabs.Panel>
 
@@ -1023,8 +1098,9 @@ export function OrdersScreen(props, message) {
           </Grid>
           {parts()}
           <Space h='xl'/>
-          <Grid key={'control panel'} justify="center" align="center">
-            <Grid.Col key={props.text.addPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
+
+          {/* <Grid key={'control panel'} justify="flex-start" align="center">
+            <Grid.Col key={props.text.addPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
               <Button variant='default' fullWidth
                 disabled={activButAddNewWork(props.props.newWork)}
                 onClick={async () => {
@@ -1035,7 +1111,7 @@ export function OrdersScreen(props, message) {
                 {props.text.addPart[props.leng]}
               </Button>
             </Grid.Col>
-            <Grid.Col key={props.text.clear[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
+            <Grid.Col key={props.text.clear[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
               <Button variant='default' fullWidth
                 disabled={JSON.stringify(props.props.newWork) === JSON.stringify(structuredClone(emptyWork))}
                 onClick={() => {
@@ -1044,7 +1120,7 @@ export function OrdersScreen(props, message) {
                   {props.text.clear[props.leng]}
               </Button>
             </Grid.Col>
-            <Grid.Col key={props.text.add[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 3 : 12}>
+            <Grid.Col key={props.text.add[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
               <Button fullWidth variant='default' c={!activButAddNewWork(props.props.newWork) ? 'green' : ''}
                 disabled={activButAddNewWork(props.props.newWork)}
                 onClick={() => {
@@ -1059,10 +1135,10 @@ export function OrdersScreen(props, message) {
               {props.text.add[props.leng]}
               </Button>
             </Grid.Col>
-          </Grid>
+          </Grid> */}
 
-          {existWorks(order)}
-
+          {controlNewWorkButtonsPanel(order)}
+          {orderWorksPanel(order)}
         </Tabs.Panel>
 
         <Tabs.Panel value={props.text.history[props.leng]} pt="xs">
@@ -1077,23 +1153,24 @@ export function OrdersScreen(props, message) {
       return (
         <Accordion.Panel>
           <Grid justify="center" grow>
-            {props.service.statuses.map(item => <Grid.Col key={item} span={props.props.screenSizeOrderButLine}>
-              <Button 
-                color={colorOrder(item)} 
-                fullWidth
-                onClick={() => {
-                  sendToSocket('editOrderStatus', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId,
-                    orderId: element._id,
-                    newStatus: item
-                  })
-                  console.log(element._id, item)
-                }}
-              >
-                {checkStatus(element._status_, item)}{'\u00A0'}{item}
-              </Button>
-            </Grid.Col>)}
+            {props.service.statuses.map(item => 
+              <Grid.Col key={item} span={props.props.screenSizeOrderButLine}>
+                <Button 
+                  color={colorOrder(item)} 
+                  fullWidth
+                  onClick={() => {
+                    sendToSocket('editOrderStatus', {
+                      serviceId: props.user.serviceId, 
+                      subServiceId: props.user.subServiceId,
+                      orderId: element._id,
+                      newStatus: item
+                    })
+                    console.log(element._id, item)
+                  }}
+                >
+                  {checkStatus(element._status_, item)}{'\u00A0'}{item}
+                </Button>
+              </Grid.Col>)}
           </Grid>
           <Space h='xs'/>
           {bottomSideData(element)}
