@@ -126,11 +126,9 @@ function ServicePage() {
   //   setOrders([...orders])
   // }
   const getOneOrder = async (data: any) => {
-
     setOrders((ex) => {
       const time = Date.now()
       const res = ex.findIndex(item => item._id === data._id)
-      console.log(res)
       if(res > -1){
         ex[res] = {...data, _updateTime_: time}
       }

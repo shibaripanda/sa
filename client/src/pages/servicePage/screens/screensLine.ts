@@ -26,7 +26,13 @@ import { ChangeMyMainOrderDataLine } from "./mySettingsScreen/itemsScreenSetting
 
 export const line = [
     {
-        name: 'createOrder',
+        // name: 'createOrder',
+        // screen: NewOrderScreen,
+        // items: [
+        //     {message: 'createOrder', screenItem: CreateOrderScreen},
+        //     {message: 'orders', screenItem: OrdersScreen},  
+        // ]
+        name: 'orders',
         screen: NewOrderScreen,
         items: [
             {message: 'createOrder', screenItem: CreateOrderScreen},
@@ -125,7 +131,17 @@ export class ScreenLine {
     }
 
     getMenuItems(){
-        return this.line.map(item => item.name)
+        const filterLine = (ar1, ar2) => {
+            for(const i of ar2){
+                if(ar1.includes(i)){
+                    return true
+                }
+            }
+            return false
+        }
+        // console.log('this.getMessagesForUser()', this.getMessagesForUser().join())
+        // console.log(this.line.filter(lin => filterLine(lin.items.map(m => m.message), this.getMessagesForUser())).map(item => item.name))
+        return this.line.filter(lin => filterLine(lin.items.map(m => m.message), this.getMessagesForUser())).map(item => item.name)
     }
 
     getScreen(activeScreen: number, props: any){

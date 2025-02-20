@@ -14,6 +14,22 @@ export class RolesGuard implements CanActivate {
 
   async canActivate(context: ExecutionContextHost): Promise<boolean> {
 
+    const accessList = {
+      orders: ['getOrdersCount', 'getOrder'],
+    }
+
+    const paterns = (activPatterns) => {
+      console.log(activPatterns)
+      let res = []
+      for(const i of activPatterns){
+        if(accessList[i]){
+          res = res.concat(accessList[i])
+        }
+      }
+      console.log(res)
+      return res
+    }
+
     const req = context.switchToWs()
     console.log('- RoleGuard', req.getPattern())
     const token = req.getClient().handshake.auth.token.Authorization.split(' ')[1]
@@ -27,7 +43,7 @@ export class RolesGuard implements CanActivate {
       return true
     }
     const activPatterns = [...new Set(service.roles.filter(item => roles.includes(item.role)).map(item => item.access).flat())]
-    if(activPatterns.includes(req.getPattern())){
+    if(paterns(activPatterns).includes(req.getPattern())){
       return true
     }
     console.log('Авторизация (RolesGuard) false')
