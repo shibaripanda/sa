@@ -19,9 +19,11 @@ import { SocketApt } from '../../modules/socket/api/socket-api.ts'
 export const emptyWork = {work: '', master: '', varanty: NaN, subCost: NaN, cost: NaN, parts: []}
 
 interface Order {
-  _id: string
-  _subService_: string
-}
+            _id: string
+   _subService_: string
+      createdAt: any
+   _updateTime_: number
+} 
 
 function ServicePage() {
   
@@ -65,7 +67,7 @@ function ServicePage() {
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
   const [orders, setOrders] = useState<Order[] | false>(false)
-  const [countLoadOrders, setCountLoadOrders] = useState([0, 100])
+  const [countLoadOrders, setCountLoadOrders] = useState([0, 5])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
@@ -92,39 +94,16 @@ function ServicePage() {
   const addNewOrder = (data: any) => {
     console.log('orders', orders ? orders.length : 'no orders')
     setOrders([{...data, _updateTime_: Date.now()}, ...orders ? orders : []])
+    if(data._manager_ === data._id){
+      console.log('dddd')
+    }
     setOrderAcord(data._id)
     setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
     openedPrintHandlers.open()
   }
   const getAndPrintNewOrder = async () => {
     SocketApt.socket?.once(`createOrder`, (data) => addNewOrder(data))
-    // getFromSocket([
-    //   {message: `createOrder`, handler: addNewOrder}
-    // ])
   }
-  // const getOneOrder = async (data: any) => {
-  //   // console.log('orders', orders.length, orderAcord)
-  //   const time = Date.now()
-  //   const res = orders.findIndex(item => item._id === data._id)
-  //   console.log(res)
-  //   if(res > -1){
-  //     orders[res] = {...data, _updateTime_: time}
-  //   }
-  //   else{
-  //     orders.push({...data, _updateTime_: time})
-  //     // orders.splice(0, 0, {...data, _updateTime_: time})
-  //   }
-  //   // console.log(orderAcord)
-  //   setOrderAcord((current) => {
-  //     if(current === data._id){
-  //       // console.log('up')
-  //       setEditedWork(structuredClone(data._work_))
-  //     }
-  //     return current
-  //   })
-  //   SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
-  //   setOrders([...orders])
-  // }
   const getOneOrder = async (data: any) => {
     setOrders((ex) => {
       const time = Date.now()
@@ -143,7 +122,7 @@ function ServicePage() {
         return current
       })
       
-      return [...ex]
+      return [...ex.sort((a, b) => a.createdAt - b.createdAt)]
     })
     SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
   }

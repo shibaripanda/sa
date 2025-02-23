@@ -181,10 +181,11 @@ export class OrderService {
         OrderSchema.add(orderSh())
         return await this.orderMongo.create(orderData())
     }
-    async getOrders(serviceId, user, service){
+    async getOrders(serviceId, subServiceId, start, end, user, service){
+        // console.log((await this.orderMongo.find())[0])
         
         // console.log(serviceId, user, service)
-        const res = await this.orderMongo.find()
+        const res = await this.orderMongo.find({_subServiceId_: subServiceId}).skip(start).limit(end).sort({createdAt: -1})
         for(const i of res){
             const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
             i._subService_ = name ? name.name : '--'

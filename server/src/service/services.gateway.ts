@@ -244,7 +244,7 @@ export class ServicesGateway {
   async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto, @Request() reg: any): Promise<any> {
     console.log('Gateway getServiceById')
     client.join(payload.serviceId)
-    console.log(client.rooms)
+    // console.log(client.rooms)
     // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, reg.service)
     this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, reg.service)
   }

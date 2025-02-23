@@ -44,12 +44,12 @@ export class RolesGuard implements CanActivate {
       return true
     }
     const activPatterns = [...new Set(service.roles.filter(item => roles.includes(item.role)).map(item => item.access).flat())]
-    console.log(activPatterns)
+    // console.log(activPatterns)
     // if(paterns(activPatterns).includes(req.getPattern()) || activPatterns.includes(req.getPattern())){
     //   return true
     // }
     if(activPatterns.includes(req.getPattern())){
-      console.log('aaa')
+      // console.log('aaa')
       return true
     }
     console.log('Авторизация (RolesGuard) false')

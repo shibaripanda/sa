@@ -15,9 +15,9 @@ export class ServicesService {
     ) {}
 
     async replaceStatusPosition(serviceId: string, index1: number, index2: number){
-        console.log(index1, index2)
+        // console.log(index1, index2)
         const item = (await this.serviceMongo.findOne({_id: serviceId}, {statuses: 1, _id: 0})).statuses[index1]
-        console.log(item)
+        // console.log(item)
         if(item){
             await this.serviceMongo.updateOne({_id: serviceId}, {$pull: {statuses: item}})
             return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$push: {statuses: {$each: [item], $position: index2}}}, {returnDocument: 'after'})
@@ -27,7 +27,7 @@ export class ServicesService {
 
     async changeColorStatus(serviceId: string, status: string, color: string){
         // return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {colorStatuses: []}, {returnDocument: 'after'})
-        console.log(status, color)
+        // console.log(status, color)
         const res = await this.serviceMongo.findOne({_id: serviceId}, {colorStatuses: 1, _id: 0})
         if(res.colorStatuses.map(item => item.status).includes(status)){
             return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$set: {'colorStatuses.$[el].color': color}}, {arrayFilters: [{'el.status': status}], returnDocument: 'after'})
