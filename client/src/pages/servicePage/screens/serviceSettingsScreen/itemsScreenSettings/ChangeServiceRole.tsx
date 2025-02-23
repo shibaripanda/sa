@@ -10,6 +10,20 @@ export function ChangeServiceRole(props, message) {
   // console.log('ChangeServiceRole', props, message)
   console.log('ChangeServiceRole')
 
+  const linesAccess = () => {
+    const line1 = line.map(item => item.items).flat()
+    let res: string[] = []
+    for(const i of line1){
+      res.push(i.message)
+      if(i['canUse']){
+        res = res.concat(i.canUse)
+      }
+    }
+    // console.log(res)
+    // return line.map(item => item.items).flat().map(item => item.message)
+    return res
+  }
+
   const accessItems = (roles) => {
       if(!roles){
         accessItems(roles)
@@ -18,7 +32,7 @@ export function ChangeServiceRole(props, message) {
         let res: any = {}
         for(const i of roles){
           res[i.role] = {}
-          for(const a of line.map(item => item.items).flat().map(item => item.message)){
+          for(const a of linesAccess()){
             res[i.role][a] = i.access.includes(a)
           }
         }
@@ -29,13 +43,11 @@ export function ChangeServiceRole(props, message) {
 
   
 
-  const linesAccess = () => {
-    return line.map(item => item.items).flat().map(item => item.message)
-  }
+  
 
   const accessStatus = (itemAccess, role) => {
     return <Center>
-            <Tooltip label={props.text[itemAccess][props.leng]}>
+            <Tooltip label={props.text[itemAccess] ? props.text[itemAccess][props.leng] : itemAccess}>
               <Checkbox
                 checked={props.props.checkedAccess[role][itemAccess]}
                 onChange={(event) => {
@@ -80,15 +92,16 @@ export function ChangeServiceRole(props, message) {
             </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {linesAccess().map(item => <Table.Tr key={item}>
-                                            <Table.Td>
-                                              {props.text[item][props.leng]}
-                                            </Table.Td>
-                                            {props.service.roles.map((role, index) => <Table.Td  key={index}>{accessStatus(item, role.role)}</Table.Td>)}
-                                            {/* <Table.Td>
-                                              {props.text[item][props.leng]}
-                                            </Table.Td> */}
-                                        </Table.Tr>)}
+              {linesAccess().map(item => 
+                <Table.Tr key={item}>
+                    <Table.Td>
+                      {props.text[item] ? props.text[item][props.leng] : item}
+                    </Table.Td>
+                    {props.service.roles.map((role, index) => <Table.Td  key={index}>{accessStatus(item, role.role)}</Table.Td>)}
+                    {/* <Table.Td>
+                      {props.text[item][props.leng]}
+                    </Table.Td> */}
+                </Table.Tr>)}
             </Table.Tbody>
             {/* <Table.Thead>
             <Table.Tr>

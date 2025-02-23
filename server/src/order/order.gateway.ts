@@ -114,7 +114,7 @@ import { OrderService } from './order.service'
   // }
 
   @UseGuards(JwtAuthGuard)
-  @UseGuards(RolesGuard)
+  // @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('getOrder')
   async getOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {

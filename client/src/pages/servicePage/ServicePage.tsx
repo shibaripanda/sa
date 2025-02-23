@@ -32,7 +32,7 @@ function ServicePage() {
   const [leng, setLeng] = useState<string | false>(false)
   const [text, setText] = useState<any | false>(false)
   const [user, setUser] = useState<object | false>(false)
-  const [activeScreen, setActiveScreen] = useState(sessionStorage.getItem('activescreen') ? Number(sessionStorage.getItem('activescreen')) : 0)
+  const [activeScreen, setActiveScreen] = useState(sessionStorage.getItem('activescreen') ? sessionStorage.getItem('activescreen') : 'orders')
   const [service, setService] = useState<object | false>(false)
   const screenSizeOrderButLine = useMatches({base: 12, sm: 12, md: 2, lg: 2})
   const screenSize = useMatches({base: 12, sm: 12, md: 4, lg: 3})
@@ -64,7 +64,7 @@ function ServicePage() {
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<Order[] | false>(false)
   const [countLoadOrders, setCountLoadOrders] = useState([0, 100])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
@@ -90,8 +90,8 @@ function ServicePage() {
   }, [])
 
   const addNewOrder = (data: any) => {
-    console.log('orders', orders.length)
-    setOrders([{...data, _updateTime_: Date.now()}, ...orders])
+    console.log('orders', orders ? orders.length : 'no orders')
+    setOrders([{...data, _updateTime_: Date.now()}, ...orders ? orders : []])
     setOrderAcord(data._id)
     setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
     openedPrintHandlers.open()
@@ -128,6 +128,7 @@ function ServicePage() {
   const getOneOrder = async (data: any) => {
     setOrders((ex) => {
       const time = Date.now()
+      if(!ex) ex = []
       const res = ex.findIndex(item => item._id === data._id)
       if(res > -1){
         ex[res] = {...data, _updateTime_: time}
@@ -210,7 +211,7 @@ function ServicePage() {
         
           <AppShell.Main>
             {screen.getScreen(
-              activeScreen,
+              activeScreen ? activeScreen : 'orders',
               {
               newServiceName: newServiceName,
               setNewSeviceName: setNewSeviceName,

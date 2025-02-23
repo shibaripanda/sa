@@ -9,6 +9,9 @@ export function Header1(props) {
   const [opened, { toggle }] = useDisclosure(false, {onOpen: () => open()})
   const { setColorScheme, clearColorScheme } = useMantineColorScheme()
   const [checked, setChecked] = useState(false)
+
+
+  console.log(props.menu)
   
   const topMenuArray = 
     [
@@ -111,11 +114,12 @@ export function Header1(props) {
       href={'#'}
       key={index}
       className={classes.mainLink}
-      data-active={index === props.activeScreen || undefined}
+      data-active={item === props.activeScreen || undefined}
       onClick={(event) => {
         event.preventDefault()
-        props.setActiveScreen(index)
-        sessionStorage.setItem('activescreen', index)
+        // console.log(item, index)
+        props.setActiveScreen(item)
+        sessionStorage.setItem('activescreen', item)
         if(opened){
             toggle()
             close()
@@ -159,7 +163,7 @@ export function Header1(props) {
             className={classes.mainLink}
             data-active={true}
             >
-              {props.text[props.menu[props.activeScreen]][props.leng]}
+              {props.text[props.activeScreen][props.leng]}
             </Anchor>,
             // <TextInput size='sx'key={39}/>
           ]}

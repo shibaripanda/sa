@@ -24,19 +24,34 @@ import { ChangeInfoMainService } from "./serviceSettingsScreen/itemsScreenSettin
 import { OrdersScreen } from "./newOrderScreen/itemsScreenSettings/OrdersScreen.tsx";
 import { ChangeMyMainOrderDataLine } from "./mySettingsScreen/itemsScreenSettings/ChangeMyMainOrderDataLine.tsx";
 
-export const line = [
+
+interface ItemData {
+    message: string
+    screenItem: Function
+    canUse?: string[]
+    setData?: string 
+    newData?: string 
+    data?: string 
+    title?: string 
+    res?: string
+    size?: number
+}
+
+interface Line {
+    name: string
+    screen: Function
+    items: ItemData[]
+    getDataMessage?: string 
+}
+
+export const line: Line[] = [
     {
-        // name: 'createOrder',
-        // screen: NewOrderScreen,
-        // items: [
-        //     {message: 'createOrder', screenItem: CreateOrderScreen},
-        //     {message: 'orders', screenItem: OrdersScreen},  
-        // ]
         name: 'orders',
         screen: NewOrderScreen,
         items: [
             {message: 'createOrder', screenItem: CreateOrderScreen},
-            {message: 'orders', screenItem: OrdersScreen},  
+            {message: 'getOrdersCount', screenItem: OrdersScreen, 
+                canUse: ['addNewWork', 'deleteWork', 'deleteAllWork', 'updateOrderWork', 'addInformationOrder', 'editOrderStatus']},  
         ]
     },
     {
@@ -48,7 +63,7 @@ export const line = [
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
             {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12},
-            {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12},
+            {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12, canUse: ['addNewServiceRole', ]},
             {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12},
             {message: 'deleteService', screenItem: DeleteService}
         ]
@@ -107,7 +122,7 @@ export const line = [
 ]
 
 export class ScreenLine {
-    line: {name: string, screen: any, items: {message: string, screenItem: any}[], getDataMessage?: string | undefined}[]
+    line: {name: string, screen: any, items: {message: string, screenItem: any, canUse?: string[] | undefined}[], getDataMessage?: string | undefined}[]
     data: {text: {}, leng: string, user: UserClass, service: ServiceClass}
     service: ServiceClass
     user: UserClass
@@ -137,25 +152,27 @@ export class ScreenLine {
                     return true
                 }
             }
-            return false
+            return this.user.userRoles.includes('owner')
         }
         // console.log('this.getMessagesForUser()', this.getMessagesForUser().join())
         // console.log(this.line.filter(lin => filterLine(lin.items.map(m => m.message), this.getMessagesForUser())).map(item => item.name))
         return this.line.filter(lin => filterLine(lin.items.map(m => m.message), this.getMessagesForUser())).map(item => item.name)
     }
 
-    getScreen(activeScreen: number, props: any){
+    getScreen(activeScreen: string, props: any){
+        console.log(activeScreen)
         console.log('screenLine', this.user, this.service)
-        const items = this.line[activeScreen].items.filter(item => this.getMessagesForUser().includes(item.message) || this.user.userRoles.includes('owner'))
+        const res = this.line.find(it => it.name === activeScreen)
+        const items = res ? res.items.filter(item => this.getMessagesForUser().includes(item.message) || this.user.userRoles.includes('owner')) : []
         if(items.length){
-            return this.line[activeScreen].screen(
+            return res ? res.screen(
                 {
                     ...this.data,
-                    getDataMessage: this.line[activeScreen].getDataMessage,
+                    getDataMessage: res.getDataMessage,
                     items: items.filter(item => this.text[item.message][this.leng].toLowerCase().includes(props.settingsFilter.toLowerCase())), 
                     props: props
                 }
-            )  
+            ): [] 
         }
     }
 
