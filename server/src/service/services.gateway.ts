@@ -3,7 +3,6 @@ import { ServicesService } from './services.service'
 import { Server, Socket } from 'socket.io'
 import { Request, UseGuards, UsePipes } from '@nestjs/common'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
-// import { RolesGuard } from 'src/auth/roles.guard'
 import { CreateServiceDto } from './dto/CreateServiceDto.dto'
 import { WSValidationPipe } from 'src/modules/wsPipeValid'
 import { RolesGuard } from 'src/auth/roles.guard'
@@ -38,64 +37,71 @@ export class ServicesGateway {
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('replaceStatusPosition')
-  async replaceStatusPosition(@MessageBody() payload: ReplaceOrderDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async replaceStatusPosition(@MessageBody() payload: ReplaceOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.replaceStatusPosition(payload.serviceId, payload.index1, payload.index2)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeColorStatus')
-  async changeColorStatus(@MessageBody() payload: ChangeServiceColorStatusDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeColorStatus(@MessageBody() payload: ChangeServiceColorStatusDto): Promise<void> {
     const service = await this.serviceSevice.changeColorStatus(payload.serviceId, payload.status, payload.color)
-    console.log(service.colorStatuses)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // console.log(service.colorStatuses)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeInfoMainService')
-  async changeInfoMainService(@MessageBody() payload: ChangeServiceDataDto, @ConnectedSocket() client: Socket): Promise<void> {
+  async changeInfoMainService(@MessageBody() payload: ChangeServiceDataDto): Promise<void> {
     const service = await this.serviceSevice.changeInfoMainService(payload.serviceId, payload.newData)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('addOrDelListVariant')
-  async addOrDelListVariant(@MessageBody() payload: EditVariantDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async addOrDelListVariant(@MessageBody() payload: EditVariantDto): Promise<void> {
     const service = await this.serviceSevice.addOrDelListVariant(payload.serviceId, payload.item, payload.variant)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('replaceOrderDataItems')
-  async replaceOrderDataItems(@MessageBody() payload: ReplaceOrderDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async replaceOrderDataItems(@MessageBody() payload: ReplaceOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.replaceOrderDataItems(payload.serviceId, payload.index1, payload.index2)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('orderDataEdit')
-  async orderDataEdit(@MessageBody() payload: EditOrderDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async orderDataEdit(@MessageBody() payload: EditOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.orderDataEdit(payload.serviceId, payload.item, payload.data, payload.newValue)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
   
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeServiceOrderDataList')
-  async changeServiceOrderDataList(@MessageBody() payload: ChangeServiceOrderDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeServiceOrderDataList(@MessageBody() payload: ChangeServiceOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.changeServiceOrderDataList(payload.serviceId, payload.newOrderData)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -111,96 +117,112 @@ export class ServicesGateway {
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeTimeSubService')
-  async changeSubServiceTime(@MessageBody() payload: ChangeSubServiceDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeSubServiceTime(@MessageBody() payload: ChangeSubServiceDataDto): Promise<void> {
     const service = await this.serviceSevice.changeSubServiceData(
       payload.serviceId, 
       payload.subServiceId, 
       payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
       payload.data) 
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeContactSubService')
-  async changeSubServiceContact(@MessageBody() payload: ChangeSubServiceDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeSubServiceContact(@MessageBody() payload: ChangeSubServiceDataDto): Promise<void> {
     const service = await this.serviceSevice.changeSubServiceData(
       payload.serviceId, 
       payload.subServiceId, 
       payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
       payload.data)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeAddressSubService')
-  async changeSubServiceAddress(@MessageBody() payload: ChangeSubServiceDataDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeSubServiceAddress(@MessageBody() payload: ChangeSubServiceDataDto): Promise<void> {
     const service = await this.serviceSevice.changeSubServiceData(
       payload.serviceId, 
       payload.subServiceId, 
       payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
       payload.data)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeLocalService')
-  async changeLocalService(@MessageBody() payload: ChangeServiceLocalDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeLocalService(@MessageBody() payload: ChangeServiceLocalDto): Promise<void> {
     const service = await this.serviceSevice.changeLocalService(payload.serviceId, payload.subServiceIdDeleteOrNew)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('addNewServiceRole')
-  async addNewServiceRole(@MessageBody() payload: AddServiceRoleDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async addNewServiceRole(@MessageBody() payload: AddServiceRoleDto): Promise<void> {
     const service = await this.serviceSevice.addNewServiceRole(payload.serviceId, payload.newRole)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeServiceRole')
-  async changeServiceRole(@MessageBody() payload: ChangeServiceRoleDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeServiceRole(@MessageBody() payload: ChangeServiceRoleDto): Promise<void> {
     const service = await this.serviceSevice.changeServiceRole(payload.serviceId, payload.role, payload.access)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeServiceStatusList')
-  async changeServiceStatusList(@MessageBody() payload: ChangeServiceStatusDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeServiceStatusList(@MessageBody() payload: ChangeServiceStatusDto): Promise<void> {
     const service = await this.serviceSevice.changeServiceStatusList(payload.serviceId, payload.status[0].toUpperCase() + payload.status.slice(1, payload.status.length).toLowerCase())
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeServiceDeviceList')
-  async changeServiceDeviceList(@MessageBody() payload: ChangeServiceDeviceDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeServiceDeviceList(@MessageBody() payload: ChangeServiceDeviceDto): Promise<void> {
     const service = await this.serviceSevice.changeServiceDeviceList(payload.serviceId, payload.device[0].toUpperCase() + payload.device.slice(1, payload.device.length).toLowerCase())
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeNameSubService')
-  async changeNameSubService(@MessageBody() payload: ChangeServiceNameDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeNameSubService(@MessageBody() payload: ChangeServiceNameDto): Promise<void> {
     const service = await this.serviceSevice.changeNameSubService(payload.serviceId, payload.subServiceId, payload.newName)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeNameMainService')
-  async changeNameMainService(@MessageBody() payload: ChangeServiceNameDto, @ConnectedSocket() client: Socket,): Promise<void> {
+  async changeNameMainService(@MessageBody() payload: ChangeServiceNameDto): Promise<void> {
     const service = await this.serviceSevice.changeNameMainService(payload.serviceId, payload.newName)
-    this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
+    this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -221,7 +243,9 @@ export class ServicesGateway {
   @SubscribeMessage('getServiceById')
   async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto, @Request() reg: any): Promise<any> {
     console.log('Gateway getServiceById')
-    // const service = await this.serviceSevice.getServiceById(payload.serviceId)
+    client.join(payload.serviceId)
+    console.log(client.rooms)
+    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, reg.service)
     this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, reg.service)
   }
 
