@@ -64,7 +64,10 @@ import { OrderService } from './order.service'
   async addInformationOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
     const order = await this.orderService.addInformationOrder(payload.serviceId, payload.subServiceId, payload.orderId, payload.data, req.user, req.service)
-    if(order) client.emit('getOrders', order)
+    if(order){
+      client.emit('getOrders', order)
+      this.server.to(payload.serviceId).emit(`getOrders`, order)
+    } 
   }
 
   @UseGuards(JwtAuthGuard)
@@ -74,7 +77,10 @@ import { OrderService } from './order.service'
   async editOrderStatus(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
     const order = await this.orderService.editOrderStatus(payload.serviceId, payload.subServiceId, payload.orderId, payload.newStatus, req.user, req.service)
-    if(order) client.emit('getOrders', order)
+    if(order){
+      client.emit('getOrders', order)
+      this.server.to(payload.serviceId).emit(`getOrders`, order)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -83,8 +89,10 @@ import { OrderService } from './order.service'
   @SubscribeMessage('createOrder')
   async createOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     const order = await this.orderService.createOrder(payload.serviceId, payload.subServiceId, payload.newOrder, req.user, req.service)
-    client.emit('createOrder', order)
-    this.server.to(payload.serviceId).emit('getOrders', order)
+    if(order){
+      client.emit('createOrder', order)
+      this.server.to(payload.serviceId).emit(`getNewOrder${payload.serviceId}`, order)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -92,27 +100,11 @@ import { OrderService } from './order.service'
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('getOrdersCount')
   async getOrdersCount(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
-    // console.log(payload)
     const orders = await this.orderService.getOrders(payload.serviceId, payload.subServiceId, payload.start, payload.end, req.user, req.service)
-    // const res = orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(payload.start, payload.end)
     for(const order of orders){
       client.emit('getOrders', order)
     }
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @UseGuards(RolesGuard)
-  // @UsePipes(new WSValidationPipe())
-  // @SubscribeMessage('getOrders')
-  // async getOrders(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
-  //   console.log(payload)
-
-  //   const orders = await this.orderService.getOrders(payload.serviceId, req.user, req.service)
-  //   // @ts-expect-error
-  //   for(const order of orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))){
-  //     client.emit('getOrders', order)
-  //   }
-  // }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)

@@ -182,10 +182,12 @@ export class OrderService {
         return await this.orderMongo.create(orderData())
     }
     async getOrders(serviceId, subServiceId, start, end, user, service){
-        // console.log((await this.orderMongo.find())[0])
+
+        console.log(user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId))
         
-        // console.log(serviceId, user, service)
-        const res = await this.orderMongo.find({_subServiceId_: subServiceId}).skip(start).limit(end).sort({createdAt: -1})
+        const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
+        // console.log(service)
+        const res = await this.orderMongo.find({_subServiceId_: subServiceId, _status_: {$nin : userFilter.statuses}}).skip(start).limit(end).sort({createdAt: -1})
         for(const i of res){
             const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
             i._subService_ = name ? name.name : '--'

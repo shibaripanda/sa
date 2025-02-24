@@ -66,7 +66,7 @@ function ServicePage() {
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
-  const [orders, setOrders] = useState<Order[] | false>(false)
+  const [orders, setOrders] = useState<Order[] | false>([])
   const [countLoadOrders, setCountLoadOrders] = useState([0, 5])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
@@ -92,14 +92,15 @@ function ServicePage() {
   }, [])
 
   const addNewOrder = (data: any) => {
-    console.log('orders', orders ? orders.length : 'no orders')
     setOrders([{...data, _updateTime_: Date.now()}, ...orders ? orders : []])
-    if(data._manager_ === data._id){
-      console.log('dddd')
-    }
     setOrderAcord(data._id)
     setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
     openedPrintHandlers.open()
+  }
+  const addNewOrderNoPrint = (data: any) => {
+    setOrders((ex) => {
+      return [{...data, _updateTime_: Date.now()}, ...ex ? ex : []]
+    })
   }
   const getAndPrintNewOrder = async () => {
     SocketApt.socket?.once(`createOrder`, (data) => addNewOrder(data))
@@ -122,19 +123,10 @@ function ServicePage() {
         return current
       })
       
-      return [...ex.sort((a, b) => a.createdAt - b.createdAt)]
+      return [...ex]
     })
     SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
   }
-  // const getCountOfOrders = (start, end) => {
-  //   orders.splice(0)
-  //   setOrders([])
-  //   SocketApt.socket?.removeListener('getOrders')
-  //   SocketApt.socket?.once('getOrders', (data) => {
-  //     getOneOrder(data)
-  //   })
-  //   sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: start, end: end})
-  // }
 
   const getTexLengUserService = async () => {
     
@@ -169,11 +161,13 @@ function ServicePage() {
         {message: `changeMyName${authClass.getServiceId()}`, handler: upUserName},
         {message: `changeMyMainOrderDataLine${authClass.getServiceId()}`, handler: upUserOrderList},
         {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
+        {message: `getNewOrder${authClass.getServiceId()}`, handler: addNewOrderNoPrint},
       ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
+
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
-      // sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
       sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: countLoadOrders[0], end: countLoadOrders[1]})
+      // sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
     }
     else{
       navigate('/')
