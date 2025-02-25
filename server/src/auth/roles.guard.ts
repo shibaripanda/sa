@@ -30,7 +30,7 @@ export class RolesGuard implements CanActivate {
 
     const activPatterns = [...new Set(service.roles.filter(item => roles.includes(item.role)).map(item => item.access).flat())]
 
-    if(activPatterns.includes(req.getPattern())){
+    if(activPatterns.includes(req.getPattern()) || 'getOrder' === req.getPattern()){
       return true
     }
     

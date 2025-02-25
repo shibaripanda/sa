@@ -21,8 +21,13 @@ export function OrdersScreen(props, message) {
     {name: props.text.status[props.leng], data: '_status_'},
     {name: props.text.localService[props.leng], data: '_subService_'},
   ])
-  const lineActiv = props.user.orderDataShowItems.find(item => item.serviceId === props.user.serviceId) ? props.user.orderDataShowItems.find(item => item.serviceId === props.user.serviceId).data : []
+  console.log(props.user.orderDataShowItems)
+  const lineActiv = props.user.orderDataShowItems
+  .find(item => item.serviceId === props.user.serviceId) ? props.user.orderDataShowItems
+  .find(item => item.serviceId === props.user.serviceId).data.filter(f => line.map(r => r.data).includes(f)) : []
+
   const activData = lineActiv.map(e => ({item: e}))
+  console.log(activData)
   
   const colorOrder = (status) => {
     return props.service.colorStatuses.find(item => item.status === status) ? props.service.colorStatuses.find(item => item.status === status).color : 'yellow'
@@ -540,7 +545,7 @@ export function OrdersScreen(props, message) {
         )
       }
       const profitMain = () => {
-        const nalog = 20
+        const nalog = props.service.fee
         const fee = totalExistCost() / 100 * nalog
         const res = (totalExistCost() - totalExistSubCost()) - fee
         if(res === 0){

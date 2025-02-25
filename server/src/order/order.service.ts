@@ -183,7 +183,7 @@ export class OrderService {
     }
     async getOrders(serviceId, subServiceId, start, end, user, service){
 
-        console.log(user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId))
+        // console.log(user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId))
         
         const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
         // console.log(service)
@@ -194,8 +194,15 @@ export class OrderService {
         }
         return res
     }
-    async getOrder(orderId){
-        return await this.orderMongo.findOne({_id: orderId})
+    async getOrder(orderId, serviceId, subServiceId, user, service){
+
+        const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
+        const res = await this.orderMongo.findOne({_id: orderId, _status_: {$nin : userFilter.statuses}})
+        if(res){
+            const name = service.subServices.find(item => item.subServiceId === res._subServiceId_)
+            res._subService_ = name ? name.name : '--'
+            return res 
+        }
     }
 
 }

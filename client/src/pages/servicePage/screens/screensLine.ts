@@ -23,6 +23,7 @@ import { CreateOrderScreen } from "./newOrderScreen/itemsScreenSettings/CreateOr
 import { ChangeInfoMainService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeInfoMainService.tsx";
 import { OrdersScreen } from "./newOrderScreen/itemsScreenSettings/OrdersScreen.tsx";
 import { ChangeMyMainOrderDataLine } from "./mySettingsScreen/itemsScreenSettings/ChangeMyMainOrderDataLine.tsx";
+import { ChangeFeeService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeFeeService.tsx";
 
 
 interface ItemData {
@@ -59,7 +60,8 @@ export const line: Line[] = [
         screen: SeviceSettingsScreen,
         items: [
             {message: 'changeNameMainService', screenItem: ChangeNameMainService},
-            {message: 'changeInfoMainService', screenItem: ChangeInfoMainService}, 
+            {message: 'changeInfoMainService', screenItem: ChangeInfoMainService},
+            {message: 'changeFeeService', screenItem: ChangeFeeService}, 
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
             {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12},

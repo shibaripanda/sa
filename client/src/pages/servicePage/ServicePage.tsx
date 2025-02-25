@@ -63,6 +63,7 @@ function ServicePage() {
   const [dragDrop, setDragDrop] = useListState([])
   const [newOrderData, setNewOrderData] = useState('')
   const [newVariant, setNewVariant] = useState('')
+  const [newFee, setNewFee] = useState(null)
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
@@ -265,7 +266,9 @@ function ServicePage() {
               orderAcord: orderAcord,
               setOrderAcord: setOrderAcord,
               editedWork: editedWork,
-              setEditedWork: setEditedWork
+              setEditedWork: setEditedWork,
+              newFee: newFee,
+              setNewFee: setNewFee
               }
             )}
           </AppShell.Main>

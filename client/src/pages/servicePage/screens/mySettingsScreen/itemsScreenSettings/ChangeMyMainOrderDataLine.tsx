@@ -19,7 +19,9 @@ export function ChangeMyMainOrderDataLine(props, item1) {
     {name: props.text.localService[props.leng], data: '_subService_'},
   ])
 
-  const lineActiv = props.user.orderDataShowItems.find(item => item.serviceId === props.user.serviceId) ? props.user.orderDataShowItems.find(item => item.serviceId === props.user.serviceId).data : []
+  const lineActiv = props.user.orderDataShowItems
+  .find(item => item.serviceId === props.user.serviceId) ? props.user.orderDataShowItems
+  .find(item => item.serviceId === props.user.serviceId).data.filter(f => line.map(r => r.data).includes(f)) : []
   
   if(props.props.stateDataOrderLine[0] === false){
     props.props.setDataOrderLine.setState(lineActiv)

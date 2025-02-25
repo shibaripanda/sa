@@ -37,6 +37,8 @@ interface OrderData {
   saveNewVariants: boolean
   variant: boolean
   number: boolean
+  hold: boolean
+  blocked: boolean
 }
 
 interface LocalUsers {
@@ -73,7 +75,17 @@ export const ServiceSchema = new mongoose.Schema({
     orderData: {
       type: Array,
       default: [
-        {item: 'Device', control: true, number: false, variant: false, variants: [], saveNewVariants: true, onlyVariants: true, multiVariants: true, hidden: false, hold: true}
+        {item: '_DeviceBlocked_', 
+          control: true, 
+          number: false, 
+          variant: true, 
+          variants: [], 
+          saveNewVariants: true, 
+          onlyVariants: true, 
+          multiVariants: false, 
+          hidden: false, 
+          hold: true,
+          blocked: true}
       ],
       require: true
     },
@@ -111,6 +123,11 @@ export const ServiceSchema = new mongoose.Schema({
       type: Array,
       default: [],
       require: true
+    },
+    fee: {
+      type: Number,
+      default: 0,
+      require: true
     }
   }, {timestamps: true})
 
@@ -131,6 +148,7 @@ export const ServiceSchema = new mongoose.Schema({
     orderData: OrderData[]
     colorStatuses: ColorStatus[]
     localUsers: LocalUsers[]
+    fee: number
   }
   
   

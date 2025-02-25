@@ -199,6 +199,7 @@ export function DragAndDrop(props, message) {
             <Table.Td>
             <Center>
                 <Button
+                    disabled={item.blocked}
                     variant='default'
                     size='xs'
                     c='red'

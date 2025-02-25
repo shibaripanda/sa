@@ -11,8 +11,7 @@ import { OrderService } from './order.service'
   export class OrdersGateway  {
 
   constructor(
-    private orderService: OrderService,
-    // private userSevice: UsersService
+    private orderService: OrderService
   ) {}
 
   @WebSocketServer() server: Server
@@ -24,7 +23,10 @@ import { OrderService } from './order.service'
   async updateOrderWork(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
     const order = await this.orderService.updateOrderWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
-    if(order) client.emit('getOrders', order)
+    if(order){
+      client.emit('getOrders', order)
+      this.server.to(payload.serviceId).emit('getOrders', order)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -34,7 +36,10 @@ import { OrderService } from './order.service'
   async deleteAllWork(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
     const order = await this.orderService.deleteAllWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
-    if(order) client.emit('getOrders', order)
+    if(order){
+      client.emit('getOrders', order)
+      this.server.to(payload.serviceId).emit('getOrders', order)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -44,7 +49,10 @@ import { OrderService } from './order.service'
   async deleteWork(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
     const order = await this.orderService.deleteWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
-    if(order) client.emit('getOrders', order)
+    if(order){
+      client.emit('getOrders', order)
+      this.server.to(payload.serviceId).emit('getOrders', order)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -54,7 +62,10 @@ import { OrderService } from './order.service'
   async addNewWork(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
     const order = await this.orderService.addNewWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
-    if(order) client.emit('getOrders', order)
+    if(order){
+      client.emit('getOrders', order)
+      this.server.to(payload.serviceId).emit('getOrders', order)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -66,7 +77,7 @@ import { OrderService } from './order.service'
     const order = await this.orderService.addInformationOrder(payload.serviceId, payload.subServiceId, payload.orderId, payload.data, req.user, req.service)
     if(order){
       client.emit('getOrders', order)
-      this.server.to(payload.serviceId).emit(`getOrders`, order)
+      this.server.to(payload.serviceId).emit('getOrders', order)
     } 
   }
 
@@ -79,7 +90,7 @@ import { OrderService } from './order.service'
     const order = await this.orderService.editOrderStatus(payload.serviceId, payload.subServiceId, payload.orderId, payload.newStatus, req.user, req.service)
     if(order){
       client.emit('getOrders', order)
-      this.server.to(payload.serviceId).emit(`getOrders`, order)
+      this.server.to(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -110,8 +121,8 @@ import { OrderService } from './order.service'
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('getOrder')
-  async getOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
-    const order = await this.orderService.getOrder(payload.orderId)
+  async getOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    const order = await this.orderService.getOrder(payload.orderId, payload.serviceId, payload.subServiceId, req.user, req.service)
     if(order) client.emit('getOrders', order)
   }
 

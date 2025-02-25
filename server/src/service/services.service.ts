@@ -39,6 +39,10 @@ export class ServicesService {
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {dataService: newData}, {returnDocument: 'after'})
     }
     
+    async changeFeeService(serviceId: string, fee: string){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {fee: fee}, {returnDocument: 'after'})
+    }
+
     async addOrDelListVariant(serviceId: string,  itemName: string, variant: string){
         const orderData = (await this.serviceMongo.findOne({_id: serviceId}, {orderData: 1, _id: 0})).orderData
         if(orderData.find(item => item.item === itemName).variants.includes(variant)){
