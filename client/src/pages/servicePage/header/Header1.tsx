@@ -9,9 +9,6 @@ export function Header1(props) {
   const [opened, { toggle }] = useDisclosure(false, {onOpen: () => open()})
   const { setColorScheme, clearColorScheme } = useMantineColorScheme()
   const [checked, setChecked] = useState(false)
-
-
-  console.log(props.menu)
   
   const topMenuArray = 
     [

@@ -6,6 +6,13 @@ import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts'
 
 export function MultSelectCreate(props) {
   // console.log(props.props.field)
+
+  const deviceName = (name) => {
+    if(name === '_DeviceBlocked_'){
+      return props.props.text.device[props.props.leng]
+    }
+    return name
+  }
     
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -85,7 +92,7 @@ export function MultSelectCreate(props) {
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
-        <PillsInput label={props.props.field.item} withAsterisk={props.props.field.control} onClick={() => combobox.openDropdown()}>
+        <PillsInput label={deviceName(props.props.field.item)} withAsterisk={props.props.field.control} onClick={() => combobox.openDropdown()}>
           <Pill.Group>
             {values}
 
@@ -95,7 +102,7 @@ export function MultSelectCreate(props) {
                 onFocus={() => combobox.openDropdown()}
                 onBlur={() => combobox.closeDropdown()}
                 value={search}
-                placeholder={props.props.field.item}
+                placeholder={deviceName(props.props.field.item)}
                 onChange={(event) => {
                   combobox.updateSelectedOptionIndex()
                   setSearch(event.currentTarget.value)

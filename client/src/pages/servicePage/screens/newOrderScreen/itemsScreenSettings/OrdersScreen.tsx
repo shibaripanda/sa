@@ -9,9 +9,9 @@ import { emptyWork } from '../../../ServicePage.tsx'
 
 export function OrdersScreen(props, message) {
 
-  console.log('OrdersScreen')
-  console.log('editedWork', props.props.editedWork)
-  console.log(props.orders.find(item => item._id === props.props.orderAcord) ? props.orders.find(item => item._id === props.props.orderAcord)['_work_'] : 'ee')
+  // console.log('OrdersScreen')
+  // console.log('editedWork', props.props.editedWork)
+  // console.log(props.orders.find(item => item._id === props.props.orderAcord) ? props.orders.find(item => item._id === props.props.orderAcord)['_work_'] : 'ee')
 
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
@@ -21,13 +21,13 @@ export function OrdersScreen(props, message) {
     {name: props.text.status[props.leng], data: '_status_'},
     {name: props.text.localService[props.leng], data: '_subService_'},
   ])
-  console.log(props.user.orderDataShowItems)
+  // console.log(props.user.orderDataShowItems)
   const lineActiv = props.user.orderDataShowItems
   .find(item => item.serviceId === props.user.serviceId) ? props.user.orderDataShowItems
   .find(item => item.serviceId === props.user.serviceId).data.filter(f => line.map(r => r.data).includes(f)) : []
 
   const activData = lineActiv.map(e => ({item: e}))
-  console.log(activData)
+  // console.log(activData)
   
   const colorOrder = (status) => {
     return props.service.colorStatuses.find(item => item.status === status) ? props.service.colorStatuses.find(item => item.status === status).color : 'yellow'

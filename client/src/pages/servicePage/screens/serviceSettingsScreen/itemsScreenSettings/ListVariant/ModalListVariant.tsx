@@ -4,13 +4,21 @@ import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts'
 
 export function ModalListVariant(props) {
 
+    console.log('ModalListVariant', props)
+
     if(props.props.listVariantName){
+        const deviceName = (name) => {
+            if(name === '_DeviceBlocked_'){
+              return props.text.device[props.leng]
+            }
+            return name
+          }
 
         const variant = props.service.orderData.find(item => item.item === props.props.listVariantName)
 
         return (
             <>
-                <Modal opened={props.props.opened} size="85%" title={props.props.listVariantName} onClose={props.props.close}>
+                <Modal opened={props.props.opened} size="85%" title={deviceName(props.props.listVariantName)} onClose={props.props.close}>
                 
                     <TextInput placeholder={props.text.statusName[props.leng]}
                     value={props.props.newVariant}

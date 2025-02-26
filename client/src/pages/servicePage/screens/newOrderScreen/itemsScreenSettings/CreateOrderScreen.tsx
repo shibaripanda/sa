@@ -5,6 +5,8 @@ import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
 import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
 import { MultSelect } from './ElementsInput/MultSelect.tsx'
+import { AutoComplete } from './ElementsInput/AutoCompete.tsx'
+import { MultiSelectData } from './ElementsInput/MultiSelectData.tsx'
 // @ts-ignore
 // import classes from './Slider.module.css'
 
@@ -13,9 +15,44 @@ export function CreateOrderScreen(props, message) {
   console.log('CreateOrderScreen')
 
   const activData = props.service.orderData.filter(item => !item.hidden)
-  
 
   const fieldCheck = (item) => {
+    if(item.variant){
+      if(item.onlyVariants){
+        if(item.multiselect){
+          return <MultiSelectData props={{...props, field: item}}/>
+        }
+        return <SelectField props={{...props, field: item}}/>
+      }
+      return <AutoComplete props={{...props, field: item}}/>
+    }
+    else if(!item.variant){
+      console.log('!item.variant')
+      return  <HandTextInput props={{...props, field: item}}/>
+    }
+
+    // if(!item.variant || item.number){
+    //   // console.log('handinput')
+    //   return  <HandTextInput props={{...props, field: item}}/>
+    // }
+    // else if(item.variant){
+    //   return <AutoComplete props={{...props, field: item}}/>
+    // }
+    // if(item.onlyVariants){
+    //   if(item.multiVariants){
+    //     // console.log('multiselect')
+    //     return <MultSelect props={{...props, field: item}}/>
+    //   }
+    //   console.log('AutoComplete')
+    //   return <AutoComplete props={{...props, field: item}}/>
+    //   // return <SelectField props={{...props, field: item}}/>
+    // }
+    // // console.log('multiselectcreate')
+    // return <MultSelectCreate props={{...props, field: item}}/>
+  }
+  
+
+  const fieldCheck1 = (item) => {
     if(!item.variant || item.number){
       // console.log('handinput')
       return  <HandTextInput props={{...props, field: item}}/>
@@ -25,8 +62,9 @@ export function CreateOrderScreen(props, message) {
         // console.log('multiselect')
         return <MultSelect props={{...props, field: item}}/>
       }
-      // console.log('select')
-      return <SelectField props={{...props, field: item}}/>
+      console.log('AutoComplete')
+      return <AutoComplete props={{...props, field: item}}/>
+      // return <SelectField props={{...props, field: item}}/>
     }
     // console.log('multiselectcreate')
     return <MultSelectCreate props={{...props, field: item}}/>

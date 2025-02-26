@@ -33,6 +33,13 @@ export function DragAndDrop(props, message) {
     }
   }
 
+  const deviceName = (name) => {
+    if(name === '_DeviceBlocked_'){
+      return props.text.device[props.leng]
+    }
+    return name
+  }
+
   const items = props.props.dragDrop.map((item, index) => (
     <Draggable key={item.item} index={index} draggableId={item.item}>
       {(provided) => (
@@ -44,6 +51,7 @@ export function DragAndDrop(props, message) {
             </Table.Td>
             <Table.Td>
                 <Switch
+                disabled={item.blocked}
                 checked={!item.hidden}
                 color='green'
                 onChange={() => {
@@ -68,14 +76,14 @@ export function DragAndDrop(props, message) {
             </Table.Td>
             <Table.Td>
               <Text c={colorTextDisableItem(item.hidden)}>
-                {item.item}
+                {deviceName(item.item)}
               </Text>
             </Table.Td>
             <Table.Td>
               <Center>
               <Checkbox
                   checked={item.number}
-                  disabled={item.hidden}
+                  disabled={item.hidden || item.blocked}
                   onChange={() => {
                     sendToSocket('orderDataEdit', {
                       serviceId: props.user.serviceId, 
@@ -94,7 +102,7 @@ export function DragAndDrop(props, message) {
               <Center>
               <Checkbox
                   checked={item.control}
-                  disabled={item.hidden}
+                  disabled={item.hidden || item.blocked}
                   onChange={() => {
                     sendToSocket('orderDataEdit', {
                       serviceId: props.user.serviceId, 
@@ -162,7 +170,7 @@ export function DragAndDrop(props, message) {
               <Center>
                 <Checkbox
                   checked={item.multiVariants}
-                  disabled={!item.variant || item.hidden || item.number}
+                  disabled={!item.variant || item.hidden || item.number || item.blocked}
                   onChange={() => {
                     sendToSocket('orderDataEdit', {
                       serviceId: props.user.serviceId, 
