@@ -28,6 +28,13 @@ export function OrdersScreen(props, message) {
 
   const activData = lineActiv.map(e => ({item: e}))
   // console.log(activData)
+
+  const deviceName = (name) => {
+    if(name === '_DeviceBlocked_'){
+      return props.text.device[props.leng]
+    }
+    return name
+  }
   
   const colorOrder = (status) => {
     return props.service.colorStatuses.find(item => item.status === status) ? props.service.colorStatuses.find(item => item.status === status).color : 'yellow'
@@ -187,9 +194,9 @@ export function OrdersScreen(props, message) {
   }
   const textBigToSmall = (text) => {
     if(text.length > 15){
-      return <Tooltip label={text}><Text size='sm'>{text.slice(0, 15) + '...'}</Text></Tooltip>
+      return <Tooltip label={text}><Text size='sm'>{deviceName(text).slice(0, 15) + '...'}</Text></Tooltip>
     }
-    return <Text size='sm'>{text}</Text>
+    return <Text size='sm'>{deviceName(text)}</Text>
   }
   const profit = (cost, subCost) => {
 

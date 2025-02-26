@@ -8,6 +8,13 @@ export function ChangeMyMainOrderDataLine(props, item1) {
 
   console.log('ChangeMyMainOrderDataLine')
 
+  const deviceName = (name) => {
+    if(name === '_DeviceBlocked_'){
+      return props.text.device[props.leng]
+    }
+    return name
+  }
+
   const line = props.service.orderData
   .map(item => ({name: item.item, data: item.item}))
   .concat([
@@ -46,7 +53,7 @@ export function ChangeMyMainOrderDataLine(props, item1) {
         >
           <div>
             <IconHandStop/>
-            <Button fullWidth>{line.find(a => a.data === item).name}</Button>
+            <Button fullWidth>{deviceName(line.find(a => a.data === item).name)}</Button>
           </div>
         </div>
       )}
@@ -91,16 +98,18 @@ export function ChangeMyMainOrderDataLine(props, item1) {
         <Space h="xs" />
         <Group>
           {line.map(item => 
-          <Chip checked={activeData(item.data)} 
+          <Chip checked={activeData(item.data)}
+            disabled={item.name === '_DeviceBlocked_'}
             onChange={() => {
-              console.log('ffffff',item.message)
-              sendToSocket(item1.message, {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId, 
-                data: item.data,
-                status: !activeData(item.data),
-                action: 'addDelete' 
-              })
+              if(item.name !== '_DeviceBlocked_'){
+                sendToSocket(item1.message, {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId, 
+                  data: item.data,
+                  status: !activeData(item.data),
+                  action: 'addDelete' 
+                })
+              }
               if(activeData(item.data)){
                 props.props.setDataOrderLine.setState([...props.props.stateDataOrderLine.filter(i => i !== item.data)])
               }
@@ -109,7 +118,7 @@ export function ChangeMyMainOrderDataLine(props, item1) {
                 props.props.setDataOrderLine.setState([...props.props.stateDataOrderLine])
               }
             }}>
-            {item.name}
+            {deviceName(item.name)}
           </Chip>)}
         </Group>
     </div>

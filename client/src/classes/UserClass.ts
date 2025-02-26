@@ -1,3 +1,5 @@
+import { sendToSocket } from "../modules/socket/pipSendSocket.ts"
+
 export interface User {
     name?: string
     email: string
@@ -8,6 +10,24 @@ export interface User {
     _id: string
     serviceId: string
     orderDataShowItems: {serviceId: string, data: string[]}[]
+}
+
+const upUserDataLine = (data, sid, subsId) => {
+    if(data.find(item => item.serviceId === sid)){
+        if(data.find(item => item.serviceId === sid).data.includes('_DeviceBlocked_')){
+            return data
+        }
+        sendToSocket('changeMyMainOrderDataLine', {
+                          serviceId: sid, 
+                          subServiceId: subsId, 
+                          data: '_DeviceBlocked_',
+                          status: true,
+                          action: 'addDelete' 
+                        })
+        data.find(item => item.serviceId === sid).data.splice(0, 0, {serviceId: sid, data: ['_DeviceBlocked_']})
+        return data
+    }
+    return [{serviceId: sid, data: ['_DeviceBlocked_']}]
 }
 
 export class UserClass {
@@ -34,7 +54,7 @@ export class UserClass {
         this.userRoles = data.roles.roles
         this.subServiceId = data.roles.subServiceId
         this.serviceId = data.serviceId
-        this.orderDataShowItems = data.orderDataShowItems
+        this.orderDataShowItems = upUserDataLine(data.orderDataShowItems, data.serviceId, data.roles.subServiceId)
 
     }
 

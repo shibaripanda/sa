@@ -103,7 +103,7 @@ import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
   @SubscribeMessage('getUserRolesByUserId')
   async getUserRolesByUserId(@ConnectedSocket() client: Socket, @Request() req: any): Promise<void> {
     const roles = await this.userSevice.getUserRolesByUserId(req.user._id)
-    client.emit('getUserRolesByUserId', roles.services_roles)
+    this.server.to(client.id).emit('getUserRolesByUserId', roles.services_roles)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -111,8 +111,7 @@ import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
   @SubscribeMessage('getUserByEmail')
   async getUsers(@ConnectedSocket() client: Socket, @MessageBody() reqestUserByEmailDto: ReqestUserByEmailDto): Promise<void> {
     const user = await this.userSevice.getUserByEmail(reqestUserByEmailDto.email)
-    client.emit('getUserByEmail', user)
-    // this.server.to(client.id).emit('getUserByEmail', user)
+    this.server.to(client.id).emit('getUserByEmail', user)
   }
 
   @UseGuards(JwtAuthGuard)

@@ -57,7 +57,9 @@ const dataShema = new mongoose.Schema({
     type: String,
   },
   data: {
-    type: Array
+    type: Array,
+    default: ['_DeviceBlocked_'],
+    require: true
   }
 })
 

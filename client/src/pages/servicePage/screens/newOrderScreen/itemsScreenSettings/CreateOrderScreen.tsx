@@ -11,6 +11,7 @@ import { NumberHandInput } from './ElementsInput/NumberHandInput.tsx'
 import { TextHandInput } from './ElementsInput/TextHandInput.tsx'
 import { MultSelectNoCreate } from './ElementsInput/MultSelectNoCreate.tsx'
 import { MultSelectCreateOne } from './ElementsInput/MultSelectCreateOne.tsx'
+import { MultSelectNoCreateOne } from './ElementsInput/MultSelectNoCreateOne.tsx'
 // @ts-ignore
 // import classes from './Slider.module.css'
 
@@ -54,7 +55,7 @@ export function CreateOrderScreen(props, message) {
             }
           }
           else{
-            if(item.saveNewVariant){
+            if(item.saveNewVariants){
               console.log('-один вариант или свой с сохранением')
               console.log(item.item)
               return  <MultSelectCreateOne props={{...props, field: item}}/>
@@ -62,6 +63,7 @@ export function CreateOrderScreen(props, message) {
             else{
               console.log('-один вариант или свой')
               console.log(item.item)
+              return  <MultSelectNoCreateOne props={{...props, field: item}}/>
             }
 
           }

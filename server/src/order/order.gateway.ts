@@ -24,8 +24,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.updateOrderWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
     if(order){
-      client.emit('getOrders', order)
-      this.server.to(payload.serviceId).emit('getOrders', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -37,8 +36,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.deleteAllWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
     if(order){
-      client.emit('getOrders', order)
-      this.server.to(payload.serviceId).emit('getOrders', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -50,8 +48,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.deleteWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
     if(order){
-      client.emit('getOrders', order)
-      this.server.to(payload.serviceId).emit('getOrders', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -63,8 +60,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.addNewWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
     if(order){
-      client.emit('getOrders', order)
-      this.server.to(payload.serviceId).emit('getOrders', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -76,8 +72,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.addInformationOrder(payload.serviceId, payload.subServiceId, payload.orderId, payload.data, req.user, req.service)
     if(order){
-      client.emit('getOrders', order)
-      this.server.to(payload.serviceId).emit('getOrders', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     } 
   }
 
@@ -89,8 +84,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.editOrderStatus(payload.serviceId, payload.subServiceId, payload.orderId, payload.newStatus, req.user, req.service)
     if(order){
-      client.emit('getOrders', order)
-      this.server.to(payload.serviceId).emit('getOrders', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -101,8 +95,8 @@ import { OrderService } from './order.service'
   async createOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     const order = await this.orderService.createOrder(payload.serviceId, payload.subServiceId, payload.newOrder, req.user, req.service)
     if(order){
-      client.emit('createOrder', order)
-      this.server.to(payload.serviceId).emit(`getNewOrder${payload.serviceId}`, order)
+      this.server.to(client.id).emit('createOrder', order)
+      client.to(payload.serviceId).emit(`getNewOrder${payload.serviceId}`, order)
     }
   }
 
@@ -113,7 +107,7 @@ import { OrderService } from './order.service'
   async getOrdersCount(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     const orders = await this.orderService.getOrders(payload.serviceId, payload.subServiceId, payload.start, payload.end, req.user, req.service)
     for(const order of orders){
-      client.emit('getOrders', order)
+      this.server.to(client.id).emit('getOrders', order)
     }
   }
 
@@ -123,7 +117,9 @@ import { OrderService } from './order.service'
   @SubscribeMessage('getOrder')
   async getOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     const order = await this.orderService.getOrder(payload.orderId, payload.serviceId, payload.subServiceId, req.user, req.service)
-    if(order) client.emit('getOrders', order)
+    if(order){
+      this.server.to(client.id).emit('getOrders', order)
+    }
   }
 
 

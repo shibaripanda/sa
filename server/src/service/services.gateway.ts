@@ -39,12 +39,8 @@ export class ServicesGateway {
   @SubscribeMessage('replaceStatusPosition')
   async replaceStatusPosition(@ConnectedSocket() client: Socket, @MessageBody() payload: ReplaceOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.replaceStatusPosition(payload.serviceId, payload.index1, payload.index2)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -54,13 +50,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeColorStatus')
   async changeColorStatus(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceColorStatusDto): Promise<void> {
     const service = await this.serviceSevice.changeColorStatus(payload.serviceId, payload.status, payload.color)
-    // console.log(service.colorStatuses)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -71,12 +62,8 @@ export class ServicesGateway {
   async changeFeeService(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
     console.log(payload.serviceId, payload.fee)
     const service = await this.serviceSevice.changeFeeService(payload.serviceId, payload.fee)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     } 
   }
 
@@ -86,12 +73,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeInfoMainService')
   async changeInfoMainService(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceDataDto): Promise<void> {
     const service = await this.serviceSevice.changeInfoMainService(payload.serviceId, payload.newData)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -101,12 +84,8 @@ export class ServicesGateway {
   @SubscribeMessage('addOrDelListVariant')
   async addOrDelListVariant(@ConnectedSocket() client: Socket, @MessageBody() payload: EditVariantDto): Promise<void> {
     const service = await this.serviceSevice.addOrDelListVariant(payload.serviceId, payload.item, payload.variant)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -116,12 +95,8 @@ export class ServicesGateway {
   @SubscribeMessage('replaceOrderDataItems')
   async replaceOrderDataItems(@ConnectedSocket() client: Socket, @MessageBody() payload: ReplaceOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.replaceOrderDataItems(payload.serviceId, payload.index1, payload.index2)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -131,12 +106,8 @@ export class ServicesGateway {
   @SubscribeMessage('orderDataEdit')
   async orderDataEdit(@ConnectedSocket() client: Socket, @MessageBody() payload: EditOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.orderDataEdit(payload.serviceId, payload.item, payload.data, payload.newValue)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
   
@@ -146,12 +117,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeServiceOrderDataList')
   async changeServiceOrderDataList(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.changeServiceOrderDataList(payload.serviceId, payload.newOrderData)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -173,14 +140,9 @@ export class ServicesGateway {
       payload.serviceId, 
       payload.subServiceId, 
       payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
-      payload.data) 
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
+      payload.data)
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -194,12 +156,8 @@ export class ServicesGateway {
       payload.subServiceId, 
       payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
       payload.data)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -213,12 +171,8 @@ export class ServicesGateway {
       payload.subServiceId, 
       payload.workTime ? payload.workTime : payload.contact ? payload.contact : payload.address ? payload.address: '',
       payload.data)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -228,12 +182,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeLocalService')
   async changeLocalService(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceLocalDto): Promise<void> {
     const service = await this.serviceSevice.changeLocalService(payload.serviceId, payload.subServiceIdDeleteOrNew)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -243,12 +193,8 @@ export class ServicesGateway {
   @SubscribeMessage('addNewServiceRole')
   async addNewServiceRole(@ConnectedSocket() client: Socket, @MessageBody() payload: AddServiceRoleDto): Promise<void> {
     const service = await this.serviceSevice.addNewServiceRole(payload.serviceId, payload.newRole)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -258,11 +204,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeServiceRole')
   async changeServiceRole(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceRoleDto): Promise<void> {
     const service = await this.serviceSevice.changeServiceRole(payload.serviceId, payload.role, payload.access)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -272,12 +215,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeServiceStatusList')
   async changeServiceStatusList(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceStatusDto): Promise<void> {
     const service = await this.serviceSevice.changeServiceStatusList(payload.serviceId, payload.status[0].toUpperCase() + payload.status.slice(1, payload.status.length).toLowerCase())
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -287,12 +226,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeServiceDeviceList')
   async changeServiceDeviceList(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceDeviceDto): Promise<void> {
     const service = await this.serviceSevice.changeServiceDeviceList(payload.serviceId, payload.device[0].toUpperCase() + payload.device.slice(1, payload.device.length).toLowerCase())
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -302,12 +237,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeNameSubService')
   async changeNameSubService(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceNameDto): Promise<void> {
     const service = await this.serviceSevice.changeNameSubService(payload.serviceId, payload.subServiceId, payload.newName)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -317,12 +248,8 @@ export class ServicesGateway {
   @SubscribeMessage('changeNameMainService')
   async changeNameMainService(@ConnectedSocket() client: Socket, @MessageBody() payload: ChangeServiceNameDto): Promise<void> {
     const service = await this.serviceSevice.changeNameMainService(payload.serviceId, payload.newName)
-    // this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, service)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
-
     if(service){
-      client.emit(`getServiceById${payload.serviceId}`, service)
-      this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
     }
   }
 
@@ -345,8 +272,6 @@ export class ServicesGateway {
   async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto, @Request() reg: any): Promise<any> {
     console.log('Gateway getServiceById')
     client.join(payload.serviceId)
-    // console.log(client.rooms)
-    // this.server.to(payload.serviceId).emit(`getServiceById${payload.serviceId}`, reg.service)
     this.server.to(client.id).emit(`getServiceById${payload.serviceId}`, reg.service)
   }
 
