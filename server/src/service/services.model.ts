@@ -81,7 +81,7 @@ export const ServiceSchema = new mongoose.Schema({
           variant: true, 
           variants: [], 
           saveNewVariants: true, 
-          onlyVariants: false, 
+          onlyVariants: true, 
           multiVariants: false, 
           hidden: false, 
           hold: true,

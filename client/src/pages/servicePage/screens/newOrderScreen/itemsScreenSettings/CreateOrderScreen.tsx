@@ -7,6 +7,10 @@ import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
 import { MultSelect } from './ElementsInput/MultSelect.tsx'
 import { AutoComplete } from './ElementsInput/AutoCompete.tsx'
 import { MultiSelectData } from './ElementsInput/MultiSelectData.tsx'
+import { NumberHandInput } from './ElementsInput/NumberHandInput.tsx'
+import { TextHandInput } from './ElementsInput/TextHandInput.tsx'
+import { MultSelectNoCreate } from './ElementsInput/MultSelectNoCreate.tsx'
+import { MultSelectCreateOne } from './ElementsInput/MultSelectCreateOne.tsx'
 // @ts-ignore
 // import classes from './Slider.module.css'
 
@@ -17,38 +21,58 @@ export function CreateOrderScreen(props, message) {
   const activData = props.service.orderData.filter(item => !item.hidden)
 
   const fieldCheck = (item) => {
-    if(item.variant){
-      if(item.onlyVariants){
-        if(item.multiselect){
-          return <MultiSelectData props={{...props, field: item}}/>
+    if(item.number){
+      console.log('-цифры')
+      console.log(item.item)
+      return  <NumberHandInput props={{...props, field: item}}/>
+    }
+    else{
+      if(item.variant){
+        if(item.onlyVariants){
+          if(item.multiVariants){
+            console.log('-несколько вариантов')
+            console.log(item.item)
+            return  <MultSelect props={{...props, field: item}}/>
+          }
+          else{
+            console.log('-один вариант')
+            console.log(item.item)
+            return  <SelectField props={{...props, field: item}}/>
+          }
         }
-        return <SelectField props={{...props, field: item}}/>
-      }
-      return <AutoComplete props={{...props, field: item}}/>
-    }
-    else if(!item.variant){
-      console.log('!item.variant')
-      return  <HandTextInput props={{...props, field: item}}/>
-    }
+        else{
+          if(item.multiVariants){
+            if(item.saveNewVariants){
+              console.log('-несколько вариантов или свой с сохранением')
+              console.log(item.item)
+              return  <MultSelectCreate props={{...props, field: item}}/>
+            }
+            else{
+              console.log('-несколько вариантов или свой')
+              console.log(item.item)
+              return  <MultSelectNoCreate props={{...props, field: item}}/>
+            }
+          }
+          else{
+            if(item.saveNewVariant){
+              console.log('-один вариант или свой с сохранением')
+              console.log(item.item)
+              return  <MultSelectCreateOne props={{...props, field: item}}/>
+            }
+            else{
+              console.log('-один вариант или свой')
+              console.log(item.item)
+            }
 
-    // if(!item.variant || item.number){
-    //   // console.log('handinput')
-    //   return  <HandTextInput props={{...props, field: item}}/>
-    // }
-    // else if(item.variant){
-    //   return <AutoComplete props={{...props, field: item}}/>
-    // }
-    // if(item.onlyVariants){
-    //   if(item.multiVariants){
-    //     // console.log('multiselect')
-    //     return <MultSelect props={{...props, field: item}}/>
-    //   }
-    //   console.log('AutoComplete')
-    //   return <AutoComplete props={{...props, field: item}}/>
-    //   // return <SelectField props={{...props, field: item}}/>
-    // }
-    // // console.log('multiselectcreate')
-    // return <MultSelectCreate props={{...props, field: item}}/>
+          }
+        }
+      }
+      else{
+        console.log('-текст')
+        console.log(item.item)
+        return  <TextHandInput props={{...props, field: item}}/>
+      }
+    }
   }
   
 

@@ -3,7 +3,6 @@ import React from 'react'
 
 
 export function NumberHandInput(props) {
-  console.log('NumberHandInput')
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){

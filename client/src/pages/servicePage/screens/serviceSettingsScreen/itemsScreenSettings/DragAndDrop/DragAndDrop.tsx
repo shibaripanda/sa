@@ -21,7 +21,7 @@ export function DragAndDrop(props, message) {
       return (
             <Button
               variant='default'
-              disabled={item.hidden || item.number}
+              disabled={item.hidden || item.number || item.blocked}
               size='xs'
               onClick={() => {
                 props.props.setListVariantName(item.item)
@@ -123,7 +123,7 @@ export function DragAndDrop(props, message) {
                   <Switch
                     checked={item.variant}
                     color='green'
-                    disabled={item.hidden || item.number}
+                    disabled={item.hidden || item.number || item.blocked}
                     onChange={() => {
                       sendToSocket('orderDataEdit', {
                         serviceId: props.user.serviceId, 
@@ -151,7 +151,7 @@ export function DragAndDrop(props, message) {
               <Center>
               <Checkbox 
                   checked={item.onlyVariants}
-                  disabled={!item.variant || item.hidden || item.number}
+                  disabled={!item.variant || item.hidden || item.number || item.blocked}
                   onChange={() => {
                     sendToSocket('orderDataEdit', {
                       serviceId: props.user.serviceId, 

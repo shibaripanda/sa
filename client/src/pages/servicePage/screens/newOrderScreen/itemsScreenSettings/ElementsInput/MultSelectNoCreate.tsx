@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { CheckIcon, Combobox, Group, Pill, PillsInput, useCombobox } from '@mantine/core'
 import React from 'react'
+import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts';
 
 
-export function MultSelect(props) {
+export function MultSelectNoCreate(props) {
   // console.log(props.props.field)
 
   const deviceName = (name) => {
@@ -18,17 +19,35 @@ export function MultSelect(props) {
     onDropdownOpen: () => combobox.updateSelectedOptionIndex('active'),
   })
 
-  const [search, setSearch] = useState('');
-  const [data] = useState(props.props.field.variants)
+  const [search, setSearch] = useState('')
+  const [data, setData] = useState(props.props.field.variants)
   // @ts-ignore
   const [value, setValue] = useState<string[]>(sessionStorage.getItem(`docInput_${props.props.field.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${props.props.field.item}`)) : [])
 
+  const exactOptionMatch = data.some((item) => item === search)
+
   const handleValueSelect = (val: string) => {
     setSearch('')
-    setValue((current) =>
-      current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
-    )
-    sessionStorage.setItem(`docInput_${props.props.field.item}`, value.includes(val) ? JSON.stringify(value.filter((v) => v !== val)) : JSON.stringify([...value, val]))
+
+    if(val === '$create'){
+      setData((current) => [...current, search])
+      // if(props.props.field.saveNewVariants){
+      //   sendToSocket('addOrDelListVariant', {
+      //               serviceId: props.props.user.serviceId, 
+      //               subServiceId: props.props.user.subServiceId, 
+      //               item: props.props.field.item,
+      //               variant: search
+      //               })
+      //             }
+      setValue((current) => [...current, search])
+      sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([...value, search]))
+    }
+    else{
+      setValue((current) =>
+        current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
+      )
+      sessionStorage.setItem(`docInput_${props.props.field.item}`, value.includes(val) ? JSON.stringify(value.filter((v) => v !== val)) : JSON.stringify([...value, val]))
+    }
     props.props.props.setNewOrderRend(Date.now())
   }
 
@@ -60,19 +79,18 @@ export function MultSelect(props) {
       </Combobox.Option>
     ))
 
-   
-  const currentValue = () => {
-    if(!sessionStorage.getItem(`docInput_${props.props.field.item}`)){
-      values.splice(0, values.length)
-      for(const i of data){
-        handleValueRemove1(i)
+    const currentValue = () => {
+      if(!sessionStorage.getItem(`docInput_${props.props.field.item}`)){
+        for(const i of data){
+          handleValueRemove1(i)
+        }
       }
     }
-  }
+  
+    currentValue()
 
-  currentValue()
   return (
-    <Combobox store={combobox} onOptionSubmit={handleValueSelect}  withinPortal={false}>
+    <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
         <PillsInput label={deviceName(props.props.field.item)} withAsterisk={props.props.field.control} onClick={() => combobox.openDropdown()}>
           <Pill.Group>
@@ -86,12 +104,12 @@ export function MultSelect(props) {
                 value={search}
                 placeholder={deviceName(props.props.field.item)}
                 onChange={(event) => {
-                  combobox.updateSelectedOptionIndex();
-                  setSearch(event.currentTarget.value);
+                  combobox.updateSelectedOptionIndex()
+                  setSearch(event.currentTarget.value)
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Backspace' && search.length === 0) {
-                    event.preventDefault();
+                    event.preventDefault()
                     handleValueRemove(value[value.length - 1])
                   }
                 }}
@@ -104,6 +122,14 @@ export function MultSelect(props) {
       <Combobox.Dropdown>
         <Combobox.Options>
           {options}
+
+          {!exactOptionMatch && search.trim().length > 0 && (
+            <Combobox.Option value="$create">+ {search}</Combobox.Option>
+          )}
+
+          {exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
+            <Combobox.Empty>Nothing found</Combobox.Empty>
+          )}
         </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>
