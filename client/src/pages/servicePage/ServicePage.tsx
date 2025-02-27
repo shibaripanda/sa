@@ -132,11 +132,27 @@ function ServicePage() {
   }
   const filterOrders = useMemo(() => {
     if(filterOrdersString){
-      return orders.filter(item => JSON.stringify(item).toString().toLowerCase().includes(filterOrdersString.toString().toLowerCase()))
+      if(filterOrdersString[filterOrdersString.length - 1] === '='){
+        console.log(filterOrdersString)
+        sendToSocket('getOrdersFilter', {
+          serviceId: authClass.getServiceId(), 
+          subServiceId: authClass.getSubServiceId(), 
+          orderId: filterOrdersString.toString().slice(0, -1),
+          exist: orders.map(item => item._id)
+        })
+      }
+      const minusSimbol = (text) => {
+        if(text[text.length - 1] === '='){
+          return text.slice(0, -1)
+        }
+        return text
+      }
+      const res = orders.filter(item => JSON.stringify(item).toString().toLowerCase().includes(minusSimbol(filterOrdersString).toString().toLowerCase()))
+      return res
     }
     console.log(orders)
     return orders
-    },[orders, filterOrdersString])
+    },[filterOrdersString, orders])
 
   const getTexLengUserService = async () => {
     

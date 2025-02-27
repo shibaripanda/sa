@@ -19,6 +19,21 @@ import { OrderService } from './order.service'
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('getOrdersFilter')
+  async getOrdersFilter(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    console.log(payload)
+    const orders = await this.orderService.getOrdersFilter(payload.serviceId, payload.subServiceId, payload.orderId, payload.exist, req.user, req.service)
+    if(orders){
+      for(const order of orders){
+        console.log('send', order._orderServiceId_)
+        this.server.to(client.id).emit('getOrders', order)
+      }
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('updateOrderWork')
   async updateOrderWork(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)

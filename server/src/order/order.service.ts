@@ -181,6 +181,24 @@ export class OrderService {
         OrderSchema.add(orderSh())
         return await this.orderMongo.create(orderData())
     }
+    async getOrdersFilter(serviceId, subServiceId, orderId, exist, user, service){
+        console.log(service.orderData.map(item => item.item))
+        const line = service.orderData.map(item => ({[item.item]: {$regex: orderId, $options: "i"}}))
+        
+        line.push({'_orderServiceId_': {$regex: orderId, $options: "i"}})
+        line.push({'_status_': {$regex: orderId, $options: "i"}})
+        line.push({'_manager_': {$regex: orderId, $options: "i"}})
+        console.log(line)
+        const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
+        // const res = await this.orderMongo.find({_orderServiceId_: {$regex: orderId}, _subServiceId_: subServiceId, _status_: {$nin : userFilter.statuses}}).limit(100).sort({createdAt: -1})
+        const res = await this.orderMongo.find({$or: line, _id: {$nin : exist}, _subServiceId_: subServiceId, _status_: {$nin : userFilter.statuses}}).limit(100).sort({createdAt: -1})
+        console.log(res.length)
+        for(const i of res){
+            const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
+            i._subService_ = name ? name.name : '--'
+        }
+        return res 
+    }
     async getOrders(serviceId, subServiceId, start, end, user, service){
 
         // console.log(user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId))
