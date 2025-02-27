@@ -139,7 +139,7 @@ export class ScreenLine {
         this.user = data.user
         this.text = data.text
         this.leng = data.leng
-        this.orders = data.orders
+        this.orders = data.filterOrders
     }
 
     getMessagesForUser(){
@@ -169,7 +169,7 @@ export class ScreenLine {
         if(items.length){
             return res ? res.screen(
                 {
-                    ...this.data,
+                    ...{...this.data, orders: this.orders},
                     getDataMessage: res.getDataMessage,
                     items: items.filter(item => this.text[item.message][this.leng].toLowerCase().includes(props.settingsFilter.toLowerCase())), 
                     props: props

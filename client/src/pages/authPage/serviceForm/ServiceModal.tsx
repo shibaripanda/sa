@@ -6,6 +6,7 @@ import { getFromSocket } from '../../../modules/socket/pipGetSocket.ts'
 import { useDisclosure } from '@mantine/hooks'
 import { ServiceModalWaiting } from './ServiceModalWaiting.tsx'
 import { useNavigate } from 'react-router-dom'
+import { TextClass } from '../../../classes/TextClass.ts'
 
 interface Role {
     serviceId: string
@@ -85,7 +86,9 @@ export function ServiceModal(props: any) {
                             .map(item =>
                             <Grid.Col key={item.subServiceId} span={12}> 
                             <Button
-                            onClick={() => {
+                            onClick={async () => {
+                                sessionStorage.setItem('leng', props.leng)
+                                sessionStorage.setItem('text', JSON.stringify(props.text))
                                 sessionStorage.setItem('serviceId', item1._id)
                                 sessionStorage.setItem('subServiceId', item.subServiceId)
                                 setTimeout(() => navigate('/service'), 1000)

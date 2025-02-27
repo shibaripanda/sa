@@ -1,17 +1,15 @@
-import { Button, Collapse, Grid, RangeSlider, TextInput } from '@mantine/core'
+import { Button, CloseButton, Collapse, Grid, RangeSlider, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
-import { HandTextInput } from './ElementsInput/HandTextInput.tsx'
 import { MultSelect } from './ElementsInput/MultSelect.tsx'
-import { AutoComplete } from './ElementsInput/AutoCompete.tsx'
-import { MultiSelectData } from './ElementsInput/MultiSelectData.tsx'
 import { NumberHandInput } from './ElementsInput/NumberHandInput.tsx'
 import { TextHandInput } from './ElementsInput/TextHandInput.tsx'
 import { MultSelectNoCreate } from './ElementsInput/MultSelectNoCreate.tsx'
 import { MultSelectCreateOne } from './ElementsInput/MultSelectCreateOne.tsx'
 import { MultSelectNoCreateOne } from './ElementsInput/MultSelectNoCreateOne.tsx'
+import { IconAt } from '@tabler/icons-react'
 // @ts-ignore
 // import classes from './Slider.module.css'
 
@@ -23,46 +21,46 @@ export function CreateOrderScreen(props, message) {
 
   const fieldCheck = (item) => {
     if(item.number){
-      console.log('-цифры')
-      console.log(item.item)
+      // console.log('-цифры')
+      // console.log(item.item)
       return  <NumberHandInput props={{...props, field: item}}/>
     }
     else{
       if(item.variant){
         if(item.onlyVariants){
           if(item.multiVariants){
-            console.log('-несколько вариантов')
-            console.log(item.item)
+            // console.log('-несколько вариантов')
+            // console.log(item.item)
             return  <MultSelect props={{...props, field: item}}/>
           }
           else{
-            console.log('-один вариант')
-            console.log(item.item)
+            // console.log('-один вариант')
+            // console.log(item.item)
             return  <SelectField props={{...props, field: item}}/>
           }
         }
         else{
           if(item.multiVariants){
             if(item.saveNewVariants){
-              console.log('-несколько вариантов или свой с сохранением')
-              console.log(item.item)
+              // console.log('-несколько вариантов или свой с сохранением')
+              // console.log(item.item)
               return  <MultSelectCreate props={{...props, field: item}}/>
             }
             else{
-              console.log('-несколько вариантов или свой')
-              console.log(item.item)
+              // console.log('-несколько вариантов или свой')
+              // console.log(item.item)
               return  <MultSelectNoCreate props={{...props, field: item}}/>
             }
           }
           else{
             if(item.saveNewVariants){
-              console.log('-один вариант или свой с сохранением')
-              console.log(item.item)
+              // console.log('-один вариант или свой с сохранением')
+              // console.log(item.item)
               return  <MultSelectCreateOne props={{...props, field: item}}/>
             }
             else{
-              console.log('-один вариант или свой')
-              console.log(item.item)
+              // console.log('-один вариант или свой')
+              // console.log(item.item)
               return  <MultSelectNoCreateOne props={{...props, field: item}}/>
             }
 
@@ -70,31 +68,13 @@ export function CreateOrderScreen(props, message) {
         }
       }
       else{
-        console.log('-текст')
-        console.log(item.item)
+        // console.log('-текст')
+        // console.log(item.item)
         return  <TextHandInput props={{...props, field: item}}/>
       }
     }
   }
   
-
-  const fieldCheck1 = (item) => {
-    if(!item.variant || item.number){
-      // console.log('handinput')
-      return  <HandTextInput props={{...props, field: item}}/>
-    }
-    if(item.onlyVariants){
-      if(item.multiVariants){
-        // console.log('multiselect')
-        return <MultSelect props={{...props, field: item}}/>
-      }
-      console.log('AutoComplete')
-      return <AutoComplete props={{...props, field: item}}/>
-      // return <SelectField props={{...props, field: item}}/>
-    }
-    // console.log('multiselectcreate')
-    return <MultSelectCreate props={{...props, field: item}}/>
-  }
   const createOrder = () => {
     const newOrder = []
     for(const i of activData){
@@ -138,6 +118,21 @@ export function CreateOrderScreen(props, message) {
     }
     return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('filter')}>{props.text.cancel[props.leng]}</Button>
   }
+  const filterOrderInput = () => {
+    return (
+      <TextInput
+        rightSection={
+          <CloseButton
+            aria-label="Clear input"
+            onClick={() => props.props.setFilterOrdersString('')}
+            style={{ display: props.props.filterOrdersString ? undefined : 'none' }}
+          />
+        }
+        value={props.props.filterOrdersString}
+        onChange={(event) => props.props.setFilterOrdersString(event.target.value)}
+      />
+    )
+  }
 
   const butLine = [
     // <div>
@@ -151,7 +146,7 @@ export function CreateOrderScreen(props, message) {
     //   />
     // </div>,
     butOpenCreateOrder(),
-    <TextInput/>,
+    filterOrderInput(),
     butOpenFilter(),
   ]
 

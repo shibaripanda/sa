@@ -17,7 +17,7 @@ export function Header1(props) {
         color: 'red', class: classes.mainLinkExit,
         action: () => {
           sessionStorage.removeItem('activescreen')
-          clearColorScheme()
+          // clearColorScheme()
           props.navigate('/')
         }
       },

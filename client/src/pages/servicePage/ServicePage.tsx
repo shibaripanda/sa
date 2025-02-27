@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useEffect, useState } from 'react'
 import { AuthClass } from '../../classes/AuthClass.ts'
 import { TextClass } from '../../classes/TextClass.ts'
@@ -23,6 +23,7 @@ interface Order {
    _subService_: string
       createdAt: any
    _updateTime_: number
+   _orderServiceId_: string
 } 
 
 function ServicePage() {
@@ -67,7 +68,7 @@ function ServicePage() {
   const [newOrderRend, setNewOrderRend] = useState(Date.now())
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
-  const [orders, setOrders] = useState<Order[] | false>([])
+  const [orders, setOrders] = useState<Order[]>([])
   const [countLoadOrders, setCountLoadOrders] = useState([0, 5])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
@@ -75,6 +76,7 @@ function ServicePage() {
   const [colorStatus, setColorStatus] = useState<object | false>(false)
   const [dataInformation, setDataInformation] = useState('')
   const [newWork, setNewWork] = useState(structuredClone(emptyWork))
+  const [filterOrdersString, setFilterOrdersString] = useState('')
 
   const [stateColorList, setStateColorListhandlers] = useListState([])
   const [stateDataOrderLine, setDataOrderLine] = useListState([false])
@@ -128,6 +130,13 @@ function ServicePage() {
     })
     SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
   }
+  const filterOrders = useMemo(() => {
+    if(filterOrdersString){
+      return orders.filter(item => JSON.stringify(item).toString().toLowerCase().includes(filterOrdersString.toString().toLowerCase()))
+    }
+    console.log(orders)
+    return orders
+    },[orders, filterOrdersString])
 
   const getTexLengUserService = async () => {
     
@@ -176,7 +185,7 @@ function ServicePage() {
   }
  
   if(text && leng && user && service && orders){
-    const screen = new ScreenLine({text, leng, user, service, orders})
+    const screen = new ScreenLine({text, leng, user, service, filterOrders})
     return (
         <AppShell header={{ height: 77 }}>
           <AppShell.Header>
@@ -268,7 +277,9 @@ function ServicePage() {
               editedWork: editedWork,
               setEditedWork: setEditedWork,
               newFee: newFee,
-              setNewFee: setNewFee
+              setNewFee: setNewFee,
+              filterOrdersString: filterOrdersString,
+              setFilterOrdersString: setFilterOrdersString
               }
             )}
           </AppShell.Main>
