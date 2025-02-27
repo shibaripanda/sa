@@ -24,6 +24,7 @@ import { ChangeInfoMainService } from "./serviceSettingsScreen/itemsScreenSettin
 import { OrdersScreen } from "./newOrderScreen/itemsScreenSettings/OrdersScreen.tsx";
 import { ChangeMyMainOrderDataLine } from "./mySettingsScreen/itemsScreenSettings/ChangeMyMainOrderDataLine.tsx";
 import { ChangeFeeService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeFeeService.tsx";
+import { ChangeMyTelegram } from "./mySettingsScreen/itemsScreenSettings/ChangeMyTelegram.tsx";
 
 
 interface ItemData {
@@ -119,6 +120,15 @@ export const line: Line[] = [
                 title: 'name', 
                 res: 'newUserName'
             },
+            {
+                message: 'сhangeMyTelegram', 
+                screenItem: ChangeMyTelegram, 
+                setData: 'setUserName', 
+                newData: 'userName', 
+                data: 'name', 
+                title: 'name', 
+                res: 'newUserName'
+            }
         ]
     }
 ]

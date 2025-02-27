@@ -84,6 +84,9 @@ export const UsersSchema = new mongoose.Schema({
     type: [dataShema],
     require: true,
     default: []
+  },
+  telegramConnect: {
+    type: Number 
   }
 }, {timestamps: true})
 

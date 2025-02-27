@@ -7,6 +7,7 @@ import { ServicesModule } from 'src/service/services.module'
 import { UsersModule } from 'src/user/users.module'
 import { AppGateway } from './app.gateway'
 import { OrderModule } from 'src/order/orders.module'
+import { BotModule } from 'src/bot/bot.module'
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { OrderModule } from 'src/order/orders.module'
     AuthModule,
     ServicesModule,
     UsersModule,
-    OrderModule
+    OrderModule,
+    BotModule
   ],
   providers: [AppService, AppGateway],
 })
