@@ -53,6 +53,12 @@ export function OrdersScreen(props, message) {
       return <IconSquareCheck/>
     }
   }
+  const nameDevice = (name) => {
+    if(name === '_DeviceBlocked_'){
+      return props.text.device[props.leng]
+    }
+    return name
+  }
   const dataForTable = (data) => {
     const res: any  = []
     if(props.props.screenSizeOrderButLine < 12){
@@ -61,7 +67,7 @@ export function OrdersScreen(props, message) {
         if(field && field !== '_history_'){
           res.push(
             <Table.Tr key={i}>
-              <Table.Th w={350}>{field.name}</Table.Th>
+              <Table.Th w={350}>{nameDevice(field.name)}</Table.Th>
               <Table.Td>{specData(data[i], i)}</Table.Td>
             </Table.Tr>
           )

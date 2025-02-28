@@ -3,13 +3,20 @@ import React from 'react'
 
 
 export function SelectField(props) {
-  // console.log(props.props)
+  console.log(props.props)
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){
       return props.props.text.device[props.props.leng]
     }
     return name
+  }
+
+  const dataData = (name) => {
+    if(name === '_DeviceBlocked_'){
+      return props.props.service.devices
+    }
+    return props.props.field.variants
   }
   
     return (
@@ -19,7 +26,7 @@ export function SelectField(props) {
               // @ts-ignore
               value={sessionStorage.getItem(`docInput_${props.props.field.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${props.props.field.item}`))[0] : null}
               placeholder={deviceName(props.props.field.item)}
-              data={props.props.field.variants}
+              data={dataData(props.props.field.item)}
               onChange={(option) => {
                 sessionStorage.setItem(`docInput_${props.props.field.item}`, option ? JSON.stringify([option]) : JSON.stringify(['']))
                 props.props.props.setNewOrderRend(Date.now())

@@ -25,6 +25,7 @@ import { OrdersScreen } from "./newOrderScreen/itemsScreenSettings/OrdersScreen.
 import { ChangeMyMainOrderDataLine } from "./mySettingsScreen/itemsScreenSettings/ChangeMyMainOrderDataLine.tsx";
 import { ChangeFeeService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeFeeService.tsx";
 import { ChangeMyTelegram } from "./mySettingsScreen/itemsScreenSettings/ChangeMyTelegram.tsx";
+import { ChangeNewOrderPrint } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNewOrderPrint.tsx";
 
 
 interface ItemData {
@@ -69,6 +70,13 @@ export const line: Line[] = [
             {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12, canUse: ['addNewServiceRole', ]},
             {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12},
             {message: 'deleteService', screenItem: DeleteService}
+        ]
+    },
+    {
+        name: 'documents',
+        screen: SeviceSettingsScreen,
+        items: [
+            {message: 'NewOrderPrint', screenItem: ChangeNewOrderPrint},
         ]
     },
     {

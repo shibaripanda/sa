@@ -77,6 +77,7 @@ function ServicePage() {
   const [dataInformation, setDataInformation] = useState('')
   const [newWork, setNewWork] = useState(structuredClone(emptyWork))
   const [filterOrdersString, setFilterOrdersString] = useState('')
+  const [printDocs, setPrinDocs] = useState(false)
 
   const [stateColorList, setStateColorListhandlers] = useListState([])
   const [stateDataOrderLine, setDataOrderLine] = useListState([false])
@@ -139,6 +140,9 @@ function ServicePage() {
           subServiceId: authClass.getSubServiceId(), 
           orderId: filterOrdersString.toString().slice(0, -1),
           exist: orders.map(item => item._id)
+        })
+        setFilterOrdersString((exist) => {
+          return exist.slice(0, -1)
         })
       }
       const minusSimbol = (text) => {
@@ -295,7 +299,9 @@ function ServicePage() {
               newFee: newFee,
               setNewFee: setNewFee,
               filterOrdersString: filterOrdersString,
-              setFilterOrdersString: setFilterOrdersString
+              setFilterOrdersString: setFilterOrdersString,
+              printDocs: printDocs,
+              setPrinDocs: setPrinDocs
               }
             )}
           </AppShell.Main>

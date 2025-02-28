@@ -179,7 +179,13 @@ export class OrderService {
             return res
         }
         OrderSchema.add(orderSh())
-        return await this.orderMongo.create(orderData())
+        // const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
+        const ord = await this.orderMongo.create(orderData())
+        if(ord){
+            const name = service.subServices.find(item => item.subServiceId === ord._subServiceId_)
+            ord._subService_ = name ? name.name : '--'
+            return ord 
+        }
     }
     async getOrdersFilter(serviceId, subServiceId, orderId, exist, user, service){
         console.log(service.orderData.map(item => item.item))

@@ -36,6 +36,17 @@ export class ServicesGateway {
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('updateDocument')
+  async updateDocument(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+    const service = await this.serviceSevice.updateDocument(payload.serviceId, payload.docName, payload.newDoc)
+    if(service){
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('replaceStatusPosition')
   async replaceStatusPosition(@ConnectedSocket() client: Socket, @MessageBody() payload: ReplaceOrderDataDto): Promise<void> {
     const service = await this.serviceSevice.replaceStatusPosition(payload.serviceId, payload.index1, payload.index2)
