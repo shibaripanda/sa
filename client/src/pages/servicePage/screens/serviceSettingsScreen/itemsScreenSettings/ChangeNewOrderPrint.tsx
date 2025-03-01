@@ -12,11 +12,6 @@ export function ChangeNewOrderPrint(props, message) {
 
     if(props.props.printDocs){
       const dataPrint = props.props.printDocs.find(item => item.name === 'NewOrderPrint').data
-
-      // console.log('fff', JSON.stringify(props.props.printDocs) === JSON.stringify(props.service.serviceDocuments))
-
-      // console.log(dataPrint)
-
       const textFields = () => {
 
         const resize = (ln) => {
@@ -48,7 +43,6 @@ export function ChangeNewOrderPrint(props, message) {
           )
       }
 
-      // printDocs setPrinDocs
     return (
       <div>
           <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>
@@ -64,7 +58,7 @@ export function ChangeNewOrderPrint(props, message) {
                   docName: 'NewOrderPrint',
                   newDoc: dataPrint
                 })
-                // props.props.setPrinDocs(false)
+                props.props.setPrinDocs(false)
               }}
               >{props.text.save[props.leng]}
             </Button>

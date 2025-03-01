@@ -944,9 +944,15 @@ export function OrdersScreen(props, message) {
         <Tabs.Panel value={props.text.close[props.leng]} pt="xs">
           <Grid justify="center" grow>
             {[
-              <Button fullWidth variant='default'>Закрыть с оплатой</Button>,
-              <Button fullWidth variant='default'>Закрыть по гарантии</Button>,
-              <Button fullWidth variant='default'>Закрыть по отказу</Button>
+              <Button
+                color='green'
+                fullWidth
+                onClick={async () => {
+                  await props.props.printDocument(order, 'WarrantyOrderPrint')
+                }}
+                >
+                {props.text.closeOrder[props.leng]}
+              </Button>
             ]
             .map((item, index) => <Grid.Col key={index} span={props.props.screenSizeOrderButLine}>{item}</Grid.Col>)}
           </Grid>

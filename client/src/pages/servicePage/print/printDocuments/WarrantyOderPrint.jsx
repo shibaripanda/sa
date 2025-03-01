@@ -1,7 +1,7 @@
 import { Center, Divider, Grid, Group, Space, Table, Text } from "@mantine/core";
 import { Component } from "react";
 
-export class NewOderPrint extends Component {
+export class WarrantyOrderPrint extends Component {
 
     constructor(props){
         super(props)
@@ -75,6 +75,127 @@ export class NewOderPrint extends Component {
       return res
     }
 
+    orderWorksPanel(order){
+
+      if(order._work_.length){
+  
+        const title = (data) => { 
+          return data.work + data.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')
+        }
+        const cost = (data) => { 
+          return data.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, data.cost)
+        }
+        const varanty = (data) => {
+          return [...data.parts
+            .filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
+            .map(item => item.varanty), data.varanty ? data.varanty : 0]
+            .sort((a, b) => b - a)
+        }
+        const partsClient = (work) => {
+          if(work.parts.filter(item => 'apart' === item.link).length){
+            return (
+              work.parts.filter(w => 'apart' === w.link).map(part => 
+                <Table.Tr>
+                  <Table.Td>
+                    {part.part ? part.part : '--'}
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {part.varanty ? part.varanty : 0}
+                    </Center>
+                  </Table.Td>
+                  <Table.Td>
+                    <Center>
+                      {part.cost ? part.cost : 0}
+                    </Center>
+                  </Table.Td>
+                </Table.Tr>
+              )
+            )
+          }
+        }
+        const totalCost = () => {
+          let total = order._work_.reduce((acc, item) => acc + item.cost, 0)
+          for(const i of order._work_){
+            total = total + i.parts.reduce((acc, item) => acc + item.cost, 0)
+          }
+          return total
+        }
+        
+        
+        return (
+          <div>
+            <Space h='xs'/>
+            <Grid>
+              <Grid.Col span={12}>
+                <Space h='xs'/>
+                <Table border="1" withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+                <Table.Tbody>
+                <Table.Tr>
+                    <Table.Td>
+                      <Center>
+                        {this.text.servOrPart[this.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {this.text.varanty[this.leng]}
+                      </Center>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {this.text.cost[this.leng]}
+                      </Center>
+                    </Table.Td>
+                  </Table.Tr> 
+                  {order._work_.map(work =>
+                    <>
+                      <Table.Tr>
+                        <Table.Td width={'70%'}>
+                          {title(work)}
+                        </Table.Td>
+                        <Table.Td width={'15%'}>
+                          <Center>
+                            {varanty(work)}
+                          </Center>
+                        </Table.Td>
+                        <Table.Td width={'15%'}>
+                          <Center>
+                            {cost(work)}
+                          </Center>
+                        </Table.Td>
+                        {/* <Table.Td width={'10%'}>
+                          <Center>
+                            {newWorkOld(work)}
+                          </Center>
+                        </Table.Td> */}
+                      </Table.Tr>
+                      {partsClient(work)}
+                    </>
+                    )
+                  }
+                  <Table.Tr>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                    </Table.Td>
+                    <Table.Td>
+                      <Center>
+                        {totalCost()}
+                      </Center>
+                    </Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
+                </Table>
+              </Grid.Col>
+            </Grid>
+            <Space h='sm'/>
+          </div>
+        )
+        
+      }
+    }
+
     render() {
       return (
         <div ref={this.props.innerRef} style={{margin: '2vmax'}}>
@@ -107,6 +228,8 @@ export class NewOderPrint extends Component {
               </Center>
             </Grid.Col>
           </Grid>
+
+          {this.orderWorksPanel(this.data)}
 
           <Center><Text td="underline" fw={700} size="sm" className="perenos">{this.dataText.docTitleListRules}</Text></Center>
 

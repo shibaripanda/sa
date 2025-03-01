@@ -15,6 +15,7 @@ import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 import { useDisclosure, useListState } from '@mantine/hooks'
 import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
 import { SocketApt } from '../../modules/socket/api/socket-api.ts'
+import { ModalWindowPrintStatus } from './print/ModalWindowPrintStatus.tsx'
 
 export const emptyWork = {work: '', master: '', varanty: NaN, subCost: NaN, cost: NaN, parts: []}
 
@@ -72,6 +73,7 @@ function ServicePage() {
   const [countLoadOrders, setCountLoadOrders] = useState([0, 5])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
+  const [openedClosePrint, openedClosePrintHandlers] = useDisclosure(false)
   const [openedPrint, openedPrintHandlers] = useDisclosure(false)
   const [colorStatus, setColorStatus] = useState<object | false>(false)
   const [dataInformation, setDataInformation] = useState('')
@@ -98,8 +100,15 @@ function ServicePage() {
   const addNewOrder = (data: any) => {
     setOrders([{...data, _updateTime_: Date.now()}, ...orders ? orders : []])
     setOrderAcord(data._id)
-    setDataForPrint({...data, _printDocument_: 'newOrderDocument'})
+    setDataForPrint({...data, _printDocument_: 'NewOderPrint'})
     openedPrintHandlers.open()
+  }
+  const printDocument = (order, doc) => {
+    setDataForPrint({...order, _printDocument_: doc})
+    if(['WarrantyOrderPrint'].includes(doc)){
+      openedClosePrintHandlers.open()
+    }
+    setTimeout(() => openedPrintHandlers.open(), 0)
   }
   const addNewOrderNoPrint = (data: any) => {
     setOrders((ex) => {
@@ -301,13 +310,24 @@ function ServicePage() {
               filterOrdersString: filterOrdersString,
               setFilterOrdersString: setFilterOrdersString,
               printDocs: printDocs,
-              setPrinDocs: setPrinDocs
+              setPrinDocs: setPrinDocs,
+              printDocument: printDocument
               }
             )}
           </AppShell.Main>
+          <ModalWindowPrintStatus 
+          openedClosePrint={openedClosePrint} 
+          openedClosePrintHandlers={openedClosePrintHandlers}
+          data={dataForPrint}
+          service={service}
+          user={user}
+          text={text}
+          leng={leng}
+          />
           <ModalWindowPrint 
           openedPrint={openedPrint} 
           openedPrintHandlers={openedPrintHandlers}
+          openedClosePrintHandlers={openedClosePrintHandlers}
           data={dataForPrint}
           service={service}
           user={user}

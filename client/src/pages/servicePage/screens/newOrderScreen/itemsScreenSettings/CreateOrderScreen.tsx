@@ -74,7 +74,6 @@ export function CreateOrderScreen(props, message) {
       }
     }
   }
-  
   const createOrder = () => {
     const newOrder = []
     for(const i of activData){
