@@ -36,6 +36,28 @@ export class ServicesGateway {
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deleteUsluga')
+  async deleteUsluga(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+    const service = await this.serviceSevice.deleteUsluga(payload.serviceId, payload.deleteUsluga)
+    if(service){
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeWorksService')
+  async changeWorksService(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+    const service = await this.serviceSevice.changeWorksService(payload.serviceId, payload.newUsluga)
+    if(service){
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('updateCurrency')
   async updateCurrency(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
     const service = await this.serviceSevice.updateCurrency(payload.serviceId, payload.newCurrency)

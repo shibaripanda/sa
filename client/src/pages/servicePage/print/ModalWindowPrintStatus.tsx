@@ -1,4 +1,4 @@
-import { Button, Group, Modal, Text } from '@mantine/core'
+import { Button, Group, Modal, NumberFormatter, Text } from '@mantine/core'
 import React from 'react'
 
 export function ModalWindowPrintStatus(props) {
@@ -15,10 +15,24 @@ export function ModalWindowPrintStatus(props) {
     }
   }
 
+  const totalPriceView = (total) => {
+        const cur = props.service.currency
+            const separator = () => {
+              if(cur.comma1000 === true){
+                return '.'
+              }
+              return false
+            }
+            if(cur.suffixOrPrefix === 'suffix'){
+              return <NumberFormatter  suffix={cur.value} thousandSeparator={separator()} decimalSeparator=',' value={total.toFixed(cur.afterNumbers)} />
+            }
+            return <NumberFormatter  prefix={cur.value} thousandSeparator={separator()} decimalSeparator=',' value={total.toFixed(cur.afterNumbers)} />
+      }
+
   return (
       <>
           <Modal
-          title={<Group justify='space-between'><Text fw={700}>{props.data._orderServiceId_} {totalCost()}</Text></Group>}
+          title={<Group justify='space-between'><Text fw={700}>{props.data._orderServiceId_}</Text> <Text c='green' fw={700}>{totalPriceView(totalCost())}</Text></Group>}
           centered
           radius={'md'} 
           size="auto"
@@ -26,13 +40,13 @@ export function ModalWindowPrintStatus(props) {
           onClose={props.openedClosePrintHandlers.close}
           withCloseButton={false}
           >
-            <div style={{textAlign: 'center', marginTop: '1.7vmax'}}>
-                    <Button
-                    onClick={props.openedClosePrintHandlers.close}  
-                    style={{width: 375, marginRight: '1.7vmax', marginBottom: '1vmax'}}>
-                      {props.text.cancel[props.leng]}
-                    </Button>
-                  </div>
+            <div>
+              <Button
+              onClick={props.openedClosePrintHandlers.close}  
+              style={{width: 375, marginRight: '1.7vmax', marginBottom: '1vmax'}}>
+                {props.text.cancel[props.leng]}
+              </Button>
+            </div>
           </Modal>
       </>
     )

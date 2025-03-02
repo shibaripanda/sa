@@ -178,7 +178,12 @@ export const ServiceSchema = new mongoose.Schema({
     },
     currency: {
       type: Object,
-      default: {suffixOrPrefix: 'suffix', value: '$', afterNumbers: 2},
+      default: {suffixOrPrefix: 'suffix', value: '$', afterNumbers: 2, comma1000: true},
+      require: true
+    },
+    uslugi: {
+      type: Array,
+      default: [{value: 'Ремонт ноутбука', price: 100}],
       require: true
     }
   }, {timestamps: true})

@@ -1,4 +1,4 @@
-import { Center, Divider, Grid, Group, Space, Table, Text } from "@mantine/core";
+import { Center, Divider, Grid, Group, NumberFormatter, Space, Table, Text } from "@mantine/core";
 import { Component } from "react";
 
 export class WarrantyOrderPrint extends Component {
@@ -75,6 +75,20 @@ export class WarrantyOrderPrint extends Component {
       return res
     }
 
+    totalPriceView(total){
+      const cur = this.service.currency
+          const separator = () => {
+            if(cur.comma1000 === true){
+              return '.'
+            }
+            return false
+          }
+          if(cur.suffixOrPrefix === 'suffix'){
+            return <NumberFormatter  suffix={cur.value} thousandSeparator={separator()} decimalSeparator=',' value={total.toFixed(cur.afterNumbers)} />
+          }
+          return <NumberFormatter  prefix={cur.value} thousandSeparator={separator()} decimalSeparator=',' value={total.toFixed(cur.afterNumbers)} />
+    }
+
     orderWorksPanel(order){
 
       if(order._work_.length){
@@ -119,7 +133,7 @@ export class WarrantyOrderPrint extends Component {
           for(const i of order._work_){
             total = total + i.parts.reduce((acc, item) => acc + item.cost, 0)
           }
-          return total
+          return this.totalPriceView(total)
         }
         
         
@@ -151,7 +165,7 @@ export class WarrantyOrderPrint extends Component {
                   {order._work_.map(work =>
                     <>
                       <Table.Tr>
-                        <Table.Td width={'70%'}>
+                        <Table.Td width={'55%'}>
                           {title(work)}
                         </Table.Td>
                         <Table.Td width={'15%'}>
@@ -159,7 +173,7 @@ export class WarrantyOrderPrint extends Component {
                             {varanty(work)}
                           </Center>
                         </Table.Td>
-                        <Table.Td width={'15%'}>
+                        <Table.Td width={'30%'}>
                           <Center>
                             {cost(work)}
                           </Center>

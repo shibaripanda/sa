@@ -28,6 +28,7 @@ import { ChangeMyTelegram } from "./mySettingsScreen/itemsScreenSettings/ChangeM
 import { ChangeNewOrderPrint } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNewOrderPrint.tsx";
 import { ChangeWarrantyOrderPrint } from "./serviceSettingsScreen/itemsScreenSettings/ChangeWarrantyOrderPrint.tsx";
 import { ChangeCurrencyService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeCurrencyService.tsx";
+import { ChangeWorksService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeWorksService.tsx";
 
 
 interface ItemData {
@@ -57,6 +58,13 @@ export const line: Line[] = [
             {message: 'createOrder', screenItem: CreateOrderScreen},
             {message: 'getOrdersCount', screenItem: OrdersScreen, 
                 canUse: ['addNewWork', 'deleteWork', 'deleteAllWork', 'updateOrderWork', 'addInformationOrder', 'editOrderStatus']},  
+        ]
+    },
+    {
+        name: 'uslugi',
+        screen: SeviceSettingsScreen,
+        items: [
+            {message: 'changeWorksService', screenItem: ChangeWorksService}, 
         ]
     },
     {

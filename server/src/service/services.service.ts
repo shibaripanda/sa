@@ -14,6 +14,15 @@ export class ServicesService {
         private userService: UsersService
     ) {}
 
+    async deleteUsluga(serviceId: string, deleteUsluga: object){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {uslugi: deleteUsluga}}, {returnDocument: 'after'})
+    }
+
+    async changeWorksService(serviceId: string, newUsluga: object){
+        console.log(newUsluga)
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {uslugi: newUsluga}}, {returnDocument: 'after'})
+    }
+
     async updateCurrency(serviceId: string, newCurrency: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {currency: newCurrency}, {returnDocument: 'after'})
     }

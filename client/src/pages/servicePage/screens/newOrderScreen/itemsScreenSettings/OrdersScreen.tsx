@@ -1,17 +1,19 @@
-import { Accordion, Anchor, Badge, Box, Button, Center, Container, Grid, Group, LoadingOverlay, NumberInput, Overlay, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
+import { Accordion, Affix, Anchor, Autocomplete, Badge, Box, Button, Center, Container, Grid, Group, LoadingOverlay, NumberInput, Overlay, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip, Transition } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
 import classes from './OrderList.module.css'
-import { IconSquareCheck, IconSquareX } from '@tabler/icons-react'
+import { IconArrowUp, IconSquareCheck, IconSquareX } from '@tabler/icons-react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { emptyWork } from '../../../ServicePage.tsx'
 
 export function OrdersScreen(props, message) {
 
-  // console.log('OrdersScreen')
-  // console.log('editedWork', props.props.editedWork)
-  // console.log(props.orders.find(item => item._id === props.props.orderAcord) ? props.orders.find(item => item._id === props.props.orderAcord)['_work_'] : 'ee')
+  console.log('OrdersScreen')
+  
+  if(!props.props.newWork.master){
+    props.props.setNewWork({...props.props.newWork, master: props.props.newWork.master ? props.props.newWork.master : props.user._id})
+  }
 
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
@@ -21,13 +23,11 @@ export function OrdersScreen(props, message) {
     {name: props.text.status[props.leng], data: '_status_'},
     {name: props.text.localService[props.leng], data: '_subService_'},
   ])
-  // console.log(props.user.orderDataShowItems)
   const lineActiv = props.user.orderDataShowItems
   .find(item => item.serviceId === props.user.serviceId) ? props.user.orderDataShowItems
   .find(item => item.serviceId === props.user.serviceId).data.filter(f => line.map(r => r.data).includes(f)) : []
 
   const activData = lineActiv.map(e => ({item: e}))
-  // console.log(activData)
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){
@@ -1094,13 +1094,27 @@ export function OrdersScreen(props, message) {
           </Grid>
           <Grid key={'input panel'} justify="center" align="center">
             <Grid.Col key={'Service'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
-              <TextInput value={props.props.newWork.work} placeholder='Услуга' error={!props.props.newWork.work}
+              <Autocomplete
+                // clearable
+                placeholder='Услуга'
+                error={!props.props.newWork.work}
+                data={props.service.uslugi.map(item => item.value)}
+                onChange={(event) => {
+                  if(!props.props.newWork.subCost && props.service.uslugi.find(item => item.value === event)){
+                    props.props.setNewWork({...props.props.newWork, cost: props.service.uslugi.find(item => item.value === event).price, work: event})
+                  }
+                  else{
+                    props.props.setNewWork({...props.props.newWork, work: event})
+                  }
+                }}
+              />
+              {/* <TextInput value={props.props.newWork.work} placeholder='Услуга' error={!props.props.newWork.work}
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, work: event.target.value})
-                }}/>
+                }}/> */}
             </Grid.Col>
             <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
-              <Select value={props.props.newWork.master} placeholder={props.text.master[props.leng]} error={!props.props.newWork.master}
+              <Select value={props.props.newWork.master ? props.props.newWork.master : props.user._id} placeholder={props.text.master[props.leng]} error={!props.props.newWork.master}
                 data={props.service.localUsers.map(item => ({label: item.name ? item.name + ' (' + item.email + ')' : item.email, value: item.id}))}
                 onChange={(event) => {
                   props.props.setNewWork({...props.props.newWork, master: event})
@@ -1274,6 +1288,19 @@ export function OrdersScreen(props, message) {
             {rowss}
           </Accordion>
         </Container>
+        <Affix position={{ bottom: 20, right: 20 }}>
+        <Transition transition="slide-up" mounted={props.props.scroll.y > 0}>
+          {(transitionStyles) => (
+            <Button
+              leftSection={<IconArrowUp size={16} />}
+              style={transitionStyles}
+              onClick={() => props.props.scrollTo({ y: 0 })}
+            >
+              Scroll to top
+            </Button>
+          )}
+        </Transition>
+      </Affix>
       </div>
     )
   }

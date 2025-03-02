@@ -11,7 +11,8 @@ interface Service {
     localUsers: []
     fee: number
     serviceDocuments: []
-    currency: Object 
+    currency: Object
+    uslugi: {value: string, price: number}[] 
 }
 
 interface OrderData {
@@ -42,6 +43,7 @@ export class ServiceClass {
     fee: number
     serviceDocuments: []
     currency: Object
+    uslugi: {value: string, price: number}[]
 
     constructor(data: Service){
 
@@ -66,11 +68,13 @@ export class ServiceClass {
         this.fee = data.fee
         this.serviceDocuments = data.serviceDocuments
         this.currency = data.currency
+        this.uslugi = data.uslugi.reverse()
+
+
+        
 
         // data.subServices = data.subServices.filter(item => item.subServiceId !== authClass.getSubServiceId())
 
     }
-
    
-
 }

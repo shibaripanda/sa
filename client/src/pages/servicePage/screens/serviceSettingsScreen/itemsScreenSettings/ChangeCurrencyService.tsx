@@ -1,4 +1,4 @@
-import { Button, Group, NumberFormatter, NumberInput, Select, Text, TextInput } from '@mantine/core'
+import { Button, Checkbox, Group, NumberFormatter, NumberInput, Select, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
@@ -18,10 +18,16 @@ export function ChangeCurrencyService(props, message) {
     const cur = props.props.currency
 
     const showExample = () => {
-      if(cur.suffixOrPrefix === 'suffix'){
-        return <NumberFormatter  suffix={cur.value} thousandSeparator='.' decimalSeparator=',' value={1000000 / 3} />
+      const separator = () => {
+        if(cur.comma1000 === true){
+          return '.'
+        }
+        return false
       }
-      return <NumberFormatter  prefix={cur.value} thousandSeparator='.' decimalSeparator=',' value={1000000 / 3} />
+      if(cur.suffixOrPrefix === 'suffix'){
+        return <NumberFormatter  suffix={cur.value} thousandSeparator={separator()} decimalSeparator=',' value={(1000000 / 3).toFixed(cur.afterNumbers)} />
+      }
+      return <NumberFormatter  prefix={cur.value} thousandSeparator={separator()} decimalSeparator=',' value={(1000000 / 3).toFixed(cur.afterNumbers)} />
     }
 
     return (
@@ -54,7 +60,15 @@ export function ChangeCurrencyService(props, message) {
           placeholder={props.text.afterNumbers[props.leng]} 
           value={cur.afterNumbers}
           onChange={(event) => {
-            props.props.serCurrency({...props.props.currency, afterNumbers: event})
+            props.props.serCurrency({...props.props.currency, afterNumbers: Number(event) < 0 ? 0 : event})
+          }}
+          />
+
+          <Checkbox
+          label={props.text.comma1000[props.leng]}
+          checked={cur.comma1000}
+          onChange={(event) => {
+            props.props.serCurrency({...props.props.currency, comma1000: event.currentTarget.checked})
           }}
           />
           </Group>

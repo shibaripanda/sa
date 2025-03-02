@@ -12,7 +12,7 @@ import { ServiceClass } from '../../classes/ServiceClass.ts'
 import { UserClass } from '../../classes/UserClass.ts'
 import { AppShell, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
-import { useDisclosure, useListState } from '@mantine/hooks'
+import { useDisclosure, useListState, useWindowScroll } from '@mantine/hooks'
 import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
 import { SocketApt } from '../../modules/socket/api/socket-api.ts'
 import { ModalWindowPrintStatus } from './print/ModalWindowPrintStatus.tsx'
@@ -86,6 +86,8 @@ function ServicePage() {
   const [orderAcord, setOrderAcord] = useState<string | null>(null)
   const [viewWork, setViewWork] = useState('Manager view')
   const [editedWork, setEditedWork] = useState<any[] | false>(false)
+  const [scroll, scrollTo] = useWindowScroll()
+  const [usluga, setUsluga] = useState({value: '', price: ''})
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -338,7 +340,11 @@ function ServicePage() {
               setPrinDocs: setPrinDocs,
               printDocument: printDocument,
               currency: currency,
-              serCurrency: serCurrency
+              serCurrency: serCurrency,
+              scroll: scroll,
+              scrollTo: scrollTo,
+              usluga: usluga,
+              setUsluga: setUsluga
               }
             )}
           </AppShell.Main>
