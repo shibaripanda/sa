@@ -10,7 +10,8 @@ interface Service {
     colorStatuses: []
     localUsers: []
     fee: number
-    serviceDocuments: [] 
+    serviceDocuments: []
+    currency: Object 
 }
 
 interface OrderData {
@@ -40,6 +41,7 @@ export class ServiceClass {
     localUsers: []
     fee: number
     serviceDocuments: []
+    currency: Object
 
     constructor(data: Service){
 
@@ -63,6 +65,7 @@ export class ServiceClass {
         this.localUsers = data.localUsers
         this.fee = data.fee
         this.serviceDocuments = data.serviceDocuments
+        this.currency = data.currency
 
         // data.subServices = data.subServices.filter(item => item.subServiceId !== authClass.getSubServiceId())
 

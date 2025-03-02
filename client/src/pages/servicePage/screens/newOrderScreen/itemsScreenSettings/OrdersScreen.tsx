@@ -1,4 +1,4 @@
-import { Accordion, Anchor, Badge, Button, Center, Container, Grid, Group, NumberInput, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
+import { Accordion, Anchor, Badge, Box, Button, Center, Container, Grid, Group, LoadingOverlay, NumberInput, Overlay, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
@@ -562,12 +562,12 @@ export function OrdersScreen(props, message) {
         const fee = totalExistCost() / 100 * nalog
         const res = (totalExistCost() - totalExistSubCost()) - fee
         if(res === 0){
-          return <Text c='yellow' size='1.5vmax'>{res}</Text>
+          return <Text c='yellow' size='1.5vmax'>{res}</Text> 
         }
         else if(res < 0){
-          return <Text c='red' size='1.5vmax'>{res}</Text>
+          return <Text c='red' size='1.5vmax'>{res}</Text> 
         }
-        return <Text c='green' size='1.5vmax'>+{res}</Text>
+        return <Text c='green' size='1.5vmax'>{res}</Text>
       }
       const butDeleteAll = (order) => {
         if(order._work_.length > 1){
@@ -655,7 +655,10 @@ export function OrdersScreen(props, message) {
                   value={props.props.viewWork} 
                   data={['Manager view', 'Client view', 'Edit']}
                   onChange={props.props.setViewWork}/>
+                  <Group>
                   {profitMain()}
+                  <Text c='grey' size='1vmax'>{props.service.fee}%</Text> 
+                  </Group>
                 </Group>
                 <Space h='xs'/>
                 <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
@@ -770,7 +773,10 @@ export function OrdersScreen(props, message) {
                   value={props.props.viewWork} 
                   data={['Manager view', 'Client view', 'Edit']}
                   onChange={props.props.setViewWork}/>
+                  <Group>
                   {profitMain()}
+                  <Text c='grey' size='1vmax'>{props.service.fee}%</Text> 
+                  </Group>
                 </Group>
                 <Space h='xs'/>
                 <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
@@ -848,7 +854,10 @@ export function OrdersScreen(props, message) {
               value={props.props.viewWork} 
               data={['Manager view', 'Client view', 'Edit']}
               onChange={props.props.setViewWork}/>
-              {profitMain()}
+              <Group>
+                {profitMain()}
+                <Text c='grey' size='1vmax'>{props.service.fee}%</Text> 
+              </Group>
             </Group>
             <Space h='xs'/>
             {props.props.editedWork.map((item, index)=>
@@ -1201,6 +1210,7 @@ export function OrdersScreen(props, message) {
           <hr color={colorOrder(element._status_)}></hr>
           <Space h='sm'/>
           {dataForTable(element)}
+          
         </Accordion.Panel>
       )
     }
@@ -1208,24 +1218,33 @@ export function OrdersScreen(props, message) {
 
   if(props.orders.length){
     const rowss = props.orders.map((element) => (
-      <Accordion.Item key={element._id} className={classes.item} value={element._id} 
-        style={{
-          border: `2px solid ${colorOrder(element._status_)}`
-        }}>
-        <Accordion.Control>
-          <Grid justify="center" align="center" visibleFrom="sm">
-            {activData.map((item, index) => 
-              <Grid.Col span={12 / activData.length} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
-            )}
-          </Grid>
-          <Grid justify="center" align="center" hiddenFrom="sm">
-            {activData.slice(0, 3).map((item, index) => 
-              <Grid.Col span={4} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
-            )}
-          </Grid>
-        </Accordion.Control>
-        {acordControl(element)}
-      </Accordion.Item>
+      <Box pos="relative" key={element._id}>
+        <Accordion.Item key={element._id} className={classes.item} value={element._id} 
+          style={{
+            border: `2px solid ${colorOrder(element._status_)}`
+          }}>
+          
+          <Accordion.Control>
+
+              {props.props.orderAcord && props.props.orderAcord !== element._id ? <Overlay color="#000" backgroundOpacity={0.35} blur={0.7} /> : <></>}
+          
+              <Grid justify="center" align="center" visibleFrom="sm">
+                {activData.map((item, index) => 
+                  <Grid.Col span={12 / activData.length} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
+                )}
+              </Grid>
+              <Grid justify="center" align="center" hiddenFrom="sm">
+                {activData.slice(0, 3).map((item, index) => 
+                  <Grid.Col span={4} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
+                )}
+              </Grid>
+            
+          </Accordion.Control>
+          
+          
+          {acordControl(element)}
+        </Accordion.Item>
+      </Box>
     ))
     
     return (

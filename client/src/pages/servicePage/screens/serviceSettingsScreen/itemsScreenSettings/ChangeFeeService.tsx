@@ -5,7 +5,6 @@ import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 export function ChangeFeeService(props, message) {
 
     console.log('ChangeFeeService')
-    console.log('props.service', props.service.fee)
 
   return (
     <div>

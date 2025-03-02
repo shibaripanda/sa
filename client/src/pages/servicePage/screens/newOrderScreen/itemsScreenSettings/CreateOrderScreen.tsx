@@ -9,11 +9,10 @@ import { TextHandInput } from './ElementsInput/TextHandInput.tsx'
 import { MultSelectNoCreate } from './ElementsInput/MultSelectNoCreate.tsx'
 import { MultSelectCreateOne } from './ElementsInput/MultSelectCreateOne.tsx'
 import { MultSelectNoCreateOne } from './ElementsInput/MultSelectNoCreateOne.tsx'
-import { IconAt } from '@tabler/icons-react'
-// @ts-ignore
-// import classes from './Slider.module.css'
 
 export function CreateOrderScreen(props, message) {
+
+  // console.log(props.props.openedNewOrder)
 
   console.log('CreateOrderScreen')
 
@@ -149,13 +148,9 @@ export function CreateOrderScreen(props, message) {
     butOpenFilter(),
   ]
 
-  return (
-    <div>
-      <Grid>
-        {butLine.map((item, index) => <Grid.Col key={index} span={props.props.screenSizeNewOrder}>{item}</Grid.Col>)}
-      </Grid>
-
-      <Collapse in={props.props.openedNewOrder}>
+  const createModule = () => {
+    if(props.props.openedNewOrder){
+      return (
         <div>
           <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr>
 
@@ -202,8 +197,12 @@ export function CreateOrderScreen(props, message) {
           </Grid>
 
         </div>
-      </Collapse>
-      <Collapse in={props.props.openedFilter}>
+      )
+    }
+  }
+  const filterModule = () => {
+    if(props.props.openedFilter){
+      return (
         <div>
           <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr>
                   dddd
@@ -250,6 +249,67 @@ export function CreateOrderScreen(props, message) {
           </Grid> */}
 
         </div>
+      )
+    }
+  }
+
+  return (
+    <div>
+      <Grid>
+        {butLine.map((item, index) => <Grid.Col key={index} span={props.props.screenSizeNewOrder}>{item}</Grid.Col>)}
+      </Grid>
+
+      <Collapse in={props.props.openedNewOrder}>
+      {createModule()}
+        {/* <div>
+          <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr>
+
+          <Grid grow>
+            {activData.map(item => 
+            <Grid.Col key={item.item} span={props.props.screenSizeNewOrder}>
+              {fieldCheck(item)}
+            </Grid.Col>)}
+          </Grid>
+
+          <Grid style={{marginTop: '1.5vmax'}} grow>
+            <Grid.Col span={props.props.screenSizeNewOrder}>
+              <Button
+                color='green'
+                fullWidth
+                disabled={disabledCreateButton()}
+                onClick={async () => {
+                  await props.props.getAndPrintNewOrder()
+                  sendToSocket('createOrder', {
+                    serviceId: props.user.serviceId, 
+                    subServiceId: props.user.subServiceId,
+                    newOrder: createOrder()
+                  })
+                }}
+                >
+                {props.text.createNewOrder[props.leng]}
+              </Button>
+            </Grid.Col>
+            <Grid.Col span={props.props.screenSizeNewOrder}>
+              <Button
+                color='red'
+                fullWidth 
+                disabled={disabledClearButton()}
+                onClick={() => {
+                  for(const i of activData.map(item => item.item)){
+                    sessionStorage.removeItem(`docInput_${i}`)
+                  }
+                  props.props.setNewOrderRend(Date.now())
+                }}
+                >
+                {props.text.clearForm[props.leng]}
+              </Button>
+            </Grid.Col>
+          </Grid>
+
+        </div> */}
+      </Collapse>
+      <Collapse in={props.props.openedFilter}>
+      {filterModule()}
       </Collapse>
       <hr style={{marginTop: '1vmax', marginBottom: '0.1vmax'}}></hr>
     </div>

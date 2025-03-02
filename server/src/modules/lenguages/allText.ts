@@ -132,5 +132,10 @@ export const textArray: LengData[] = [
     {rutext: 'Новый заказ', index: 'NewOrderPrint', info_data: 'новый заказ', update: false},
     {rutext: 'Закрыть заказ', index: 'closeOrder', info_data: 'закрыть заказ', update: false},
     {rutext: 'Печать', index: 'print', info_data: 'печать', update: false},
+    {rutext: 'Гарантия', index: 'changeWarrantyOrderPrint', info_data: 'гарантия', update: false},
+    {rutext: 'Валюта', index: 'changeCurrencyService', info_data: 'валюта', update: false},
+    {rutext: 'Суфикс или префикс', index: 'suffixOrPrefix', info_data: 'суфикс или префикс', update: false},
+    {rutext: 'Знаков после запятой', index: 'afterNumbers', info_data: 'после запятой', update: false},
+    
     
 ]

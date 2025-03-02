@@ -2,16 +2,16 @@ import { Button, Group, Space, Text, Textarea } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
-export function ChangeNewOrderPrint(props, message) {
+export function ChangeWarrantyOrderPrint(props, message) {
 
-    console.log('ChangeNewOrderPrint')
+    console.log('WarrantyOrderPrint')
 
     if(!props.props.printDocs){
       props.props.setPrinDocs(structuredClone(props.service.serviceDocuments))
     }
 
     if(props.props.printDocs){
-      const dataPrint = props.props.printDocs.find(item => item.name === 'NewOrderPrint').data
+      const dataPrint = props.props.printDocs.find(item => item.name === 'WarrantyOrderPrint').data
       const textFields = () => {
 
         const resize = (ln) => {
@@ -50,7 +50,7 @@ export function ChangeNewOrderPrint(props, message) {
           {textFields()}
           <Group>
             <Button style={{marginTop: 10}}
-              disabled={JSON.stringify(props.props.printDocs.find(item => item.name === 'NewOrderPrint')) === JSON.stringify(props.service.serviceDocuments.find(item => item.name === 'NewOrderPrint'))}
+              disabled={JSON.stringify(props.props.printDocs.find(item => item.name === 'WarrantyOrderPrint')) === JSON.stringify(props.service.serviceDocuments.find(item => item.name === 'WarrantyOrderPrint'))}
               onClick={() => {
                 sendToSocket('updateDocument', {
                   serviceId: props.user.serviceId, 
@@ -64,7 +64,7 @@ export function ChangeNewOrderPrint(props, message) {
             </Button>
 
             <Button style={{marginTop: 10}}
-              disabled={JSON.stringify(props.props.printDocs.find(item => item.name === 'NewOrderPrint')) === JSON.stringify(props.service.serviceDocuments.find(item => item.name === 'NewOrderPrint'))}
+              disabled={JSON.stringify(props.props.printDocs.find(item => item.name === 'WarrantyOrderPrint')) === JSON.stringify(props.service.serviceDocuments.find(item => item.name === 'WarrantyOrderPrint'))}
               onClick={() => {
                 props.props.setPrinDocs(structuredClone(props.service.serviceDocuments))
               }}

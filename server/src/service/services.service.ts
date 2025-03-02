@@ -14,6 +14,10 @@ export class ServicesService {
         private userService: UsersService
     ) {}
 
+    async updateCurrency(serviceId: string, newCurrency: string){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {currency: newCurrency}, {returnDocument: 'after'})
+    }
+
     async updateDocument(serviceId: string, docName: string, newDoc: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {'serviceDocuments.$[el].data': newDoc}, {arrayFilters: [{'el.name': docName}], returnDocument: 'after'})
     }

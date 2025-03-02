@@ -26,6 +26,8 @@ import { ChangeMyMainOrderDataLine } from "./mySettingsScreen/itemsScreenSetting
 import { ChangeFeeService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeFeeService.tsx";
 import { ChangeMyTelegram } from "./mySettingsScreen/itemsScreenSettings/ChangeMyTelegram.tsx";
 import { ChangeNewOrderPrint } from "./serviceSettingsScreen/itemsScreenSettings/ChangeNewOrderPrint.tsx";
+import { ChangeWarrantyOrderPrint } from "./serviceSettingsScreen/itemsScreenSettings/ChangeWarrantyOrderPrint.tsx";
+import { ChangeCurrencyService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeCurrencyService.tsx";
 
 
 interface ItemData {
@@ -64,6 +66,7 @@ export const line: Line[] = [
             {message: 'changeNameMainService', screenItem: ChangeNameMainService},
             {message: 'changeInfoMainService', screenItem: ChangeInfoMainService},
             {message: 'changeFeeService', screenItem: ChangeFeeService}, 
+            {message: 'changeCurrencyService', screenItem: ChangeCurrencyService, size: 12}, 
             {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
             {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
             {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12},
@@ -76,7 +79,8 @@ export const line: Line[] = [
         name: 'documents',
         screen: SeviceSettingsScreen,
         items: [
-            {message: 'NewOrderPrint', screenItem: ChangeNewOrderPrint},
+            {message: 'NewOrderPrint', screenItem: ChangeNewOrderPrint, size: 12},
+            {message: 'changeWarrantyOrderPrint', screenItem: ChangeWarrantyOrderPrint, size: 12},
         ]
     },
     {
@@ -180,8 +184,9 @@ export class ScreenLine {
     }
 
     getScreen(activeScreen: string, props: any){
-        console.log(activeScreen)
-        console.log('screenLine', this.user, this.service)
+        console.log('-----------------------')
+        console.log('ScreenLine',activeScreen)
+        console.log(this.user, this.service)
         const res = this.line.find(it => it.name === activeScreen)
         const items = res ? res.items.filter(item => this.getMessagesForUser().includes(item.message) || this.user.userRoles.includes('owner')) : []
         if(items.length){

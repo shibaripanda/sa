@@ -227,6 +227,14 @@ export function DragAndDrop(props, message) {
       )}
     </Draggable>
   ))
+
+  const modalListVariant = () => {
+    if(props.props.listVariantName){
+      return (
+        <ModalListVariant {...props}/>
+      )
+    }
+  }
     
     return (
       <>
@@ -274,7 +282,7 @@ export function DragAndDrop(props, message) {
           </Table>
         </DragDropContext>
       </Table.ScrollContainer>
-      <ModalListVariant {...props}/>
+      {modalListVariant()}
       </>
     )
   }

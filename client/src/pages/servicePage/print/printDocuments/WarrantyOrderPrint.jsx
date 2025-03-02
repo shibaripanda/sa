@@ -10,7 +10,7 @@ export class WarrantyOrderPrint extends Component {
         this.service = props.service
         this.text = props.text
         this.leng = props.leng
-        this.dataText = props.service.serviceDocuments.find(item => item.name === 'NewOrderPrint').data
+        this.dataText = props.service.serviceDocuments.find(item => item.name === 'WarrantyOrderPrint').data
     }
 
     dataForTable(){
@@ -207,7 +207,7 @@ export class WarrantyOrderPrint extends Component {
 
           <Group justify="space-between" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
             <Text size="sm">{this.service.name} {this.service.subName}</Text>
-            <Text size="sm">{new Date(this.data.createdAt).toLocaleDateString([`${this.leng}`, "en"])} {new Date(this.data.createdAt).toLocaleTimeString([`${this.leng}`, "en"]).slice(0, -3)}</Text>
+            <Text size="sm">{new Date(Date.now()).toLocaleDateString([`${this.leng}`, "en"])} {new Date(Date.now()).toLocaleTimeString([`${this.leng}`, "en"]).slice(0, -3)}</Text>
           </Group>
 
           <hr></hr>

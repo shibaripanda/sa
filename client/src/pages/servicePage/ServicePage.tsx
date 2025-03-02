@@ -42,7 +42,7 @@ function ServicePage() {
   const screenSize = useMatches({base: 12, sm: 12, md: 4, lg: 3})
   const screenSizeNewOrder = useMatches({base: 12, sm: 12, md: 4, lg: 4})
   const [opened, { close, open }] = useDisclosure(false)
-  const [listVariantName, setListVariantName] = useState('')
+  const [listVariantName, setListVariantName] = useState(false)
   const [newServiceName, setNewSeviceName] = useState('')
   const [newSubServiceName, setSubNewSeviceName] = useState('')
   const [newSubService, setSubNewSevice] = useState('')
@@ -51,6 +51,7 @@ function ServicePage() {
   const [newRole, setNewRole] = useState('')
   const [status, setStatus] = useState('')
   const [users, setUsers] = useState(false)
+  const [currency, serCurrency] = useState(false)
   const [usersLocal, setUsersLocal] = useState(false)
   const [workTime, setWorkTime] = useState('')
   const [contact, setContact] = useState('')
@@ -80,12 +81,9 @@ function ServicePage() {
   const [newWork, setNewWork] = useState(structuredClone(emptyWork))
   const [filterOrdersString, setFilterOrdersString] = useState('')
   const [printDocs, setPrinDocs] = useState(false)
-
   const [stateColorList, setStateColorListhandlers] = useListState([])
   const [stateDataOrderLine, setDataOrderLine] = useListState([false])
-
   const [orderAcord, setOrderAcord] = useState<string | null>(null)
-
   const [viewWork, setViewWork] = useState('Manager view')
   const [editedWork, setEditedWork] = useState<any[] | false>(false)
 
@@ -140,6 +138,33 @@ function ServicePage() {
     })
     SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
   }
+  const modalPrinNewWarranty = () => {
+    if(dataForPrint){
+      return (
+        <>
+        <ModalWindowPrintStatus 
+          openedClosePrint={openedClosePrint} 
+          openedClosePrintHandlers={openedClosePrintHandlers}
+          data={dataForPrint}
+          service={service}
+          user={user}
+          text={text}
+          leng={leng}
+          />
+          <ModalWindowPrint 
+          openedPrint={openedPrint} 
+          openedPrintHandlers={openedPrintHandlers}
+          openedClosePrintHandlers={openedClosePrintHandlers}
+          data={dataForPrint}
+          service={service}
+          user={user}
+          text={text}
+          leng={leng}
+          />
+        </>
+      )
+    }
+  }
   const filterOrders = useMemo(() => {
     if(filterOrdersString){
       if(filterOrdersString[filterOrdersString.length - 1] === '='){
@@ -163,7 +188,7 @@ function ServicePage() {
       const res = orders.filter(item => JSON.stringify(item).toString().toLowerCase().includes(minusSimbol(filterOrdersString).toString().toLowerCase()))
       return res
     }
-    console.log(orders)
+    // console.log(orders)
     return orders
     },[filterOrdersString, orders])
 
@@ -311,29 +336,13 @@ function ServicePage() {
               setFilterOrdersString: setFilterOrdersString,
               printDocs: printDocs,
               setPrinDocs: setPrinDocs,
-              printDocument: printDocument
+              printDocument: printDocument,
+              currency: currency,
+              serCurrency: serCurrency
               }
             )}
           </AppShell.Main>
-          <ModalWindowPrintStatus 
-          openedClosePrint={openedClosePrint} 
-          openedClosePrintHandlers={openedClosePrintHandlers}
-          data={dataForPrint}
-          service={service}
-          user={user}
-          text={text}
-          leng={leng}
-          />
-          <ModalWindowPrint 
-          openedPrint={openedPrint} 
-          openedPrintHandlers={openedPrintHandlers}
-          openedClosePrintHandlers={openedClosePrintHandlers}
-          data={dataForPrint}
-          service={service}
-          user={user}
-          text={text}
-          leng={leng}
-          />
+          {modalPrinNewWarranty()}
         </AppShell>
     )
   }
