@@ -10,7 +10,7 @@ export interface User {
     _id: string
     serviceId: string
     orderDataShowItems: {serviceId: string, data: string[]}[]
-    telegramConnect: number
+    telegramId: number
 }
 
 const upUserDataLine = (data, sid, subsId) => {
@@ -43,7 +43,7 @@ export class UserClass {
     subServiceId: string
     serviceId: string
     orderDataShowItems: {serviceId: string, data: string[]}[]
-    telegramConnect: number
+    telegramId: number
     
     constructor(data: User){
 
@@ -57,7 +57,7 @@ export class UserClass {
         this.subServiceId = data.roles.subServiceId
         this.serviceId = data.serviceId
         this.orderDataShowItems = upUserDataLine(data.orderDataShowItems, data.serviceId, data.roles.subServiceId)
-        this.telegramConnect = data.telegramConnect
+        this.telegramId = data.telegramId
 
     }
 

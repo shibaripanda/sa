@@ -73,6 +73,11 @@ export const OrderSchema = new mongoose.Schema({
     type: [Work],
     require: true,
     default: []
+  },
+  _media_: {
+    type: Array,
+    require: true,
+    default: []
   }
 }, {timestamps: true})
 

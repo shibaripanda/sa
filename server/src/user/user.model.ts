@@ -63,6 +63,11 @@ const dataShema = new mongoose.Schema({
   }
 })
 
+interface ActCode {
+  code: string
+  time: number
+}
+
 export const UsersSchema = new mongoose.Schema({
   email: {
     type: String, 
@@ -85,19 +90,27 @@ export const UsersSchema = new mongoose.Schema({
     require: true,
     default: []
   },
-  telegramConnect: {
-    type: Number 
+  telegramId: {
+    type: Number,
+    unique: true
   },
   activCodeTelegram: {
     type: Object 
+  },
+  newOrderImages: {
+    type: [],
+    require: true,
+    default: []
   }
 }, {timestamps: true})
 
 export interface User {
-  _id: mongoose.ObjectId
+  _id: string
   email: string
   authCode: AuthCode
   services_roles: ServicesRoles[]
   name?: string
-  orderDataShowItems: DataList[] 
+  orderDataShowItems: DataList[]
+  activCodeTelegram: ActCode
+  telegramId: number 
 }

@@ -11,8 +11,10 @@ export function ModalWindowPrintStatus(props) {
       for(const i of props.data._work_){
         total = total + i.parts.reduce((acc, item) => acc + item.cost, 0)
       }
+      console.log(total)
       return total
     }
+    return 0
   }
 
   const totalPriceView = (total) => {

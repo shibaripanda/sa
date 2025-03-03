@@ -11,15 +11,15 @@ export function ChangeMyTelegram(props, item) {
   const getLink = () => {
     if(props.props.telegramPass && props.props.telegramPass.length && props.props.telegramPass.length > 8 && props.props.telegramPass.length < 10){
       return (
-        <Anchor href={link + props.props.telegramPass} target="_blank">Connect</Anchor>
+        <Anchor href={link + '?start=' + props.props.telegramPass + 'getactivcode' + props.user._id} target="_blank">Connect</Anchor>
       )
     }
   }
   const getTest = () => {
-    if(props.user.telegramConnect){
+    if(props.user.telegramId){
       return (
         <Button style={{marginTop: 10}}
-            disabled={!props.user.telegramConnect}
+            disabled={!props.user.telegramId}
             onClick={() => {
               sendToSocket('testTelegram', {
                 serviceId: props.user.serviceId, 
@@ -34,7 +34,7 @@ export function ChangeMyTelegram(props, item) {
 
   return (
     <div>
-        <Text fw={700} style={{marginBottom: 10}}>{props.text[item.message][props.leng]} {props.user.telegramConnect ? '✅' : '❌'}</Text>
+        <Text fw={700} style={{marginBottom: 10}}>{props.text[item.message][props.leng]} {props.user.telegramId ? '✅' : '❌'}</Text>
         <TextInput
           label={props.text.activCode[props.leng]}
           onChange={(event) => props.props.setTelegramPass(event.target.value)}
