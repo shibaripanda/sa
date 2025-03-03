@@ -1,13 +1,10 @@
-import { Autocomplete, Button, Center, Grid, NumberInput, Space, Text, TextInput } from '@mantine/core'
+import { Autocomplete, Button, Center, Grid, NumberInput, Space, Text } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeBoxPartsService(props, message) {
 
-    // console.log('ChangeNameMainService', props, message)
-    console.log('ChangeBoxPartsService')
-
-    // boxPart setBoxPart
+  console.log('ChangeBoxPartsService')
 
   return (
     <div>

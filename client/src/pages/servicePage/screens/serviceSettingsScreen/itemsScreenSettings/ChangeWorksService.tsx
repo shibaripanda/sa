@@ -1,4 +1,4 @@
-import { Autocomplete, Button, Center, Grid, NumberInput, Space, Text, TextInput } from '@mantine/core'
+import { Autocomplete, Button, Center, Grid, NumberInput, Space, Text } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
@@ -14,7 +14,7 @@ export function ChangeWorksService(props, message) {
 
           <Grid.Col span={8}>
             <Autocomplete
-              
+              value={props.props.usluga.value}
               placeholder="Pick value or enter anything"
               data={props.service.uslugi.map(item => item.value)}
               onChange={(event) => {

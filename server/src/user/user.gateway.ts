@@ -25,6 +25,16 @@ import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
   @WebSocketServer() server: Server
 
   @UseGuards(JwtAuthGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('getTelegramPass')
+  async getTelegramPass(@ConnectedSocket() client: Socket, @Request() req: any): Promise<void> {
+    const user = await this.userSevice.getTelegramPass(req.user._id)
+    if(user){
+      this.server.to(client.id).emit('alert', {title: 'Connecting Telegram App', message: 'Code send to email'})
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('changeMyMainOrderDataLine')

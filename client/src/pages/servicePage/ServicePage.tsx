@@ -10,12 +10,13 @@ import { getFromSocket } from '../../modules/socket/pipGetSocket.ts'
 import { sendToSocket } from '../../modules/socket/pipSendSocket.ts'
 import { ServiceClass } from '../../classes/ServiceClass.ts'
 import { UserClass } from '../../classes/UserClass.ts'
-import { AppShell, useMatches } from '@mantine/core'
+import { AppShell, Modal, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 import { useDisclosure, useListState, useWindowScroll } from '@mantine/hooks'
 import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
 import { SocketApt } from '../../modules/socket/api/socket-api.ts'
 import { ModalWindowPrintStatus } from './print/ModalWindowPrintStatus.tsx'
+import { ModalAlert } from '../../modules/ModalAlert.tsx'
 
 export const emptyWork = {work: '', master: '', varanty: NaN, subCost: NaN, cost: NaN, parts: []}
 
@@ -89,6 +90,9 @@ function ServicePage() {
   const [scroll, scrollTo] = useWindowScroll()
   const [usluga, setUsluga] = useState({value: '', price: ''})
   const [boxPart, setBoxPart] = useState({value: '', varanty: '', subPrice: '', price: ''})
+  const [telegramPass, setTelegramPass] = useState(false)
+  const [alertModal, handlerAlertModal] = useDisclosure(false)
+  const [alertData, setAlertData] = useState(false)
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -97,6 +101,11 @@ function ServicePage() {
     getTexLengUserService()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const showAlertMessage = (data: any) => {
+    setAlertData(data)
+    handlerAlertModal.open()
+  }
 
   const addNewOrder = (data: any) => {
     setOrders([{...data, _updateTime_: Date.now()}, ...orders ? orders : []])
@@ -229,6 +238,7 @@ function ServicePage() {
         {message: `changeMyMainOrderDataLine${authClass.getServiceId()}`, handler: upUserOrderList},
         {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
         {message: `getNewOrder${authClass.getServiceId()}`, handler: addNewOrderNoPrint},
+        {message: `alert`, handler: showAlertMessage},
       ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
 
@@ -347,12 +357,16 @@ function ServicePage() {
               usluga: usluga,
               setUsluga: setUsluga,
               boxPart: boxPart,
-              setBoxPart: setBoxPart
+              setBoxPart: setBoxPart,
+              telegramPass: telegramPass,
+              setTelegramPass: setTelegramPass
               }
             )}
           </AppShell.Main>
           {modalPrinNewWarranty()}
+          <ModalAlert alertModal={alertModal} handlerAlertModal={handlerAlertModal} data={alertData}/>
         </AppShell>
+        // alertModal handlerAlertModal
     )
   }
   return (

@@ -143,6 +143,9 @@ export const textArray: LengData[] = [
     {rutext: 'Склад', index: 'partsBox', info_data: 'склад', update: false},
     {rutext: 'Запчасти и цены', index: 'changeBoxPartsService', info_data: 'склад и цены', update: false},
     {rutext: 'Запчасть', index: 'part', info_data: 'запчасть', update: false},
+    {rutext: 'Код активации', index: 'activCode', info_data: 'код активации', update: false},
+    {rutext: 'Получить код активации на электронную почту', index: 'getActivCode', info_data: 'получить код активации', update: false},
+    {rutext: 'Тест', index: 'test', info_data: 'тест', update: false},
     
     
 ]

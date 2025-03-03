@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { User } from './user.model'
+import { rendomNumberOrder } from 'src/order/tech/rendomNumberOrder'
+import { rendomLetteOrder } from 'src/order/tech/rendomLetteOrder'
+import { sendEmail } from 'src/modules/sendMail'
 
 @Injectable()
 export class UsersService {
@@ -10,6 +13,14 @@ export class UsersService {
         @InjectModel('User') 
         private userMongo: Model<User>
     ) {}
+
+    async getTelegramPass(_id: string){
+        const activCode = rendomNumberOrder({min: 1000, max: 9999}) + rendomLetteOrder() + rendomNumberOrder({min: 1000, max: 9999})
+        const user = await this.userMongo.findOneAndUpdate({_id: _id}, {activCodeTelegram: {code: activCode, time: Date.now()}})
+        // sendEmail(user.email.toLowerCase(), 'Connecting Telegram App', activCode)
+        sendEmail('remontf10@gmail.com', 'Connecting Telegram App', activCode)
+        return user
+    }
 
     async changeDataOrderList(serviceId: string, data: string, status: boolean, user: any, index1: number, index2: number, action: string){
         const res = await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})
