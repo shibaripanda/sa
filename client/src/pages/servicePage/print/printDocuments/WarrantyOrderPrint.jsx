@@ -108,8 +108,8 @@ export class WarrantyOrderPrint extends Component {
         const partsClient = (work) => {
           if(work.parts.filter(item => 'apart' === item.link).length){
             return (
-              work.parts.filter(w => 'apart' === w.link).map(part => 
-                <Table.Tr>
+              work.parts.filter(w => 'apart' === w.link).map((part, index) => 
+                <Table.Tr key={'part' + Date.now() + index}>
                   <Table.Td>
                     {part.part ? part.part : '--'}
                   </Table.Td>
@@ -143,28 +143,28 @@ export class WarrantyOrderPrint extends Component {
             <Grid>
               <Grid.Col span={12}>
                 <Space h='xs'/>
-                <Table border="1" withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+                <Table border="1" withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical" key={'workPanel'}>
                 <Table.Tbody>
-                <Table.Tr>
-                    <Table.Td>
+                <Table.Tr key={'hat'}>
+                    <Table.Td key={'servOrPart'}>
                       <Center>
                         {this.text.servOrPart[this.leng]}
                       </Center>
                     </Table.Td>
-                    <Table.Td>
+                    <Table.Td key={'varanty'}>
                       <Center>
                         {this.text.varanty[this.leng]}
                       </Center>
                     </Table.Td>
-                    <Table.Td>
+                    <Table.Td key={'cost'}>
                       <Center>
                         {this.text.cost[this.leng]}
                       </Center>
                     </Table.Td>
                   </Table.Tr> 
-                  {order._work_.map(work =>
+                  {order._work_.map((work, index) =>
                     <>
-                      <Table.Tr>
+                      <Table.Tr key={'work' + Date.now() + index}>
                         <Table.Td width={'55%'}>
                           {title(work)}
                         </Table.Td>
@@ -188,12 +188,12 @@ export class WarrantyOrderPrint extends Component {
                     </>
                     )
                   }
-                  <Table.Tr>
-                    <Table.Td>
+                  <Table.Tr key={'bottom'}>
+                    <Table.Td  key={'1cost'}>
                     </Table.Td>
-                    <Table.Td>
+                    <Table.Td key={'2cost'}>
                     </Table.Td>
-                    <Table.Td>
+                    <Table.Td key={'3cost'}>
                       <Center>
                         {totalCost()}
                       </Center>

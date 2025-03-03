@@ -88,6 +88,7 @@ function ServicePage() {
   const [editedWork, setEditedWork] = useState<any[] | false>(false)
   const [scroll, scrollTo] = useWindowScroll()
   const [usluga, setUsluga] = useState({value: '', price: ''})
+  const [boxPart, setBoxPart] = useState({value: '', varanty: '', subPrice: '', price: ''})
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -344,7 +345,9 @@ function ServicePage() {
               scroll: scroll,
               scrollTo: scrollTo,
               usluga: usluga,
-              setUsluga: setUsluga
+              setUsluga: setUsluga,
+              boxPart: boxPart,
+              setBoxPart: setBoxPart
               }
             )}
           </AppShell.Main>

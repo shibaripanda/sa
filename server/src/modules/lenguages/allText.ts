@@ -140,6 +140,9 @@ export const textArray: LengData[] = [
     {rutext: 'Разделения тысяч', index: 'comma1000', info_data: 'разделение тысяч', update: false},
     {rutext: 'Услуги', index: 'uslugi', info_data: 'услуги', update: false},
     {rutext: 'Услуги и цены', index: 'changeWorksService', info_data: 'услуги и цены', update: false},
+    {rutext: 'Склад', index: 'partsBox', info_data: 'склад', update: false},
+    {rutext: 'Запчасти и цены', index: 'changeBoxPartsService', info_data: 'склад и цены', update: false},
+    {rutext: 'Запчасть', index: 'part', info_data: 'запчасть', update: false},
     
     
 ]

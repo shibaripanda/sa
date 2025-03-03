@@ -29,6 +29,7 @@ import { ChangeNewOrderPrint } from "./serviceSettingsScreen/itemsScreenSettings
 import { ChangeWarrantyOrderPrint } from "./serviceSettingsScreen/itemsScreenSettings/ChangeWarrantyOrderPrint.tsx";
 import { ChangeCurrencyService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeCurrencyService.tsx";
 import { ChangeWorksService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeWorksService.tsx";
+import { ChangeBoxPartsService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeBoxPartsService.tsx";
 
 
 interface ItemData {
@@ -68,6 +69,13 @@ export const line: Line[] = [
         ]
     },
     {
+        name: 'partsBox',
+        screen: SeviceSettingsScreen,
+        items: [
+            {message: 'changeBoxPartsService', screenItem: ChangeBoxPartsService}, 
+        ]
+    },
+    {
         name: 'serviceSettings',
         screen: SeviceSettingsScreen,
         items: [
@@ -81,14 +89,6 @@ export const line: Line[] = [
             {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12, canUse: ['addNewServiceRole', ]},
             {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12},
             {message: 'deleteService', screenItem: DeleteService}
-        ]
-    },
-    {
-        name: 'documents',
-        screen: SeviceSettingsScreen,
-        items: [
-            {message: 'NewOrderPrint', screenItem: ChangeNewOrderPrint, size: 12},
-            {message: 'changeWarrantyOrderPrint', screenItem: ChangeWarrantyOrderPrint, size: 12},
         ]
     },
     {
@@ -115,6 +115,14 @@ export const line: Line[] = [
         getDataMessage: 'getServiceLocalUsers',
         items: [
             {message: 'changeLocalServiceUser', screenItem: ChangeLocalServiceUser, size: 12},
+        ]
+    },
+    {
+        name: 'documents',
+        screen: SeviceSettingsScreen,
+        items: [
+            {message: 'NewOrderPrint', screenItem: ChangeNewOrderPrint, size: 12},
+            {message: 'changeWarrantyOrderPrint', screenItem: ChangeWarrantyOrderPrint, size: 12},
         ]
     },
     {

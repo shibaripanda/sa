@@ -15,6 +15,10 @@ export function OrdersScreen(props, message) {
     props.props.setNewWork({...props.props.newWork, master: props.props.newWork.master ? props.props.newWork.master : props.user._id})
   }
 
+  if(!props.props.newWork.varanty){
+    props.props.setNewWork({...props.props.newWork, varanty: props.props.newWork.varanty ? props.props.newWork.varanty : 120})
+  }
+
   const line = props.service.orderData.map(item => ({name: item.item, data: item.item})).concat([
     {name: props.text.created[props.leng], data: 'createdAt'},
     {name: props.text.edited[props.leng], data: 'updatedAt'},
@@ -268,11 +272,28 @@ export function OrdersScreen(props, message) {
           </Center>
         </Grid.Col>
         <Grid.Col key={'part'} span={props.props.screenSizeOrderButLine < 12 ? 5.1 : 12}>
-          <TextInput value={item.part} placeholder='Запчасть' error={!item.part}
-            onChange={(event) => {
-              item.part = event.target.value
-              props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
-            }}/>
+
+        <Autocomplete
+          value={item.part}
+          placeholder={props.text.part[props.leng]}
+          error={!item.part}
+          data={props.service.boxParts.map(item => item.value + ` | ${props.text.varanty[props.leng]}: ` + item.varanty + ` | ${props.text.subCost[props.leng]}: ` + item.subPrice + ` | ${props.text.cost[props.leng]}: ` + item.price)}
+          onChange={(event) => {
+
+            if(props.service.boxParts.find(item => item.value === event.split(' | ')[0])){
+              const res = props.service.boxParts.find(item => item.value === event.split(' | ')[0])
+              console.log(res)
+              item.part = res.value
+              item.cost = res.price
+              item.subCost = res.subPrice
+              item.varanty = res.varanty
+            }
+            else{
+              item.part = event
+            }
+            props.props.setNewWork({...props.props.newWork, parts: [...props.props.newWork.parts]})
+          }}
+        />
         </Grid.Col>
         <Grid.Col key={'hide'} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 0}>
           <SegmentedControl value={item.link} fullWidth
@@ -437,7 +458,7 @@ export function OrdersScreen(props, message) {
         return [...data.parts
           .filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
           .map(item => item.varanty), data.varanty ? data.varanty : 0]
-          .sort((a, b) => b - a)
+          .sort((a, b) => b - a)[0]
       }
       const partsManager = (work) => {
         if(work.parts.filter(item => 'apart' === item.link).length){
@@ -1095,23 +1116,19 @@ export function OrdersScreen(props, message) {
           <Grid key={'input panel'} justify="center" align="center">
             <Grid.Col key={'Service'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
               <Autocomplete
-                // clearable
+                value={props.props.newWork.work}
                 placeholder='Услуга'
                 error={!props.props.newWork.work}
-                data={props.service.uslugi.map(item => item.value)}
+                data={props.service.uslugi.map(item => item.value + ` | ${props.text.cost[props.leng]}: ` + item.price)}
                 onChange={(event) => {
-                  if(!props.props.newWork.subCost && props.service.uslugi.find(item => item.value === event)){
-                    props.props.setNewWork({...props.props.newWork, cost: props.service.uslugi.find(item => item.value === event).price, work: event})
+                  if(!props.props.newWork.subCost && props.service.uslugi.find(item => item.value === event.split(' | ')[0])){
+                    props.props.setNewWork({...props.props.newWork, cost: props.service.uslugi.find(item => item.value === event.split(' | ')[0]).price, work: event.split(' | ')[0]})
                   }
                   else{
-                    props.props.setNewWork({...props.props.newWork, work: event})
+                    props.props.setNewWork({...props.props.newWork, work: event.split(' | ')[0]})
                   }
                 }}
               />
-              {/* <TextInput value={props.props.newWork.work} placeholder='Услуга' error={!props.props.newWork.work}
-                onChange={(event) => {
-                  props.props.setNewWork({...props.props.newWork, work: event.target.value})
-                }}/> */}
             </Grid.Col>
             <Grid.Col key={props.text.master[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 1.9 : 12}>
               <Select value={props.props.newWork.master ? props.props.newWork.master : props.user._id} placeholder={props.text.master[props.leng]} error={!props.props.newWork.master}
@@ -1145,45 +1162,6 @@ export function OrdersScreen(props, message) {
           </Grid>
           {parts()}
           <Space h='xl'/>
-
-          {/* <Grid key={'control panel'} justify="flex-start" align="center">
-            <Grid.Col key={props.text.addPart[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
-              <Button variant='default' fullWidth
-                disabled={activButAddNewWork(props.props.newWork)}
-                onClick={async () => {
-                  await props.props.setNewWork(
-                    {...props.props.newWork, parts: [...props.props.newWork.parts, {part: '', varanty: NaN, subCost: NaN, cost: NaN, link: 'apart'}]}
-                  )
-                }}>
-                {props.text.addPart[props.leng]}
-              </Button>
-            </Grid.Col>
-            <Grid.Col key={props.text.clear[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
-              <Button variant='default' fullWidth
-                disabled={JSON.stringify(props.props.newWork) === JSON.stringify(structuredClone(emptyWork))}
-                onClick={() => {
-                  props.props.setNewWork(structuredClone(emptyWork))
-                }}>
-                  {props.text.clear[props.leng]}
-              </Button>
-            </Grid.Col>
-            <Grid.Col key={props.text.add[props.leng]} span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
-              <Button fullWidth variant='default' c={!activButAddNewWork(props.props.newWork) ? 'green' : ''}
-                disabled={activButAddNewWork(props.props.newWork)}
-                onClick={() => {
-                    sendToSocket('addNewWork', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      orderId: order._id,
-                      work: {...props.props.newWork, total: total().sumCost}
-                    })
-                    props.props.setNewWork(structuredClone(emptyWork))
-                }}>
-              {props.text.add[props.leng]}
-              </Button>
-            </Grid.Col>
-          </Grid> */}
-
           {controlNewWorkButtonsPanel(order)}
           {orderWorksPanel(order)}
         </Tabs.Panel>
@@ -1203,7 +1181,7 @@ export function OrdersScreen(props, message) {
             {props.service.statuses.map(item => 
               <Grid.Col key={item} span={props.props.screenSizeOrderButLine}>
                 <Button 
-                  color={colorOrder(item)} 
+                  color={item === element._status_ ? colorOrder(item) : 'gray'} 
                   fullWidth
                   onClick={() => {
                     sendToSocket('editOrderStatus', {

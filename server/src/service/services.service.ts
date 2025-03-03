@@ -14,6 +14,14 @@ export class ServicesService {
         private userService: UsersService
     ) {}
 
+    async deletePart(serviceId: string, deletePart: object){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {boxParts: deletePart}}, {returnDocument: 'after'})
+    }
+
+    async changeBoxPartsService(serviceId: string, newPart: object){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {boxParts: newPart}}, {returnDocument: 'after'})
+    }
+
     async deleteUsluga(serviceId: string, deleteUsluga: object){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {uslugi: deleteUsluga}}, {returnDocument: 'after'})
     }

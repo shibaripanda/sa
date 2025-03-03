@@ -185,6 +185,11 @@ export const ServiceSchema = new mongoose.Schema({
       type: Array,
       default: [{value: 'Ремонт ноутбука', price: 100}],
       require: true
+    },
+    boxParts: {
+      type: Array,
+      default: [{value: 'Жесткий диск Netac SSD256', subPrice: 70, price: 100, varanty: 120}],
+      require: true
     }
   }, {timestamps: true})
 

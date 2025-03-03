@@ -36,6 +36,28 @@ export class ServicesGateway {
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deletePart')
+  async deletePart(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+    const service = await this.serviceSevice.deletePart(payload.serviceId, payload.deletePart)
+    if(service){
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeBoxPartsService')
+  async changeBoxPartsService(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+    const service = await this.serviceSevice.changeBoxPartsService(payload.serviceId, payload.newPart)
+    if(service){
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('deleteUsluga')
   async deleteUsluga(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
     const service = await this.serviceSevice.deleteUsluga(payload.serviceId, payload.deleteUsluga)
