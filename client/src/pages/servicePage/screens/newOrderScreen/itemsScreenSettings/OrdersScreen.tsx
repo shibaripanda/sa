@@ -1,4 +1,4 @@
-import { Accordion, Affix, Anchor, Autocomplete, Badge, Box, Button, Center, Container, Grid, Group, LoadingOverlay, NumberInput, Overlay, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip, Transition } from '@mantine/core'
+import { Accordion, Affix, Anchor, Autocomplete, Badge, Box, Button, Center, Container, Grid, Group, Image, NumberInput, Overlay, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip, Transition } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
@@ -958,6 +958,27 @@ export function OrdersScreen(props, message) {
       }
     }
   }
+  const orderPhotosLine = (order) => {
+    if(order._mediaPhotos_ && order._mediaPhotos_.length){
+      return (
+        <>
+        <Space h='sm'/>
+        <Grid>
+          {order._mediaPhotos_.map(item => 
+            <Grid.Col span={2}>
+              <Image 
+                src={`data:image/jpeg;base64,${item}`}
+                radius="sm"
+                h='15vmax'
+                w="auto"
+              />
+            </Grid.Col>
+          )}
+        </Grid>
+        </>
+      )
+    }
+  }
   
   const bottomSideData = (order) => {
     return (
@@ -1202,6 +1223,37 @@ export function OrdersScreen(props, message) {
           <hr color={colorOrder(element._status_)}></hr>
           <Space h='sm'/>
           {dataForTable(element)}
+          <Space h='sm'/>
+          <Group justify="space-between">
+            <Button
+              disabled={!element._media_.length || element._mediaPhotos_}
+              variant='default'
+              onClick={() => {
+                sendToSocket('getOrderPhotos', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  orderId: element._id,
+                })
+              }}
+            >
+            Фотографии
+            </Button>
+            <Button
+              disabled={!props.user.telegramId}
+              variant='default'
+              onClick={() => {
+                sendToSocket('sendOrderToTelegram', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  orderId: element._id,
+                })
+              }}
+            >
+            Послать в телеграмм
+            </Button>
+          </Group>
+          
+          {orderPhotosLine(element)}
           
         </Accordion.Panel>
       )

@@ -1,14 +1,11 @@
-import {
-    Ctx,
-    InjectBot,
-    // Help,
-    Hears,
-  } from 'nestjs-telegraf'
+import { InjectBot } from 'nestjs-telegraf'
 import { forwardRef, Inject } from '@nestjs/common'
 import { Telegraf } from 'telegraf'
 import { UsersService } from 'src/user/users.service'
 import { OrderService } from 'src/order/order.service'
 import { ServicesService } from 'src/service/services.service'
+import { Service } from 'src/service/services.model'
+import { User } from 'src/user/user.model'
   
   // @Update()
   // @Injectable()
@@ -21,6 +18,29 @@ import { ServicesService } from 'src/service/services.service'
         private orderService: OrderService,
         private serviceService: ServicesService
     ) {}
+
+    async sendOrderToTelegram(orderId: string, serviceId: string, subServiceId: string, user: User, service: Service){
+      const order = await this.orderService.getOrder(orderId, serviceId, subServiceId, user, service)
+      if(order){
+        this.newOrderTelegramMessage(user.telegramId, order)
+        return true
+      }
+      return false
+    }
+    
+    async getOrderPhotos(orderId: string, serviceId: string, subServiceId: string, user: object){
+      const res = await this.orderService.getOrderPhotos(orderId, serviceId, subServiceId, user)
+      if(res){
+        const bufferArray: string[] = []
+        for(const i of res._media_.filter(item => item.type === 'photo').map(item => item.media)){
+          const url = await this.bot.telegram.getFileLink(i)
+          const buffer: ArrayBuffer = await (await fetch(url.href)).arrayBuffer()
+          bufferArray.push(Buffer.from(buffer).toString('base64')) 
+        }
+        return bufferArray
+      }
+      return false
+    }
 
     async testTelegram(telegramId: number){
       await this.bot.telegram.sendMessage(telegramId, 'Connected! ✅', {parse_mode: 'HTML'}).catch(error => console.log(error))
@@ -37,7 +57,6 @@ import { ServicesService } from 'src/service/services.service'
       }
     }
       
-
     async addNewOrderImages(telegramId, photo){
       const res = await this.userService.addNewOrderImages(telegramId, {type: 'photo', media: photo})
       if(res){
@@ -46,16 +65,6 @@ import { ServicesService } from 'src/service/services.service'
         return Buffer.from(buffer).toString('base64')
       }
       return false
-    }
-  
-    // @Help()
-    // async help(@Ctx() ctx: TelegrafContext) {
-    //   await ctx.reply('Send me a sticker');
-    // }
-  
-    @Hears('hi')
-    async hears(@Ctx() ctx: any) {
-      await ctx.reply('Hey there');
     }
 
     async newOrderTelegramMessage(telegramId, order){

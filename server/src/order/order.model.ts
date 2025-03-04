@@ -91,6 +91,7 @@ export interface Order {
     _subService_: string
     _history_: []
     _work_: []
+    _media_: {type: string, media: string}[]
   }
 
 

@@ -10,7 +10,7 @@ import { getFromSocket } from '../../modules/socket/pipGetSocket.ts'
 import { sendToSocket } from '../../modules/socket/pipSendSocket.ts'
 import { ServiceClass } from '../../classes/ServiceClass.ts'
 import { UserClass } from '../../classes/UserClass.ts'
-import { AppShell, Modal, useMatches } from '@mantine/core'
+import { AppShell, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 import { useDisclosure, useListState, useWindowScroll } from '@mantine/hooks'
 import { ModalWindowPrint } from './print/ModalWindowPrint.tsx'
@@ -26,6 +26,7 @@ interface Order {
       createdAt: any
    _updateTime_: number
    _orderServiceId_: string
+   _mediaPhotos_?: []
 } 
 
 function ServicePage() {
@@ -134,7 +135,14 @@ function ServicePage() {
       if(!ex) ex = []
       const res = ex.findIndex(item => item._id === data._id)
       if(res > -1){
-        ex[res] = {...data, _updateTime_: time}
+        let mp: [] = []
+        if(ex[res]._mediaPhotos_){
+          mp = [...ex[res]._mediaPhotos_]
+          ex[res] = {...data, _updateTime_: time, _mediaPhotos_: mp}
+        }
+        else{
+          ex[res] = {...data, _updateTime_: time}
+        }
       }
       else{
         ex.push({...data, _updateTime_: time})
@@ -177,6 +185,15 @@ function ServicePage() {
       )
     }
   }
+  const getOrderPhotos = (data) => {
+    setOrders((ex) => {
+      const or = ex.find(item => item._id === data.orderId)
+      if(or){
+        or._mediaPhotos_ = data.media
+      }
+      return [...ex]
+    })
+  }
   const filterOrders = useMemo(() => {
     if(filterOrdersString){
       if(filterOrdersString[filterOrdersString.length - 1] === '='){
@@ -202,6 +219,7 @@ function ServicePage() {
     }
     // console.log(orders)
     return orders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[filterOrdersString, orders])
 
   const getTexLengUserService = async () => {
@@ -239,6 +257,7 @@ function ServicePage() {
         {message: `deleteService${authClass.getServiceId()}`, handler: deleteServiceRedirect},
         {message: `getNewOrder${authClass.getServiceId()}`, handler: addNewOrderNoPrint},
         {message: `alert`, handler: showAlertMessage},
+        {message: 'getOrderPhotos', handler: getOrderPhotos},
       ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
 
@@ -250,7 +269,7 @@ function ServicePage() {
       navigate('/')
     }
   }
- 
+
   if(text && leng && user && service && orders){
     const screen = new ScreenLine({text, leng, user, service, filterOrders})
     return (

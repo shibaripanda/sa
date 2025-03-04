@@ -16,6 +16,12 @@ export class OrderService {
         private botService: BotService,
     ) {}
 
+    async getOrderPhotos(orderId, serviceId, subServiceId, user){
+        // console.log(serviceId)
+        // console.log(user.services_roles.find(item => item.serviceId === serviceId))
+        const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
+        return await this.orderMongo.findOne({_id: orderId, _status_: {$nin : userFilter.statuses}}, {_media_: 1, _id: 0})
+    }
     async updateOrderWork(serviceId, subServiceId, orderId, work, user, service){
         const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId})
         if(old){
