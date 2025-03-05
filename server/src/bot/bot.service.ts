@@ -42,6 +42,10 @@ import { User } from 'src/user/user.model'
       return false
     }
 
+    async sendCodeToBot(telegramId: number, code: string){
+      await this.bot.telegram.sendMessage(telegramId, code, {parse_mode: 'HTML'}).catch(error => console.log(error))
+    }
+
     async testTelegram(telegramId: number){
       await this.bot.telegram.sendMessage(telegramId, 'Connected! ✅', {parse_mode: 'HTML'}).catch(error => console.log(error))
     }

@@ -15,6 +15,25 @@ export function ChangeMyTelegram(props, item) {
       )
     }
   }
+  const disconect = () => {
+    if(props.user.telegramId){
+      return (
+        <Button style={{marginTop: 10}}
+            color={'red'}
+            disabled={!props.user.telegramId}
+            onClick={() => {
+              props.props.updateUserData(0 ,'telegramId')
+              sendToSocket('disconectTelegram', {
+                serviceId: props.user.serviceId, 
+                subServiceId: props.user.subServiceId
+              })
+              props.props.setTelegramPass('Disconnect')
+            }}
+          >{props.text.disconect[props.leng]}
+        </Button>
+      )
+    }
+  }
   const getTest = () => {
     if(props.user.telegramId){
       return (
@@ -51,6 +70,7 @@ export function ChangeMyTelegram(props, item) {
               }}
             >{props.text.getActivCode[props.leng]}
           </Button>
+          {disconect()}
           {getTest()}
           {getLink()}
         </Group>

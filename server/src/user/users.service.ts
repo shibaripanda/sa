@@ -17,6 +17,14 @@ export class UsersService {
     ) {}
 
     @WebSocketServer() server: Server
+    
+    async disconectTelegram(_id: string){
+        return await this.userMongo.updateOne({_id: _id}, {telegramId: 0, passwordToTelegram: false})
+    }
+
+    async changeAuthTelegram(userId: string, passwordToTelegram: boolean){
+        return await this.userMongo.updateOne({_id: userId}, {passwordToTelegram: passwordToTelegram})
+    }
 
     async addNewOrderImages(telegramId: number, photo: object){
         return await this.userMongo.updateOne({telegramId: telegramId}, {$addToSet: {newOrderImages: photo}})

@@ -6,13 +6,16 @@ import { User } from 'src/user/user.model'
 import { lengs } from 'src/modules/lenguages/allText'
 import { LengDataStart } from 'src/modules/lenguages/lengPackUpdate'
 import { sendEmail } from 'src/modules/sendMail'
+import { BotService } from 'src/bot/bot.service'
 
 @Injectable()
 export class AuthService {
 
     constructor(
         private usersService: UsersService,
-        private jwtService: JwtService){}
+        private jwtService: JwtService,
+        private botService: BotService
+    ){}
 
     async login(data: ReqestAuthDto){
         console.log(data)
@@ -35,7 +38,12 @@ export class AuthService {
         if(!user) await this.usersService.createUser(data.email.toLowerCase(), newCode, Date.now())
         else await this.usersService.newCodeCreate(data.email.toLowerCase(), newCode, Date.now())
         if(process.env.MODE === 'prod'){
-            await sendEmail(data.email.toLowerCase(), textCode, newCode.toString())
+            if(user.telegramId && user.passwordToTelegram){
+                this.botService.sendCodeToBot(user.telegramId, newCode.toString())
+            }
+            else{
+              await sendEmail(data.email.toLowerCase(), textCode, newCode.toString())  
+            }
         }
         throw new UnauthorizedException({message: global.appText.codeSendToEmail[data.leng] ? global.appText.codeSendToEmail[data.leng] : global.appText.codeSendToEmail.en})
     }
@@ -52,7 +60,8 @@ export class AuthService {
             roles: user.services_roles, 
             name: user.name ? user.name : false, 
             orderDataShowItems: user.orderDataShowItems,
-            telegramId: user.telegramId
+            telegramId: user.telegramId,
+            passwordToTelegram: user.passwordToTelegram
         }
         return {
             token: this.jwtService.sign(payload)

@@ -94,6 +94,7 @@ function ServicePage() {
   const [telegramPass, setTelegramPass] = useState(false)
   const [alertModal, handlerAlertModal] = useDisclosure(false)
   const [alertData, setAlertData] = useState(false)
+  const [passwordToTelegram, setPasswordToTelegram] = useState(false)
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -193,6 +194,10 @@ function ServicePage() {
       }
       return [...ex]
     })
+  }
+  const updateUserData = async (data, field) => {
+    authClass.updateServiceAppUsers(data, field)
+    setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), [field]: data}))
   }
   const filterOrders = useMemo(() => {
     if(filterOrdersString){
@@ -378,7 +383,10 @@ function ServicePage() {
               boxPart: boxPart,
               setBoxPart: setBoxPart,
               telegramPass: telegramPass,
-              setTelegramPass: setTelegramPass
+              setTelegramPass: setTelegramPass,
+              updateUserData: updateUserData,
+              passwordToTelegram: passwordToTelegram,
+              setPasswordToTelegram: setPasswordToTelegram
               }
             )}
           </AppShell.Main>

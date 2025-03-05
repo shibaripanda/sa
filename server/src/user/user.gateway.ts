@@ -25,6 +25,29 @@ import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
   @WebSocketServer() server: Server
 
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('disconectTelegram')
+  async disconectTelegram(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    const user = await this.userSevice.disconectTelegram(req.user._id)
+    if(user){
+      this.server.to(client.id).emit('alert', {title: 'Telegram', message: 'Telegram disconnected'})
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('changeAuthTelegram')
+  async changeAuthTelegram(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    const user = await this.userSevice.changeAuthTelegram(req.user._id, payload.passwordToTelegram)
+    if(user){
+      this.server.to(client.id).emit('alert', {title: 'Password to', message: payload.passwordToTelegram ? 'Telegram' : 'Email'})
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('getTelegramPass')
   async getTelegramPass(@ConnectedSocket() client: Socket, @Request() req: any): Promise<void> {

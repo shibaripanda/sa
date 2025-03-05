@@ -11,6 +11,7 @@ export interface User {
     serviceId: string
     orderDataShowItems: {serviceId: string, data: string[]}[]
     telegramId: number
+    passwordToTelegram: boolean
 }
 
 const upUserDataLine = (data, sid, subsId) => {
@@ -44,6 +45,7 @@ export class UserClass {
     serviceId: string
     orderDataShowItems: {serviceId: string, data: string[]}[]
     telegramId: number
+    passwordToTelegram: boolean
     
     constructor(data: User){
 
@@ -58,6 +60,7 @@ export class UserClass {
         this.serviceId = data.serviceId
         this.orderDataShowItems = upUserDataLine(data.orderDataShowItems, data.serviceId, data.roles.subServiceId)
         this.telegramId = data.telegramId
+        this.passwordToTelegram = data.passwordToTelegram
 
     }
 

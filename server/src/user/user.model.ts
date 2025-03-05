@@ -101,6 +101,11 @@ export const UsersSchema = new mongoose.Schema({
     type: [],
     require: true,
     default: []
+  },
+  passwordToTelegram: {
+    type: Boolean,
+    require: true,
+    default: false
   }
 }, {timestamps: true})
 
@@ -113,4 +118,5 @@ export interface User {
   orderDataShowItems: DataList[]
   activCodeTelegram: ActCode
   telegramId: number 
+  passwordToTelegram: boolean
 }

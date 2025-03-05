@@ -69,7 +69,7 @@ export const ServiceSchema = new mongoose.Schema({
     },
     colorStatuses: {
       type: [],
-      default: [],
+      default: [{status: 'New', color: 'red'}, {status: 'Ready', color: 'green'} ],
       require: true
     },
     orderData: {

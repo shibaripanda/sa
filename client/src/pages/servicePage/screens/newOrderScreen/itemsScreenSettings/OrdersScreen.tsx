@@ -41,7 +41,7 @@ export function OrdersScreen(props, message) {
   }
   
   const colorOrder = (status) => {
-    return props.service.colorStatuses.find(item => item.status === status) ? props.service.colorStatuses.find(item => item.status === status).color : 'yellow'
+    return props.service.colorStatuses.find(item => item.status === status) ? props.service.colorStatuses.find(item => item.status === status).color : 'grey'
   }
   const specData = (data, type) => {
     if(['createdAt', 'updatedAt'].includes(type)){

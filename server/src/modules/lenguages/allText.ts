@@ -146,6 +146,8 @@ export const textArray: LengData[] = [
     {rutext: 'Код активации', index: 'activCode', info_data: 'код активации', update: false},
     {rutext: 'Получить код активации на электронную почту', index: 'getActivCode', info_data: 'получить код активации', update: false},
     {rutext: 'Тест', index: 'test', info_data: 'тест', update: false},
+    {rutext: 'Куда посылать временный пароль', index: 'changeAuthTelegram', info_data: 'куда пароль', update: false},
+    {rutext: 'Отменить привязку', index: 'disconect', info_data: 'отключить', update: false},
     
     
-]
+] 
