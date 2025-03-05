@@ -16,7 +16,7 @@ export function ChangeBoxPartsService(props, message) {
             <Autocomplete
               value={props.props.boxPart.value}
               placeholder={props.text.part[props.leng]}
-              data={props.service.boxParts.map(item => item.value)}
+              // data={props.service.boxParts.map(item => item.value)}
               onChange={(event) => {
                 console.log(event)
                 props.props.setBoxPart({...props.props.boxPart, value: event})
