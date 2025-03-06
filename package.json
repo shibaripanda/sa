@@ -6,7 +6,7 @@
     "gitpull": "git pull origin main",
     "buildapp": "cd server && npm run build && cd .. && cd client && npm run build && cd ..",
     "uploadapp": "cd server && scp -r dist dima@142.93.1.154:/home/dima/apptest.by/appServer && cd .. && cd client && scp -r build dima@142.93.1.154:/home/dima/apptest.by/appClient && cd ..",
-    "uploadenv": "cd server && scp -r .env.production dima@142.93.1.154:/home/dima/apptest.by/appServer && cd .. && cd client && scp -r .env.production dima@142.93.1.154:/home/dima/apptest.by/appClient && cd .."
+    "uploadenv": "cd server && scp -r .env.production dima@142.93.1.154:/home/dima/sa/server && cd .. && cd client && scp -r .env.production dima@142.93.1.154:/home/dima/sa/client && cd .."
   },
   "dependencies": {
     "concurrently": "^9.1.0"
