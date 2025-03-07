@@ -6,6 +6,6 @@ COPY package.json /app
 
 COPY . .
 
-RUN npm run npmi --force
+RUN npm i
 
-CMD npm run app
+CMD npm run start:dev
