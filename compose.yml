@@ -1,12 +1,8 @@
 services:
   client:
-    image: pandadoker/client:2
+    image: pandadoker/clientprod:09
     build:
       context: ./client
-      # args:
-      #   REACT_APP_LINK: ${REACT_APP_LINK}
-      #   REACT_APP_WS: ${REACT_APP_WS}
-      #   REACT_APP_BOTLINK: ${REACT_APP_BOTLINK}
     container_name: client
     ports:
       - "80:80"
@@ -14,7 +10,7 @@ services:
       - server
 
   server:
-    image: pandadoker/server:2
+    image: pandadoker/serverprod:09
     build:
       context: ./server
     container_name: server
@@ -23,6 +19,7 @@ services:
           condition: service_healthy
     ports:
       - "5050:5050"
+      - "1025:1025"
     env_file:
       - ./server/.env.production
 
@@ -31,9 +28,6 @@ services:
     container_name: mongo
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/serviceapp --quiet
-      # interval: 5s
-      # timeout: 5s
-      # retries: 5
     restart: always
     ports:
       - '27017:27017'
