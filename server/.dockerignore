@@ -9,5 +9,6 @@ Dockerfile
 .eslintrc.js
 .gitignore
 .prettierrc
+Makefile
 
 README.md
