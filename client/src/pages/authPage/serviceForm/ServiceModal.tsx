@@ -91,6 +91,7 @@ export function ServiceModal(props: any) {
                                 sessionStorage.setItem('text', JSON.stringify(props.text))
                                 sessionStorage.setItem('serviceId', item1._id)
                                 sessionStorage.setItem('subServiceId', item.subServiceId)
+                                // @ts-ignore
                                 setTimeout(() => navigate('/service'), 1000)
                             }} 
                             fullWidth

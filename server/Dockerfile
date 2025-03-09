@@ -1,11 +1,16 @@
-FROM node 
-
+# Build Stage
+FROM node AS build
 WORKDIR /app
-
-COPY package.json /app
+COPY package*.json ./
+RUN npm install -force
 
 COPY . .
+RUN npm run build
 
-RUN npm i
-
-CMD npm run start:dev
+# Production Stage
+FROM node AS production
+WORKDIR /app
+COPY --from=build /app/node_modules /app/node_modules
+COPY --from=build /app/dist .
+EXPOSE 5050
+CMD ["node", "main.js"]

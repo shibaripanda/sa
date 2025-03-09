@@ -8,6 +8,7 @@ import ServicePage from './pages/servicePage/ServicePage.tsx'
 
 const theme = createTheme({
   /** Put your mantine theme override here */
+
 })
 
 function App() {
@@ -15,8 +16,8 @@ function App() {
       <MantineProvider theme={theme}>
         <BrowserRouter>
             <Routes>
-              <Route path="/service" element={<ServicePage/>} />
-              <Route path="/" element={<AuthPage/>} />
+              <Route path={'/service'} element={<ServicePage/>} />
+              <Route path={'/'} element={<AuthPage/>} />
             </Routes>
           </BrowserRouter>
       </MantineProvider>
