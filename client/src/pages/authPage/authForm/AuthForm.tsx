@@ -3,6 +3,7 @@ import {
     Button,
     Paper,
     PasswordInput,
+    Space,
     TextInput,
     Title,
   } from '@mantine/core';
@@ -11,6 +12,7 @@ import classes from './AuthForm.module.css'
 import { LanguagePicker } from '../../../components/LanguagePicker/LanguagePicker.tsx'
 import { useDisclosure } from '@mantine/hooks'
 import { ServiceModal } from '../serviceForm/ServiceModal.tsx'
+import { GoogleLogin } from '@react-oauth/google';
 
 const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   
@@ -187,6 +189,15 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
             {sendButBlok()}
             {authBlok()}
             {usersBlock()}
+            <Space h='lg'/>
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                console.log(credentialResponse);
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />
         </Paper>
         {modalBlock()}
       </div>
