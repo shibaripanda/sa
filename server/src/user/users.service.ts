@@ -173,8 +173,8 @@ export class UsersService {
     async newCodeCreate(email: string, code: number, time: number){
         await this.userMongo.updateOne({email: email}, {authCode: {code: code, time: time}})
     }
-    async createUser(email: string, code: number, time: number){
-        await this.userMongo.create({email: email, authCode: {code: code, time: time}})
+    async createUser(email: string, name: string){
+        return await this.userMongo.create({email: email, name: name})
     }
     async getUserByEmail(email: string){
         return await this.userMongo.findOne({email: email})
@@ -186,7 +186,7 @@ export class UsersService {
         const user = await this.userMongo.findOne({email: email})
         // const newService = await this.serviceMongo.getServiceById(serviceId)
 
-        if(!user) await this.createUser(email, Math.round(Math.random() * (9999 - 1000) + 1000), Date.now())
+        if(!user) await this.createUser(email, '')
         const roles = (await this.userMongo.findOne({email: email})).services_roles.find(item => item.serviceId.toString() === serviceId)
         if(roles){
             

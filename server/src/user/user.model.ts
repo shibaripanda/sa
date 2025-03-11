@@ -92,7 +92,7 @@ export const UsersSchema = new mongoose.Schema({
   },
   telegramId: {
     type: Number,
-    unique: true
+    require: false
   },
   activCodeTelegram: {
     type: Object 
