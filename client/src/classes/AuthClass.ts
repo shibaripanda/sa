@@ -98,7 +98,7 @@ export class AuthClass {
     }
 
     async startGoogleAuthRequest(credentialResponse, setDescriptionText, setUsersThisSession, usersThisSession){
-        
+
         return await axios({
             method: 'POST',
             url: this.link + '/auth/googleLogin',
