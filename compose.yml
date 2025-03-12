@@ -5,6 +5,7 @@ services:
       context: ./client
     container_name: client
     ports:
+      - "443:443"
       - "80:80"
     depends_on:
       - server
