@@ -102,7 +102,7 @@ export class AuthClass {
         return await axios({
             method: 'POST',
             url: this.link + '/auth/googleLogin',
-            data: credentialResponse,
+            data: {access_token: credentialResponse},
             headers: {},
             timeout: 10000
         })

@@ -6,7 +6,8 @@ import { lengs } from 'src/modules/lenguages/allText'
 import { LengDataStart } from 'src/modules/lenguages/lengPackUpdate'
 import { BotService } from 'src/bot/bot.service'
 import { RequestGoogleLogin } from './dto/request-googleLogin.dto'
-import { OAuth2Client } from 'google-auth-library'
+// import { OAuth2Client } from 'google-auth-library'
+import axios from 'axios'
 
 @Injectable()
 export class AuthService {
@@ -74,18 +75,27 @@ export class AuthService {
 
     private async verifyIdTokenGoogle(data: RequestGoogleLogin){
 
-        const client = new OAuth2Client(data.clientId)
+        const userInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {headers: { Authorization: `Bearer ${data.access_token}` },})
+        .then(res => res.data);
 
-        if(client){
-            const ticket = await client.verifyIdToken({
-                idToken: data.credential,
-                audience: data.clientId,
-            })
-            const payload = ticket.getPayload()
-            console.log(payload)
-            return payload
-        }
-        return false
+        console.log(userInfo)
+    
+
+        // const client = new OAuth2Client(data.clientId)
+        // const client = new OAuth2Client(token)
+
+        // if(client){
+        //     const 
+            
+        //     const ticket = await client.verifyIdToken({
+        //         idToken: data.credential,
+        //         audience: data.clientId,
+        //     })
+        //     const payload = ticket.getPayload()
+        //     console.log(payload)
+        //     return payload
+        // }
+        return userInfo
     }
 
     private async generateToken(user: User){

@@ -4,7 +4,7 @@ import {
     Paper,
     PasswordInput,
     Space,
-    TextInput,
+    // TextInput,
     Title,
   } from '@mantine/core';
   // @ts-ignore
@@ -12,13 +12,14 @@ import classes from './AuthForm.module.css'
 import { LanguagePicker } from '../../../components/LanguagePicker/LanguagePicker.tsx'
 import { useDisclosure } from '@mantine/hooks'
 import { ServiceModal } from '../serviceForm/ServiceModal.tsx'
-import { GoogleLogin, googleLogout } from '@react-oauth/google';
+// import { GoogleLogin, googleLogout } from '@react-oauth/google'
+import { useGoogleLogin } from '@react-oauth/google'
 
 const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   
   export function AuthForm(props: any) {
 
-    const [errorMessageEmail, setErrorMessageEmail] = useState<string>('')
+    // const [errorMessageEmail, setErrorMessageEmail] = useState<string>('')
     const [clickEmailSend, setClickEmailSend] = useState<boolean>(false)
     const [descriptionText, setDescriptionText] = useState<string>('')
     const [opened, { close, open }] = useDisclosure(false)
@@ -127,7 +128,7 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
               sessionStorage.removeItem('serviceAppUsers')
               sessionStorage.removeItem('currentUser')
               sessionStorage.removeItem('serviceId')
-              googleLogout()
+              // googleLogout()
               clearInterval(timer)
             }}
             >
@@ -153,6 +154,15 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
         />
       }
     }
+    const login = useGoogleLogin({
+        onSuccess: async tokenResponse  => {
+          console.log(tokenResponse)
+          await props.authClass.startGoogleAuthRequest(tokenResponse.access_token, setDescriptionText, props.setUsersThisSession, props.usersThisSession)
+        }
+        // onError: errorResponse => {
+        //   console.log('Login Failed')
+        // }
+    })
 
     return (
       <div className={classes.wrapper}>
@@ -193,14 +203,26 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
             {authBlok()} */}
             {usersBlock()}
             <Space h='lg'/>
-            <GoogleLogin
+            <Button
+              variant='default'
+              fullWidth
+              mt="xl"
+              size="md" 
+              onClick={() => login()}>
+                Sign in with Google 🚀
+            </Button>
+            {/* <Space h='lg'/> */}
+            {/* <GoogleLogin
+              auto_select
               onSuccess={async (credentialResponse) => {
+                console.log(credentialResponse)
                 await props.authClass.startGoogleAuthRequest(credentialResponse, setDescriptionText, props.setUsersThisSession, props.usersThisSession)
+                // googleLogout()
               }}
               onError={() => {
                 console.log('Login Failed');
               }}
-            />
+            /> */}
         </Paper>
         {modalBlock()}
       </div>

@@ -4,13 +4,13 @@ export class RequestGoogleLogin {
 
     @IsNotEmpty()
     @IsString()
-    readonly clientId: string
+    readonly access_token: string
 
-    @IsNotEmpty()
-    @IsString()
-    readonly credential: string
+    // @IsNotEmpty()
+    // @IsString()
+    // readonly credential: string
 
-    @IsNotEmpty()
-    @IsString()
-    readonly select_by: string
+    // @IsNotEmpty()
+    // @IsString()
+    // readonly select_by: string
 }
