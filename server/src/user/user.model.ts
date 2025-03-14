@@ -119,4 +119,5 @@ export interface User {
   activCodeTelegram: ActCode
   telegramId: number 
   passwordToTelegram: boolean
+  newOrderImages: {media: string, type: string}[]
 }

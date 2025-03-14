@@ -4,6 +4,7 @@ import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { upFirstString } from '../../../../../modules/upFirstString.ts'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { IconHandStop } from '@tabler/icons-react'
+import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeServiceStatusList(props, message) {
 
@@ -120,7 +121,7 @@ export function ChangeServiceStatusList(props, message) {
       <TextInput placeholder={props.text.statusName[props.leng]}
         value={props.props.status}
         onChange={(event) => {
-          props.props.setStatus(upFirstString(event.target.value))
+          props.props.setStatus(upFirstString(editString(event.target.value)))
         }}/>
 
       <Button style={{marginTop: 10}}

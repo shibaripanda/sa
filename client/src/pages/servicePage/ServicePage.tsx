@@ -88,13 +88,14 @@ function ServicePage() {
   const [orderAcord, setOrderAcord] = useState<string | null>(null)
   const [viewWork, setViewWork] = useState('Manager view')
   const [editedWork, setEditedWork] = useState<any[] | false>(false)
-  const [scroll, scrollTo] = useWindowScroll()
+  // const [scroll, scrollTo] = useWindowScroll()
   const [usluga, setUsluga] = useState({value: '', price: ''})
   const [boxPart, setBoxPart] = useState({value: '', varanty: '', subPrice: '', price: ''})
   const [telegramPass, setTelegramPass] = useState(false)
   const [alertModal, handlerAlertModal] = useDisclosure(false)
   const [alertData, setAlertData] = useState(false)
   const [passwordToTelegram, setPasswordToTelegram] = useState(false)
+  const [newOrderImages, setNewOrderImages] = useState(false)
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -199,6 +200,9 @@ function ServicePage() {
     authClass.updateServiceAppUsers(data, field)
     setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), [field]: data}))
   }
+  const askNewOrderImages = () => {
+    sendToSocket('getNewOrderImages', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
+  }
   const filterOrders = useMemo(() => {
     if(filterOrdersString){
       if(filterOrdersString[filterOrdersString.length - 1] === '='){
@@ -252,6 +256,9 @@ function ServicePage() {
       const deleteServiceRedirect = () => {
         navigate('/')
       }
+      const getNewOrderImages = (data: any) => {
+        setNewOrderImages(data)
+      }
       
       getFromSocket([
         {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
@@ -263,6 +270,7 @@ function ServicePage() {
         {message: `getNewOrder${authClass.getServiceId()}`, handler: addNewOrderNoPrint},
         {message: `alert`, handler: showAlertMessage},
         {message: 'getOrderPhotos', handler: getOrderPhotos},
+        {message: 'getNewOrderImages', handler: getNewOrderImages},
       ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
 
@@ -376,8 +384,8 @@ function ServicePage() {
               printDocument: printDocument,
               currency: currency,
               serCurrency: serCurrency,
-              scroll: scroll,
-              scrollTo: scrollTo,
+              // scroll: scroll,
+              // scrollTo: scrollTo,
               usluga: usluga,
               setUsluga: setUsluga,
               boxPart: boxPart,
@@ -386,12 +394,14 @@ function ServicePage() {
               setTelegramPass: setTelegramPass,
               updateUserData: updateUserData,
               passwordToTelegram: passwordToTelegram,
-              setPasswordToTelegram: setPasswordToTelegram
+              setPasswordToTelegram: setPasswordToTelegram,
+              askNewOrderImages: askNewOrderImages,
+              newOrderImages: newOrderImages
               }
             )}
           </AppShell.Main>
           {modalPrinNewWarranty()}
-          <ModalAlert alertModal={alertModal} handlerAlertModal={handlerAlertModal} data={alertData}/>
+          <ModalAlert alertModal={alertModal} user={user} handlerAlertModal={handlerAlertModal} data={alertData}/>
         </AppShell>
         // alertModal handlerAlertModal
     )

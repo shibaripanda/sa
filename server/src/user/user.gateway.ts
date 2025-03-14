@@ -27,6 +27,18 @@ import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deleteAllImage')
+  async deleteAllImage(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    const user = await this.userSevice.deleteAllImage(req.user._id)
+    if(user){
+      this.server.to(client.id).emit('getNewOrderImages', [])
+    }
+  }
+
+ 
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('disconectTelegram')
   async disconectTelegram(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     const user = await this.userSevice.disconectTelegram(req.user._id)
@@ -51,9 +63,9 @@ import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('getTelegramPass')
   async getTelegramPass(@ConnectedSocket() client: Socket, @Request() req: any): Promise<void> {
-    const user = await this.userSevice.getTelegramPass(req.user._id)
-    if(user){
-      this.server.to(client.id).emit('alert', {title: 'Connecting Telegram App', message: 'Code send to email'})
+    const code = await this.userSevice.getTelegramPass(req.user._id)
+    if(code){
+      this.server.to(client.id).emit('alert', {title: 'Connecting Telegram Link', message: 'Click to connect', telegramCode: code})
     }
   }
 

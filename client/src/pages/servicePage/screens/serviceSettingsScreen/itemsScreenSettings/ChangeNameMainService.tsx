@@ -1,6 +1,7 @@
 import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
+import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeNameMainService(props, message) {
 
@@ -14,7 +15,7 @@ export function ChangeNameMainService(props, message) {
         <TextInput placeholder={props.text.newNameForService[props.leng]}
         value={props.props.newServiceName}
         onChange={(event) => {
-          props.props.setNewSeviceName(event.target.value)
+          props.props.setNewSeviceName(editString(event.target.value))
         }}/>
         <Button style={{marginTop: 10}}
         disabled={!props.props.newServiceName}

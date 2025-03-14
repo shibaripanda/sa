@@ -30,7 +30,6 @@ import { ChangeWarrantyOrderPrint } from "./serviceSettingsScreen/itemsScreenSet
 import { ChangeCurrencyService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeCurrencyService.tsx";
 import { ChangeWorksService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeWorksService.tsx";
 import { ChangeBoxPartsService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeBoxPartsService.tsx";
-import { ChangeAuthTelegram } from "./mySettingsScreen/itemsScreenSettings/ChangeAuthTelegram.tsx";
 
 
 interface ItemData {
@@ -157,8 +156,7 @@ export const line: Line[] = [
                 data: 'name', 
                 title: 'name', 
                 res: 'newUserName'
-            },
-            {message: 'changeAuthTelegram', screenItem: ChangeAuthTelegram},
+            }
         ]
     }
 ]

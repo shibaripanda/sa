@@ -4,6 +4,7 @@ import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { upFirstString } from '../../../../../modules/upFirstString.ts'
 import { line } from '../../screensLine.ts'
 import { IconSquareX } from '@tabler/icons-react'
+import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeServiceRole(props, message) {
 
@@ -129,7 +130,7 @@ export function ChangeServiceRole(props, message) {
         <TextInput placeholder={props.text.newRole[props.leng]}
         value={props.props.newRole}
         onChange={(event) => {
-          props.props.setNewRole(upFirstString(event.target.value))
+          props.props.setNewRole(upFirstString(editString(event.target.value)))
         }}/>
         <Button style={{marginTop: 10}}
         disabled={!props.props.newRole || props.service.roles.map(item => item.role).includes(props.props.newRole) || ['Owner', 'owner'].includes(props.props.newRole)}

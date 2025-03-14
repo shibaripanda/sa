@@ -2,6 +2,7 @@ import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { DragAndDrop } from './DragAndDrop/DragAndDrop.tsx'
+import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeServiceOrderDataList(props, message) {
 
@@ -20,10 +21,15 @@ export function ChangeServiceOrderDataList(props, message) {
         <TextInput placeholder={props.text.statusName[props.leng]}
         value={props.props.newOrderData}
         onChange={(event) => {
-          props.props.setNewOrderData(event.target.value)
+          props.props.setNewOrderData(editString(event.target.value))
         }}/>
         <Button style={{marginTop: 10}}
-        disabled={!props.props.newOrderData || props.service.orderData.map(item => item.item).includes(props.props.newOrderData)}
+        disabled={
+          !props.props.newOrderData || 
+          props.service.orderData.map(item => item.item).includes(props.props.newOrderData) || 
+          props.props.newOrderData.includes('.') || 
+          props.props.newOrderData.includes('_')
+        }
         onClick={() => {
           sendToSocket(message, {
             serviceId: props.user.serviceId, 

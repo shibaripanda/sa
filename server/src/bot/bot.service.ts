@@ -19,6 +19,34 @@ import { User } from 'src/user/user.model'
         private serviceService: ServicesService
     ) {}
 
+    async deleteImage(userId: string, image: string){
+      const res = await this.userService.deleteImage(userId, image)
+      if(res){
+        const bufferArray: {buffer: string, media: string}[] = []
+        for(const i of res.newOrderImages.filter(item => item.type === 'photo').map(item => item.media)){
+          const url = await this.bot.telegram.getFileLink(i)
+          const buffer: ArrayBuffer = await (await fetch(url.href)).arrayBuffer()
+          bufferArray.push({buffer: Buffer.from(buffer).toString('base64'), media: i}) 
+        }
+        return bufferArray
+      }
+      return false
+    }
+
+    async getNewOrderImages(userId: string){
+      const res = await this.userService.getNewOrderImages(userId)
+      if(res){
+        const bufferArray: {buffer: string, media: string}[] = []
+        for(const i of res.newOrderImages.filter(item => item.type === 'photo').map(item => item.media)){
+          const url = await this.bot.telegram.getFileLink(i)
+          const buffer: ArrayBuffer = await (await fetch(url.href)).arrayBuffer()
+          bufferArray.push({buffer: Buffer.from(buffer).toString('base64'), media: i}) 
+        }
+        return bufferArray
+      }
+      return false
+    }
+
     async sendOrderToTelegram(orderId: string, serviceId: string, subServiceId: string, user: User, service: Service){
       const order = await this.orderService.getOrder(orderId, serviceId, subServiceId, user, service)
       if(order){
@@ -66,7 +94,7 @@ import { User } from 'src/user/user.model'
       if(res){
         const url = await this.bot.telegram.getFileLink(photo)
         const buffer = await (await fetch(url.href)).arrayBuffer()
-        return Buffer.from(buffer).toString('base64')
+        return {one: Buffer.from(buffer).toString('base64'), second: await this.getNewOrderImages(res._id)}
       }
       return false
     }

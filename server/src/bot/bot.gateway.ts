@@ -17,6 +17,30 @@ export class BotGateway {
     ) {}
 
   @WebSocketServer() server: Server
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deleteImage')
+  async deleteImage(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    // console.log(req)
+    const res = await this.botService.deleteImage(req.user._id, payload.image)
+    if(res){
+      this.server.to(client.id).emit('getNewOrderImages', res)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('getNewOrderImages')
+  async getNewOrderImages(@ConnectedSocket() client: Socket, @Request() req: any): Promise<void> {
+    // console.log(req)
+    const res = await this.botService.getNewOrderImages(req.user._id)
+    if(res){
+      this.server.to(client.id).emit('getNewOrderImages', res)
+    }
+  }
   
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
@@ -61,8 +85,9 @@ export class BotGateway {
   async addNewOrderImages(@Ctx() ctx: any){
     const res = await this.botService.addNewOrderImages(ctx.from.id, ctx.message.photo[1].file_id)
     if(res){
-      this.server.to(ctx.from.id.toString()).emit('alert', {title: 'New', message: '✅', buffer: res})
-    }
+      this.server.to(ctx.from.id.toString()).emit('alert', {title: 'New', message: '✅', buffer: res.one})
+      this.server.to(ctx.from.id.toString()).emit('getNewOrderImages', res.second)
+    } 
   }
 
   @Start()

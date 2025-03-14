@@ -2,6 +2,7 @@ import { Button, Group, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { IconSquareX } from '@tabler/icons-react'
+import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeLocalService(props, message) {
 
@@ -32,7 +33,7 @@ export function ChangeLocalService(props, message) {
         <TextInput placeholder={props.text.newNameForLocalService[props.leng]}
         value={props.props.newSubService}
         onChange={(event) => {
-          props.props.setSubNewSevice(event.target.value)
+          props.props.setSubNewSevice(editString(event.target.value))
         }}/>
         <Button style={{marginTop: 10}}
         disabled={!props.props.newSubService || props.service.subServices.map(item => item.name).includes(props.props.newSubService)}

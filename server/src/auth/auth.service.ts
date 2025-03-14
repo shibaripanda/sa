@@ -107,7 +107,8 @@ export class AuthService {
             name: user.name ? user.name : false, 
             orderDataShowItems: user.orderDataShowItems,
             telegramId: user.telegramId,
-            passwordToTelegram: user.passwordToTelegram
+            passwordToTelegram: user.passwordToTelegram,
+            newOrderImages: user.newOrderImages
         }
         return {
             token: this.jwtService.sign(payload)

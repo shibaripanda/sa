@@ -6,10 +6,13 @@ import classes from './OrderList.module.css'
 import { IconArrowUp, IconSquareCheck, IconSquareX } from '@tabler/icons-react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { emptyWork } from '../../../ServicePage.tsx'
+// import { useWindowScroll } from '@mantine/hooks'
 
 export function OrdersScreen(props, message) {
 
   console.log('OrdersScreen')
+
+  // const [scroll, scrollTo] = useWindowScroll()
   
   if(!props.props.newWork.master){
     props.props.setNewWork({...props.props.newWork, master: props.props.newWork.master ? props.props.newWork.master : props.user._id})
@@ -964,8 +967,8 @@ export function OrdersScreen(props, message) {
         <>
         <Space h='sm'/>
         <Grid>
-          {order._mediaPhotos_.map(item => 
-            <Grid.Col span={2}>
+          {order._mediaPhotos_.map((item, index)=> 
+            <Grid.Col span={2} key={index}>
               <Image 
                 src={`data:image/jpeg;base64,${item}`}
                 radius="sm"
@@ -1318,19 +1321,19 @@ export function OrdersScreen(props, message) {
             {rowss}
           </Accordion>
         </Container>
-        <Affix position={{ bottom: 20, right: 20 }}>
-        <Transition transition="slide-up" mounted={props.props.scroll.y > 0}>
+        {/* <Affix position={{ bottom: 20, right: 20 }}>
+        <Transition transition="slide-up" mounted={scroll.y > 0}>
           {(transitionStyles) => (
             <Button
               leftSection={<IconArrowUp size={16} />}
               style={transitionStyles}
-              onClick={() => props.props.scrollTo({ y: 0 })}
+              onClick={() => scrollTo({ y: 0 })}
             >
               Scroll to top
             </Button>
           )}
         </Transition>
-      </Affix>
+      </Affix> */}
       </div>
     )
   }

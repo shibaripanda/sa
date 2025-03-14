@@ -1,4 +1,4 @@
-import { Button, CloseButton, Collapse, Grid, RangeSlider, TextInput } from '@mantine/core'
+import { Button, CloseButton, Collapse, Grid, Image, Indicator, RangeSlider, Space, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
@@ -106,15 +106,19 @@ export function CreateOrderScreen(props, message) {
   }
   const butOpenCreateOrder = () => {
     if(!props.props.openedNewOrder){
-      return <Button fullWidth color='green' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text[message][props.leng]}</Button>
+      return <Button fullWidth color='green' 
+      onClick={() => {
+        switchFilterOrNewOrder('newOrder')
+        props.props.askNewOrderImages()
+      }}>{props.text[message][props.leng]}</Button>
     }
-    return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text.cancel[props.leng]}</Button>
+    return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text.hide[props.leng]}</Button>
   }
   const butOpenFilter = () => {
     if(!props.props.openedFilter){
       return <Button fullWidth onClick={() => switchFilterOrNewOrder('filter')}>Filter</Button>
     }
-    return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('filter')}>{props.text.cancel[props.leng]}</Button>
+    return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('filter')}>{props.text.hide[props.leng]}</Button>
   }
   const filterOrderInput = () => {
     return (
@@ -130,6 +134,40 @@ export function CreateOrderScreen(props, message) {
         onChange={(event) => props.props.setFilterOrdersString(event.target.value)}
       />
     )
+  }
+  const newOrderPhotosLine = () => {
+    if(props.props.newOrderImages && props.props.newOrderImages.length){
+      return (
+        <>
+        <Grid>
+          {props.props.newOrderImages.map(item => 
+            <Grid.Col span={1.2} key={item.media}>
+              <Indicator
+              offset={7} position="bottom-end" color="red" 
+              withBorder
+              inline
+              size={'1.5vmax'}
+              onClick={async () => {
+                sendToSocket('deleteImage', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  image: item.media
+                })
+              }}
+              >
+              <Image 
+                src={`data:image/jpeg;base64,${item.buffer}`}
+                radius="sm"
+                h='10vmax'
+                w="auto"
+              />
+              </Indicator>
+            </Grid.Col>
+          )}
+        </Grid>
+        </>
+      )
+    }
   }
 
   const butLine = [
@@ -152,7 +190,6 @@ export function CreateOrderScreen(props, message) {
     if(props.props.openedNewOrder){
       return (
         <div>
-          <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr>
 
           <Grid grow>
             {activData.map(item => 
@@ -160,23 +197,22 @@ export function CreateOrderScreen(props, message) {
               {fieldCheck(item)}
             </Grid.Col>)}
           </Grid>
-
-          <Grid style={{marginTop: '1.5vmax'}} grow>
+            <Space h='lg'/>
+            {newOrderPhotosLine()}
+          <Grid grow>
             <Grid.Col span={props.props.screenSizeNewOrder}>
               <Button
-                color='green'
+                color='red'
                 fullWidth
-                disabled={disabledCreateButton()}
+                disabled={!props.props.newOrderImages.length}
                 onClick={async () => {
-                  await props.props.getAndPrintNewOrder()
-                  sendToSocket('createOrder', {
+                  sendToSocket('deleteAllImage', {
                     serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId,
-                    newOrder: createOrder()
+                    subServiceId: props.user.subServiceId
                   })
                 }}
                 >
-                {props.text.createNewOrder[props.leng]}
+                {props.text.deleteAllImages[props.leng]}
               </Button>
             </Grid.Col>
             <Grid.Col span={props.props.screenSizeNewOrder}>
@@ -194,6 +230,23 @@ export function CreateOrderScreen(props, message) {
                 {props.text.clearForm[props.leng]}
               </Button>
             </Grid.Col>
+            <Grid.Col span={props.props.screenSizeNewOrder}>
+              <Button
+                color='green'
+                fullWidth
+                disabled={disabledCreateButton()}
+                onClick={async () => {
+                  await props.props.getAndPrintNewOrder()
+                  sendToSocket('createOrder', {
+                    serviceId: props.user.serviceId, 
+                    subServiceId: props.user.subServiceId,
+                    newOrder: createOrder()
+                  })
+                }}
+                >
+                {props.text.createNewOrder[props.leng]}
+              </Button>
+            </Grid.Col>
           </Grid>
 
         </div>
@@ -204,7 +257,7 @@ export function CreateOrderScreen(props, message) {
     if(props.props.openedFilter){
       return (
         <div>
-          <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr>
+          {/* <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr> */}
                   dddd
           {/* <Grid grow>
             {activData.map(item => 

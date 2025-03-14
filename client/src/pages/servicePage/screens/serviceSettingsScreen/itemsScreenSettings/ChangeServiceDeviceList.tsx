@@ -3,6 +3,7 @@ import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { IconSquareX } from '@tabler/icons-react'
 import { upFirstString } from '../../../../../modules/upFirstString.ts'
+import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeServiceDeviceList(props, message) {
 
@@ -29,7 +30,7 @@ export function ChangeServiceDeviceList(props, message) {
         <TextInput placeholder={props.text.deviceName[props.leng]}
         value={props.props.device}
         onChange={(event) => {
-          props.props.setDevice(upFirstString(event.target.value))
+          props.props.setDevice(upFirstString(editString(event.target.value)))
         }}/>
         <Button style={{marginTop: 10}}
         disabled={!props.props.device || props.service.devices.includes(props.props.device)}

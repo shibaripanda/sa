@@ -4,7 +4,7 @@ import { Model } from 'mongoose'
 import { User } from './user.model'
 import { rendomNumberOrder } from 'src/order/tech/rendomNumberOrder'
 import { rendomLetteOrder } from 'src/order/tech/rendomLetteOrder'
-import { sendEmail } from 'src/modules/sendMail'
+// import { sendEmail } from 'src/modules/sendMail'
 import { Server } from 'socket.io'
 import { WebSocketServer } from '@nestjs/websockets'
 
@@ -17,6 +17,14 @@ export class UsersService {
     ) {}
 
     @WebSocketServer() server: Server
+
+    async deleteImage(_id: string, image: string){
+        return await this.userMongo.findOneAndUpdate({_id: _id}, {$pull: {newOrderImages: {media: image, type: 'photo'}}}, {returnDocument: 'after'})
+    }
+
+    async deleteAllImage(_id: string){
+        return await this.userMongo.updateOne({_id: _id}, {newOrderImages: []})
+    }
     
     async disconectTelegram(_id: string){
         return await this.userMongo.updateOne({_id: _id}, {telegramId: 0, passwordToTelegram: false})
@@ -26,18 +34,20 @@ export class UsersService {
         return await this.userMongo.updateOne({_id: userId}, {passwordToTelegram: passwordToTelegram})
     }
 
+    async getNewOrderImages(_id: string){
+        return await this.userMongo.findOne({_id: _id}, {newOrderImages: 1, _id: 0})
+    }
+
     async addNewOrderImages(telegramId: number, photo: object){
-        return await this.userMongo.updateOne({telegramId: telegramId}, {$addToSet: {newOrderImages: photo}})
+        return await this.userMongo.findOneAndUpdate({telegramId: telegramId}, {$push: {newOrderImages: {$each: [photo], $position: 0, $slice: 10}}}, {returnDocument: 'after'})
     }
     async setTelegramId(_id: string, telegramId: string){
         await this.userMongo.updateOne({_id: _id}, {telegramId: telegramId})
     }
     async getTelegramPass(_id: string){
         const activCode = rendomNumberOrder({min: 1000, max: 9999}) + rendomLetteOrder() + rendomNumberOrder({min: 1000, max: 9999})
-        const user = await this.userMongo.findOneAndUpdate({_id: _id}, {activCodeTelegram: {code: activCode, time: Date.now()}})
-        // sendEmail(user.email.toLowerCase(), 'Connecting Telegram App', activCode)
-        sendEmail('remontf10@gmail.com', 'Connecting Telegram App', activCode)
-        return user
+        const user = await this.userMongo.findOneAndUpdate({_id: _id}, {activCodeTelegram: {code: activCode.toLowerCase(), time: Date.now()}}, {returnDocument: 'after'})
+        return user.activCodeTelegram.code
     }
     async changeDataOrderList(serviceId: string, data: string, status: boolean, user: any, index1: number, index2: number, action: string){
         const res = await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})

@@ -148,6 +148,8 @@ export const textArray: LengData[] = [
     {rutext: 'Тест', index: 'test', info_data: 'тест', update: false},
     {rutext: 'Куда посылать временный пароль', index: 'changeAuthTelegram', info_data: 'куда пароль', update: false},
     {rutext: 'Отменить привязку', index: 'disconect', info_data: 'отключить', update: false},
+    {rutext: 'Свернуть', index: 'hide', info_data: 'свернуть', update: false},
+    {rutext: 'Удалить все фото', index: 'deleteAllImages', info_data: 'удалить все фото', update: false},
     
     
 ] 
