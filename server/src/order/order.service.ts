@@ -201,7 +201,7 @@ export class OrderService {
     }
     async getOrdersFilter(serviceId, subServiceId, orderId, exist, user, service){
         console.log(service.orderData.map(item => item.item))
-        const line = service.orderData.map(item => ({[item.item]: {$regex: orderId, $options: "i"}}))
+        const line = service.orderData.filter(item => !item.number).map(item => ({[item.item]: {$regex: orderId, $options: "i"}}))
         
         line.push({'_orderServiceId_': {$regex: orderId, $options: "i"}})
         line.push({'_status_': {$regex: orderId, $options: "i"}})

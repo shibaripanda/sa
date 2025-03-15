@@ -69,7 +69,7 @@ export function ServiceModal(props: any) {
   
     return (
         <>
-            <Modal opened={props.opened} size="50%" title={props.user.name ? props.user.name : props.user.email}
+            <Modal opened={props.opened} title={props.user.name ? props.user.name : props.user.email}
                 onClose={() => {
                     sessionStorage.removeItem('currentUser')
                     props.close()
@@ -86,6 +86,7 @@ export function ServiceModal(props: any) {
                             .map(item =>
                             <Grid.Col key={item.subServiceId} span={12}> 
                             <Button
+                            variant='default'
                             onClick={async () => {
                                 sessionStorage.setItem('leng', props.leng)
                                 sessionStorage.setItem('text', JSON.stringify(props.text))
@@ -110,7 +111,7 @@ export function ServiceModal(props: any) {
                 </Grid.Col>
 
                 <Grid.Col span={12}>
-                    <Button size='xs'
+                    <Button size='xs' color='green'
                     onClick={() => {
                         createNewService()
                     }}>

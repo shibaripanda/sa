@@ -24,13 +24,15 @@ export class AuthService {
 
         if(loginStatus){
             const user = await this.usersService.getUserByEmail(loginStatus.email.toLowerCase())
-            const newCode = Math.round(Math.random() * (9999 - 1000) + 1000)
+            // const newCode = Math.round(Math.random() * (9999 - 1000) + 1000)
             if(!user){
                 const newUser = await this.usersService.createUser(loginStatus.email.toLowerCase(), loginStatus.name ? loginStatus.name : '')
                 return this.generateToken(newUser)
             }
-            if(user.telegramId && user.passwordToTelegram){
-                this.botService.sendCodeToBot(user.telegramId, newCode.toString())
+            console.log(user.telegramId, user.passwordToTelegram)
+            if(user.telegramId){
+                console.log('телеграм уведомление')
+                this.botService.sendCodeToBot(user.telegramId, 'Выполнен вход')
             }
             return this.generateToken(user)
         }

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Anchor, Burger, Grid, Group, Modal, Switch, useMantineColorScheme } from '@mantine/core'
+import React from 'react'
+import { Anchor, Burger, Grid, Group, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 // @ts-ignore
 import classes from './Header1.module.css'
@@ -7,8 +7,6 @@ import classes from './Header1.module.css'
 export function Header1(props) {
   const [openedModal, { open, close }] = useDisclosure(false)
   const [opened, { toggle }] = useDisclosure(false, {onOpen: () => open()})
-  const { setColorScheme, clearColorScheme } = useMantineColorScheme()
-  const [checked, setChecked] = useState(false)
   
   const topMenuArray = 
     [
@@ -17,21 +15,11 @@ export function Header1(props) {
         color: 'red', class: classes.mainLinkExit,
         action: () => {
           sessionStorage.removeItem('activescreen')
-          // clearColorScheme()
           props.navigate('/')
         }
       },
       {name: `${props.service.name} (${props.service.subName})`, action: () => {}, class: classes.mainLink},
-      {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink},
-      {name: <Switch
-        color='gray'
-        checked={checked}
-        onChange={(event) => {
-          if(checked) {setColorScheme('light')}
-          else {setColorScheme('dark')}
-          setChecked(event.currentTarget.checked)
-        }}
-      />, action: () => {}, class: classes.mainLink},
+      {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink}
     ]
   const topMenuMobileArray = 
     [

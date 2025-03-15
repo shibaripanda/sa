@@ -150,6 +150,12 @@ export const textArray: LengData[] = [
     {rutext: 'Отменить привязку', index: 'disconect', info_data: 'отключить', update: false},
     {rutext: 'Свернуть', index: 'hide', info_data: 'свернуть', update: false},
     {rutext: 'Удалить все фото', index: 'deleteAllImages', info_data: 'удалить все фото', update: false},
+    {rutext: 'Фотографии', index: 'photos', info_data: 'фотографии', update: false},
+    {rutext: 'Менеджер', index: 'Manager view', info_data: 'вид менеджера', update: false},
+    {rutext: 'Клиент', index: 'Client view', info_data: 'вид клиент', update: false},
+    {rutext: 'Редактор', index: 'Edit', info_data: 'вид редактор', update: false},
+    {rutext: 'Фильтр', index: 'filter', info_data: 'фильтр', update: false},
+    {rutext: 'Послать в телеграм', index: 'sendToTelegram', info_data: 'послать в телеграм', update: false},
     
     
 ] 

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UsePipes } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req, UsePipes } from '@nestjs/common'
 import { AuthService } from './auth.service'
 // import { ReqestAuthDto } from './dto/request-auth.dto'
 import { WSValidationPipe } from 'src/modules/wsPipeValid'
@@ -11,8 +11,11 @@ export class AuthController {
 
     @Post('/googleLogin')
     @UsePipes(new WSValidationPipe())
-    googleLogin(@Body() data: RequestGoogleLogin){
-        console.log('/auth/googleLogin', data)
+    googleLogin(@Body() data: RequestGoogleLogin, @Req() req: any){
+        console.log(req.headers['x-forwarded-for']?.split(',').shift()
+        || req.socket?.remoteAddress)
+
+        console.log(req.ip)
         return this.authService.googleLogin(data)
     }
 

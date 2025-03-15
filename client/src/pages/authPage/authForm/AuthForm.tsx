@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
 import {
+  ActionIcon,
     Button,
+    Grid,
+    // Group,
     Paper,
-    PasswordInput,
+    // PasswordInput,
     Space,
     // TextInput,
     Title,
+    useComputedColorScheme,
+    useMantineColorScheme,
   } from '@mantine/core';
   // @ts-ignore
 import classes from './AuthForm.module.css'
@@ -14,88 +19,104 @@ import { useDisclosure } from '@mantine/hooks'
 import { ServiceModal } from '../serviceForm/ServiceModal.tsx'
 // import { GoogleLogin, googleLogout } from '@react-oauth/google'
 import { useGoogleLogin } from '@react-oauth/google'
+import { IconSun } from '@tabler/icons-react'
 
-const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+// const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   
   export function AuthForm(props: any) {
 
     // const [errorMessageEmail, setErrorMessageEmail] = useState<string>('')
-    const [clickEmailSend, setClickEmailSend] = useState<boolean>(false)
+    const { setColorScheme } = useMantineColorScheme();
+    const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true })
+    // const [clickEmailSend, setClickEmailSend] = useState<boolean>(false)
     const [descriptionText, setDescriptionText] = useState<string>('')
     const [opened, { close, open }] = useDisclosure(false)
-    const [timer, setTimer] = useState<number>()
-    let [time, setTime] = useState<number>(60)
+    // const [timer, setTimer] = useState<number>()
+    // let [time, setTime] = useState<number>(60)
 
-    function timerSet(){
-      if(time === 0){
-        clearInterval(timer)
-        setClickEmailSend(false)
-        props.setAuthCode()
-      }
-      else{
-        setTime(time--)
-      }
+    // function timerSet(){
+    //   if(time === 0){
+    //     clearInterval(timer)
+    //     setClickEmailSend(false)
+    //     props.setAuthCode()
+    //   }
+    //   else{
+    //     setTime(time--)
+    //   }
+    // }
+
+    const colorShema = () => {
+      return (
+        <ActionIcon
+          onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
+          variant="transparent"
+          color="grey"
+          aria-label="Toggle color scheme"
+        >
+          <IconSun stroke={1.5} />
+        </ActionIcon>
+      )
     }
 
-    const authBlok = () => {
-        if(clickEmailSend){
-            return (
-                <div> 
-                    <PasswordInput
-                    description={descriptionText} 
-                    label="Password" 
-                    placeholder="xxxx" 
-                    mt="md" 
-                    size="md"
-                    withAsterisk
-                    value={props.authCode}
-                    onChange={(event) => {
-                        props.setAuthCode(event.currentTarget.value)
-                    }} 
-                    />
-                    <Button
-                    type="submit"
-                    fullWidth
-                    mt="xl"
-                    size="md"
-                    disabled={!props.authCode || props.authCode.length < 4 || props.authCode.length > 4}
-                    onClick={async () => {
-                        const res = await props.authClass.startRequest(props.email, props.leng, Number(props.authCode), setDescriptionText, props.setUsersThisSession, props.usersThisSession, props.setAuthCode, props.setEmail, setClickEmailSend)
-                        clearInterval(timer)
-                        if(!res){
-                          props.setAuthCode()
-                          setTime(60)
-                          time = 60
-                          const int = setInterval(timerSet, 1000)
-                          setTimer(int)
-                        }
-                    }}
-                    >
-                    {props.text.auth[props.leng] + ' ' + time}
-                    </Button>
-                </div>
-            )
-        }
-    }
-    const sendButBlok = () => {
-      if(!clickEmailSend)
-        return <Button
-            fullWidth
-            mt="xl"
-            size="md"
-            disabled={!validEmail.test(props.email) || clickEmailSend}
-            onClick={async () => {
-                await props.authClass.startRequest(props.email, props.leng, undefined, setDescriptionText)
-                setClickEmailSend(true)
-                setTime(60)
-                time = 60
-                const int = setInterval(timerSet, 1000)
-                setTimer(int)
-            }}
-            >
-            {props.text.sendPasswordToEmail[props.leng]}
-            </Button>
-    }
+    // const authBlok = () => {
+    //     if(clickEmailSend){
+    //         return (
+    //             <div> 
+    //                 <PasswordInput
+    //                 description={descriptionText} 
+    //                 label="Password" 
+    //                 placeholder="xxxx" 
+    //                 mt="md" 
+    //                 size="md"
+    //                 withAsterisk
+    //                 value={props.authCode}
+    //                 onChange={(event) => {
+    //                     props.setAuthCode(event.currentTarget.value)
+    //                 }} 
+    //                 />
+    //                 <Button
+    //                 type="submit"
+    //                 fullWidth
+    //                 mt="xl"
+    //                 size="md"
+    //                 disabled={!props.authCode || props.authCode.length < 4 || props.authCode.length > 4}
+    //                 onClick={async () => {
+    //                     const res = await props.authClass.startRequest(props.email, props.leng, Number(props.authCode), setDescriptionText, props.setUsersThisSession, props.usersThisSession, props.setAuthCode, props.setEmail, setClickEmailSend)
+    //                     clearInterval(timer)
+    //                     if(!res){
+    //                       props.setAuthCode()
+    //                       setTime(60)
+    //                       time = 60
+    //                       const int = setInterval(timerSet, 1000)
+    //                       setTimer(int)
+    //                     }
+    //                 }}
+    //                 >
+    //                 {props.text.auth[props.leng] + ' ' + time}
+    //                 </Button>
+    //             </div>
+    //         )
+    //     }
+    // }
+    // const sendButBlok = () => {
+    //   if(!clickEmailSend)
+    //     return <Button
+    //         fullWidth
+    //         mt="xl"
+    //         size="md"
+    //         disabled={!validEmail.test(props.email) || clickEmailSend}
+    //         onClick={async () => {
+    //             await props.authClass.startRequest(props.email, props.leng, undefined, setDescriptionText)
+    //             setClickEmailSend(true)
+    //             setTime(60)
+    //             time = 60
+    //             const int = setInterval(timerSet, 1000)
+    //             setTimer(int)
+    //         }}
+    //         >
+    //         {props.text.sendPasswordToEmail[props.leng]}
+    //         </Button>
+    // }
     const usersBlock = () => {
       if(props.usersThisSession.length)
         return (
@@ -109,7 +130,7 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
             size="md"
             onClick={async () => {
               sessionStorage.setItem('currentUser', JSON.stringify(item))
-              clearInterval(timer)
+              // clearInterval(timer)
               open()
             }}
             >
@@ -122,14 +143,14 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
             size="md"
             onClick={async () => {
               props.setUsersThisSession([])
-              setClickEmailSend(false)
+              // setClickEmailSend(false)
               props.setAuthCode()
               props.setEmail('')
               sessionStorage.removeItem('serviceAppUsers')
               sessionStorage.removeItem('currentUser')
               sessionStorage.removeItem('serviceId')
               // googleLogout()
-              clearInterval(timer)
+              // clearInterval(timer)
             }}
             >
             {props.text.exit[props.leng]}
@@ -159,15 +180,21 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
           console.log(tokenResponse)
           await props.authClass.startGoogleAuthRequest(tokenResponse.access_token, setDescriptionText, props.setUsersThisSession, props.usersThisSession)
         }
-        // onError: errorResponse => {
-        //   console.log('Login Failed')
-        // }
     })
 
     return (
       <div className={classes.wrapper}>
         <Paper className={classes.form} radius={0} p={30}>
-          <LanguagePicker avLeng={props.avLeng} setLeng={props.setLeng} leng={props.leng}/>
+
+          <Grid justify="space-between" align="center">
+            <Grid.Col span={11}>
+              <LanguagePicker avLeng={props.avLeng} setLeng={props.setLeng} leng={props.leng}/>
+            </Grid.Col>
+            <Grid.Col span={1}>
+              {colorShema()}
+            </Grid.Col>
+          </Grid>
+            
           <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
             {props.text.welcome[props.leng]}
           </Title>
@@ -202,7 +229,6 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
             {sendButBlok()}
             {authBlok()} */}
             {usersBlock()}
-            <Space h='lg'/>
             <Button
               variant='default'
               fullWidth
@@ -211,18 +237,6 @@ const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))
               onClick={() => login()}>
                 Sign in with Google 🚀
             </Button>
-            {/* <Space h='lg'/> */}
-            {/* <GoogleLogin
-              auto_select
-              onSuccess={async (credentialResponse) => {
-                console.log(credentialResponse)
-                await props.authClass.startGoogleAuthRequest(credentialResponse, setDescriptionText, props.setUsersThisSession, props.usersThisSession)
-                // googleLogout()
-              }}
-              onError={() => {
-                console.log('Login Failed');
-              }}
-            /> */}
         </Paper>
         {modalBlock()}
       </div>

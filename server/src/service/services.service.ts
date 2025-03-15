@@ -17,26 +17,29 @@ export class ServicesService {
     async deletePart(serviceId: string, deletePart: object){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {boxParts: deletePart}}, {returnDocument: 'after'})
     }
-
     async changeBoxPartsService(serviceId: string, newPart: object){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {boxParts: newPart}}, {returnDocument: 'after'})
     }
-
     async deleteUsluga(serviceId: string, deleteUsluga: object){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {uslugi: deleteUsluga}}, {returnDocument: 'after'})
     }
-
     async changeWorksService(serviceId: string, newUsluga: object){
         console.log(newUsluga)
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$addToSet: {uslugi: newUsluga}}, {returnDocument: 'after'})
     }
-
     async updateCurrency(serviceId: string, newCurrency: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {currency: newCurrency}, {returnDocument: 'after'})
     }
-
     async updateDocument(serviceId: string, docName: string, newDoc: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {'serviceDocuments.$[el].data': newDoc}, {arrayFilters: [{'el.name': docName}], returnDocument: 'after'})
+    }
+    async replaceDevicePosition(serviceId: string, index1: number, index2: number){
+        const item = (await this.serviceMongo.findOne({_id: serviceId}, {devices: 1, _id: 0})).devices[index1]
+        if(item){
+            await this.serviceMongo.updateOne({_id: serviceId}, {$pull: {devices: item}})
+            return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$push: {devices: {$each: [item], $position: index2}}}, {returnDocument: 'after'})
+        }
+        return await this.serviceMongo.findOne({_id: serviceId})
     }
     async replaceStatusPosition(serviceId: string, index1: number, index2: number){
         const item = (await this.serviceMongo.findOne({_id: serviceId}, {statuses: 1, _id: 0})).statuses[index1]

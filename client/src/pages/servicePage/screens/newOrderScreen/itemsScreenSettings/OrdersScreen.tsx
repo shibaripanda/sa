@@ -1,12 +1,11 @@
-import { Accordion, Affix, Anchor, Autocomplete, Badge, Box, Button, Center, Container, Grid, Group, Image, NumberInput, Overlay, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip, Transition } from '@mantine/core'
+import { Accordion, Anchor, Autocomplete, Badge, Box, Button, Center, Container, Grid, Group, Image, NumberInput, Overlay, SegmentedControl, Select, Space, Table, Tabs, Text, TextInput, Tooltip } from '@mantine/core'
 import React from 'react'
 import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
 import classes from './OrderList.module.css'
-import { IconArrowUp, IconSquareCheck, IconSquareX } from '@tabler/icons-react'
+import { IconSquareCheck, IconSquareX } from '@tabler/icons-react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { emptyWork } from '../../../ServicePage.tsx'
-// import { useWindowScroll } from '@mantine/hooks'
 
 export function OrdersScreen(props, message) {
 
@@ -42,7 +41,6 @@ export function OrdersScreen(props, message) {
     }
     return name
   }
-  
   const colorOrder = (status) => {
     return props.service.colorStatuses.find(item => item.status === status) ? props.service.colorStatuses.find(item => item.status === status).color : 'grey'
   }
@@ -676,8 +674,12 @@ export function OrdersScreen(props, message) {
               <Grid.Col span={12}>
                 <Group justify="space-between" align="center">
                   <SegmentedControl
-                  value={props.props.viewWork} 
-                  data={['Manager view', 'Client view', 'Edit']}
+                  value={props.props.viewWork}
+                  data={[
+                    {label: props.text['Manager view'][props.leng], value: 'Manager view' }, 
+                    {label: props.text['Client view'][props.leng], value: 'Client view' }, 
+                    {label: props.text['Edit'][props.leng], value: 'Edit' }
+                  ]}
                   onChange={props.props.setViewWork}/>
                   <Group>
                   {profitMain()}
@@ -795,7 +797,11 @@ export function OrdersScreen(props, message) {
                 <Group justify="space-between" align="center">
                   <SegmentedControl
                   value={props.props.viewWork} 
-                  data={['Manager view', 'Client view', 'Edit']}
+                  data={[
+                    {label: props.text['Manager view'][props.leng], value: 'Manager view' }, 
+                    {label: props.text['Client view'][props.leng], value: 'Client view' }, 
+                    {label: props.text['Edit'][props.leng], value: 'Edit' }
+                  ]}
                   onChange={props.props.setViewWork}/>
                   <Group>
                   {profitMain()}
@@ -876,7 +882,11 @@ export function OrdersScreen(props, message) {
             <Group justify="space-between" align="center">
               <SegmentedControl
               value={props.props.viewWork} 
-              data={['Manager view', 'Client view', 'Edit']}
+              data={[
+                {label: props.text['Manager view'][props.leng], value: 'Manager view' }, 
+                {label: props.text['Client view'][props.leng], value: 'Client view' }, 
+                {label: props.text['Edit'][props.leng], value: 'Edit' }
+              ]}
               onChange={props.props.setViewWork}/>
               <Group>
                 {profitMain()}
@@ -968,7 +978,7 @@ export function OrdersScreen(props, message) {
         <Space h='sm'/>
         <Grid>
           {order._mediaPhotos_.map((item, index)=> 
-            <Grid.Col span={2} key={index}>
+            <Grid.Col span={1.2} key={index}>
               <Image 
                 src={`data:image/jpeg;base64,${item}`}
                 radius="sm"
@@ -1111,7 +1121,7 @@ export function OrdersScreen(props, message) {
               </Button>
             </Grid.Col>
           </Grid>
-          <Space h={10}/>
+          <Space h='lg'/>
           {[...order._information_].reverse().map((item, index) => <div key={index}>{item}</div>)}
         </Tabs.Panel>
 
@@ -1141,7 +1151,7 @@ export function OrdersScreen(props, message) {
             <Grid.Col key={'Service'} span={props.props.screenSizeOrderButLine < 12 ? 5.5 : 12}>
               <Autocomplete
                 value={props.props.newWork.work}
-                placeholder='Услуга'
+                placeholder={props.text.uslugi[props.leng]}
                 error={!props.props.newWork.work}
                 data={props.service.uslugi.map(item => item.value + ` | ${props.text.cost[props.leng]}: ` + item.price)}
                 onChange={(event) => {
@@ -1205,7 +1215,7 @@ export function OrdersScreen(props, message) {
             {props.service.statuses.map(item => 
               <Grid.Col key={item} span={props.props.screenSizeOrderButLine}>
                 <Button 
-                  color={item === element._status_ ? colorOrder(item) : 'gray'} 
+                  color={item === element._status_ ? colorOrder(element._status_) : 'grey'} 
                   fullWidth
                   onClick={() => {
                     sendToSocket('editOrderStatus', {
@@ -1223,6 +1233,7 @@ export function OrdersScreen(props, message) {
           </Grid>
           <Space h='xs'/>
           {bottomSideData(element)}
+          <Space h='xs'/>
           <hr color={colorOrder(element._status_)}></hr>
           <Space h='sm'/>
           {dataForTable(element)}
@@ -1239,7 +1250,7 @@ export function OrdersScreen(props, message) {
                 })
               }}
             >
-            Фотографии
+            {props.text.photos[props.leng]}
             </Button>
             <Button
               disabled={!props.user.telegramId}
@@ -1252,7 +1263,7 @@ export function OrdersScreen(props, message) {
                 })
               }}
             >
-            Послать в телеграмм
+            {props.text.sendToTelegram[props.leng]}
             </Button>
           </Group>
           
@@ -1288,7 +1299,6 @@ export function OrdersScreen(props, message) {
             
           </Accordion.Control>
           
-          
           {acordControl(element)}
         </Accordion.Item>
       </Box>
@@ -1321,19 +1331,6 @@ export function OrdersScreen(props, message) {
             {rowss}
           </Accordion>
         </Container>
-        {/* <Affix position={{ bottom: 20, right: 20 }}>
-        <Transition transition="slide-up" mounted={scroll.y > 0}>
-          {(transitionStyles) => (
-            <Button
-              leftSection={<IconArrowUp size={16} />}
-              style={transitionStyles}
-              onClick={() => scrollTo({ y: 0 })}
-            >
-              Scroll to top
-            </Button>
-          )}
-        </Transition>
-      </Affix> */}
       </div>
     )
   }

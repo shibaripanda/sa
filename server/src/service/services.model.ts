@@ -59,17 +59,24 @@ export const ServiceSchema = new mongoose.Schema({
     },
     devices: {
       type: Array,
-      default: ['Devicename_1', 'Devicename_2'],
+      default: ['Laptop', 'Mobile phone'],
       require: true
     },
     statuses: {
       type: Array,
-      default: ['New', 'Ready'],
+      default: ['New', 'Diagnostics', 'Coordination', 'Process', 'Ready', 'Closed'],
       require: true
     },
     colorStatuses: {
       type: [],
-      default: [{status: 'New', color: 'red'}, {status: 'Ready', color: 'green'} ],
+      default: [
+        {status: 'New', color: '#f02626'}, 
+        {status: 'Diagnostics', color: '#228be6'}, 
+        {status: 'Coordination', color: '#e0dd09'},
+        {status: 'Process', color: '#731ced'},
+        {status: 'Ready', color: '#82c91e'},  
+        {status: 'Closed', color: '#2e2e2e'}
+      ],
       require: true
     },
     orderData: {
@@ -183,12 +190,12 @@ export const ServiceSchema = new mongoose.Schema({
     },
     uslugi: {
       type: Array,
-      default: [{value: 'Ремонт ноутбука', price: 100}],
+      default: [{value: 'Laptop repair', price: 100}],
       require: true
     },
     boxParts: {
       type: Array,
-      default: [{value: 'Жесткий диск Netac SSD256', subPrice: 70, price: 100, varanty: 120}],
+      default: [{value: 'Hard drive 550gb', subPrice: 70, price: 100, varanty: 120}],
       require: true
     }
   }, {timestamps: true})

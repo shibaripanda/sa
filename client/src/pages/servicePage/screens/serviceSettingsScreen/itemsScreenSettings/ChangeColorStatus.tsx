@@ -15,7 +15,7 @@ export function ChangeColorStatus(props, message) {
 
   const colorBut = (status) => {
     const res = props.service.colorStatuses.find(item => item.status === status)
-    return res ? res.color : 'green'
+    return res ? res.color : 'grey'
   }
 
   const items = props.props.stateColorList.map((item, index) => (

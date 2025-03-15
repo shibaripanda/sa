@@ -116,7 +116,7 @@ export function CreateOrderScreen(props, message) {
   }
   const butOpenFilter = () => {
     if(!props.props.openedFilter){
-      return <Button fullWidth onClick={() => switchFilterOrNewOrder('filter')}>Filter</Button>
+      return <Button fullWidth onClick={() => switchFilterOrNewOrder('filter')}>{props.text.filter[props.leng]}</Button>
     }
     return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('filter')}>{props.text.hide[props.leng]}</Button>
   }
@@ -241,6 +241,10 @@ export function CreateOrderScreen(props, message) {
                     serviceId: props.user.serviceId, 
                     subServiceId: props.user.subServiceId,
                     newOrder: createOrder()
+                  })
+                  sendToSocket('deleteAllImage', {
+                    serviceId: props.user.serviceId, 
+                    subServiceId: props.user.subServiceId
                   })
                 }}
                 >

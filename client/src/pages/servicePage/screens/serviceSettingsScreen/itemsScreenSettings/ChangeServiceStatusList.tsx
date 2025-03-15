@@ -16,7 +16,7 @@ export function ChangeServiceStatusList(props, message) {
 
   const colorBut = (status) => {
     const res = props.service.colorStatuses.find(item => item.status === status)
-    return res ? res.color : 'green'
+    return res ? res.color : 'grey'
   }
 
   const items = props.props.stateColorList.map((item, index) => (
@@ -55,7 +55,8 @@ export function ChangeServiceStatusList(props, message) {
                 </Group>
 
                 <ColorPicker
-                  value={colorBut(item)}
+                  value={props.props.colorStatus.color}
+                  // value={colorBut(item)}
                   onChange={(color) => {
                     console.log(props.props.colorStatus)
                     props.props.setColorStatus({status: item, color: color})
