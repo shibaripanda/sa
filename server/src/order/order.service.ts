@@ -166,16 +166,16 @@ export class OrderService {
         return false   
     }
     async createOrder(serviceId, subServiceId, newOrder, user, service){
-        const orderSh = () => {
+        const orderSh = async () => {
             const res = {}
             for(const i of newOrder){
                 res[i.field] = i.number ? 'number' : 'string'
             }
             return res
         }
-        const orderData = () => {
+        const orderData = async () => {
             const res = {
-                _status_: service.statuses[0],
+                _status_: service.statuses[0] ? service.statuses[0] : 'New',
                 _serviceId_: serviceId, 
                 _subServiceId_: subServiceId,
                 _orderServiceId_: rendomNumberOrder({min: 1000, max: 9999}) + '_' + rendomLetteOrder() + rendomLetteOrder() + rendomLetteOrder(),
@@ -187,14 +187,15 @@ export class OrderService {
             }
             return res
         }
-        OrderSchema.add(orderSh())
-        const ord = await this.orderMongo.create(orderData())
+        OrderSchema.add(await orderSh())
+        const ord = await this.orderMongo.create(await orderData())
+        console.log(ord._id)
         if(ord){
-            const name = service.subServices.find(item => item.subServiceId === ord._subServiceId_)
+            const name = await service.subServices.find(item => item.subServiceId === ord._subServiceId_)
             ord._subService_ = name ? name.name : '--'
             if(user.telegramId){
               await user.updateOne({newOrderImages: []})
-              await this.botService.newOrderTelegramMessage(user.telegramId, ord)  
+            //   await this.botService.newOrderTelegramMessage(user.telegramId, ord)  
             }
             return ord 
         }

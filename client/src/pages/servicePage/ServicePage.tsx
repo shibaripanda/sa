@@ -73,7 +73,7 @@ function ServicePage() {
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
   const [orders, setOrders] = useState<Order[]>([])
-  const [countLoadOrders, setCountLoadOrders] = useState([0, 5])
+  const [countLoadOrders, setCountLoadOrders] = useState([0, 100])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
   const [openedClosePrint, openedClosePrintHandlers] = useDisclosure(false)

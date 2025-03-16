@@ -237,15 +237,16 @@ export function CreateOrderScreen(props, message) {
                 disabled={disabledCreateButton()}
                 onClick={async () => {
                   await props.props.getAndPrintNewOrder()
-                  sendToSocket('createOrder', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId,
-                    newOrder: createOrder()
-                  })
+                      sendToSocket('createOrder', {
+                      serviceId: props.user.serviceId, 
+                      subServiceId: props.user.subServiceId,
+                      newOrder: createOrder()
+                    })
                   sendToSocket('deleteAllImage', {
                     serviceId: props.user.serviceId, 
                     subServiceId: props.user.subServiceId
                   })
+                  switchFilterOrNewOrder('newOrder')   //сворачивание нового заказа
                 }}
                 >
                 {props.text.createNewOrder[props.leng]}
