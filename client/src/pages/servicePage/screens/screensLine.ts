@@ -203,9 +203,12 @@ export class ScreenLine {
     }
 
     getScreen(activeScreen: string, props: any){
-        console.log('-----------------------')
-        console.log('ScreenLine',activeScreen)
-        console.log(this.user, this.service)
+        // @ts-ignore
+        if(process.env.REACT_APP_MODE === 'dev'){
+            console.log('-----------------------')
+            console.log('ScreenLine',activeScreen)
+            console.log(this.user, this.service)
+        }
         const res = this.line.find(it => it.name === activeScreen)
         const items = res ? res.items.filter(item => this.getMessagesForUser().includes(item.message) || this.user.userRoles.includes('owner')) : []
         if(items.length){

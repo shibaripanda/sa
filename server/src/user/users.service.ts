@@ -4,7 +4,6 @@ import { Model } from 'mongoose'
 import { User } from './user.model'
 import { rendomNumberOrder } from 'src/order/tech/rendomNumberOrder'
 import { rendomLetteOrder } from 'src/order/tech/rendomLetteOrder'
-// import { sendEmail } from 'src/modules/sendMail'
 import { Server } from 'socket.io'
 import { WebSocketServer } from '@nestjs/websockets'
 

@@ -10,8 +10,6 @@ import { emptyWork } from '../../../ServicePage.tsx'
 export function OrdersScreen(props, message) {
 
   console.log('OrdersScreen')
-
-  // const [scroll, scrollTo] = useWindowScroll()
   
   if(!props.props.newWork.master){
     props.props.setNewWork({...props.props.newWork, master: props.props.newWork.master ? props.props.newWork.master : props.user._id})
