@@ -196,7 +196,7 @@ export class OrderService {
             ord._subService_ = name ? name.name : '--'
             if(user.telegramId){
               await user.updateOne({newOrderImages: []})
-            //   await this.botService.newOrderTelegramMessage(user.telegramId, ord)  
+              await this.botService.newOrderTelegramMessage(user.telegramId, ord)  
             }
             return ord 
         }

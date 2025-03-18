@@ -51,7 +51,7 @@ export function OrdersScreen(props, message) {
         }
         return new Date(data).toLocaleDateString([`${props.leng}`, "en"])
     }
-    return data ? data : '--'
+    return data ? textBigToSmall(data, 35) : '--'
   }
   const checkStatus = (x, y) => {
     if(x === y){
@@ -203,9 +203,9 @@ export function OrdersScreen(props, message) {
       )
     }
   }
-  const textBigToSmall = (text) => {
-    if(text.length > 15){
-      return <Tooltip label={text}><Text size='sm'>{deviceName(text).slice(0, 15) + '...'}</Text></Tooltip>
+  const textBigToSmall = (text, l) => {
+    if(text.length > l){
+      return <Tooltip label={text}><Text size='sm'>{deviceName(text).slice(0, l) + '...'}</Text></Tooltip>
     }
     return <Text size='sm'>{deviceName(text)}</Text>
   }
@@ -1308,7 +1308,7 @@ export function OrdersScreen(props, message) {
       <div>
         <Grid justify="space-between" align="center" visibleFrom="sm" style={{marginBottom: '1vmax'}}>
           {activData.map(item => 
-              <Grid.Col span={12 / activData.length} key={item.item}><Center>{textBigToSmall(line.find(w => w.data === item.item).name)}</Center></Grid.Col>
+              <Grid.Col span={12 / activData.length} key={item.item}><Center>{textBigToSmall(line.find(w => w.data === item.item).name, 15)}</Center></Grid.Col>
             )}
         </Grid>
         <Container size="100%" className={classes.wrapper}>
