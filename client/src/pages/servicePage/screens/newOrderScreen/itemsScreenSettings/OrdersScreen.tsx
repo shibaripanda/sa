@@ -51,7 +51,7 @@ export function OrdersScreen(props, message) {
         }
         return new Date(data).toLocaleDateString([`${props.leng}`, "en"])
     }
-    return data ? textBigToSmall(data, 35) : '--'
+    return data ? data : '--'
   }
   const checkStatus = (x, y) => {
     if(x === y){
@@ -1007,7 +1007,17 @@ export function OrdersScreen(props, message) {
 
         <Tabs.Panel value={props.text.close[props.leng]} pt="xs">
           <Grid justify="center" grow>
-            {[
+            {[<></>,
+              // <Button
+              //   color='red'
+              //   fullWidth
+              //   onClick={async () => {
+              //     // await props.props.printDocument(order, 'WarrantyOrderPrint')
+              //   }}
+              //   >
+              //   {props.text.delete[props.leng]}
+              // </Button>,
+              // <></>,
               <Button
                 color='green'
                 fullWidth
@@ -1016,7 +1026,8 @@ export function OrdersScreen(props, message) {
                 }}
                 >
                 {props.text.closeOrder[props.leng]}
-              </Button>
+              </Button>,
+              <></>
             ]
             .map((item, index) => <Grid.Col key={index} span={props.props.screenSizeOrderButLine}>{item}</Grid.Col>)}
           </Grid>
@@ -1288,12 +1299,12 @@ export function OrdersScreen(props, message) {
           
               <Grid justify="center" align="center" visibleFrom="sm">
                 {activData.map((item, index) => 
-                  <Grid.Col span={12 / activData.length} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
+                  <Grid.Col span={12 / activData.length} key={element._id + index}><Center>{textBigToSmall(specData(element[item.item], item.item), 30)}</Center></Grid.Col>
                 )}
               </Grid>
               <Grid justify="center" align="center" hiddenFrom="sm">
                 {activData.slice(0, 3).map((item, index) => 
-                  <Grid.Col span={4} key={element._id + index}><Center>{specData(element[item.item], item.item)}</Center></Grid.Col>
+                  <Grid.Col span={4} key={element._id + index}><Center>{textBigToSmall(specData(element[item.item], item.item), 35)}</Center></Grid.Col>
                 )}
               </Grid>
             

@@ -1,6 +1,7 @@
 import { Injectable, CanActivate } from '@nestjs/common'
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host'
 import { JwtService } from '@nestjs/jwt'
+import { canUse } from 'src/modules/canUse'
 import { ServicesService } from 'src/service/services.service'
 import { UsersService } from 'src/user/users.service'
 
@@ -30,7 +31,7 @@ export class RolesGuard implements CanActivate {
 
     const activPatterns = [...new Set(service.roles.filter(item => roles.includes(item.role)).map(item => item.access).flat())]
 
-    if(activPatterns.includes(req.getPattern()) || 'getOrder' === req.getPattern()){
+    if(activPatterns.includes(req.getPattern()) || canUse.includes(req.getPattern())){
       return true
     }
     

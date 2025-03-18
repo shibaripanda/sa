@@ -53,7 +53,7 @@ export function ChangeMyMainOrderDataLine(props, item1) {
         >
           <div>
             <IconHandStop/>
-            <Button fullWidth>{deviceName(line.find(a => a.data === item).name)}</Button>
+            <Button fullWidth variant='default'>{deviceName(line.find(a => a.data === item).name)}</Button>
           </div>
         </div>
       )}

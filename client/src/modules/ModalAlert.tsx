@@ -1,4 +1,4 @@
-import { Anchor, Button, Group, Image, Modal } from '@mantine/core'
+import { Anchor, Button, Group, Image, Modal, Space } from '@mantine/core'
 import React from 'react'
 
 export function ModalAlert(props) {
@@ -26,7 +26,7 @@ export function ModalAlert(props) {
               props.handlerAlertModal.close()
             }}
             >
-            ok
+            Ok
             </Button>
           </Group>
         </Modal>
@@ -50,7 +50,8 @@ export function ModalAlert(props) {
 
     return (
       <>
-        <Modal 
+        <Modal
+        size="auto" 
         centered
         opened={props.alertModal} 
         onClose={props.handlerAlertModal.close} 
@@ -61,15 +62,15 @@ export function ModalAlert(props) {
           {props.data.message}
           </Group>
           {image()}
-          <Group justify="flex-end">
-            <Button variant='default'
-            onClick={() => {
-              props.handlerAlertModal.close()
-            }}
-            >
-            ok
-            </Button>
-          </Group>
+          <Space h='lg'/>
+          <Button variant='default'
+          autoFocus
+          onClick={() => {
+            props.handlerAlertModal.close()
+          }}
+          >
+          Ok
+          </Button>
         </Modal>
       </>
     )

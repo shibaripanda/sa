@@ -73,7 +73,7 @@ function ServicePage() {
   const [orderData, setOrderData] = useState([])
   const [dataForPrint, setDataForPrint] = useState(false)
   const [orders, setOrders] = useState<Order[]>([])
-  const [countLoadOrders, setCountLoadOrders] = useState([0, 100])
+  const [countLoadOrders, setCountLoadOrders] = useState([0, 25])
   const [openedNewOrder, openedNewOrderHandler] = useDisclosure(false)
   const [openedFilter, openedFilterHandler] = useDisclosure(false)
   const [openedClosePrint, openedClosePrintHandlers] = useDisclosure(false)
@@ -88,7 +88,6 @@ function ServicePage() {
   const [orderAcord, setOrderAcord] = useState<string | null>(null)
   const [viewWork, setViewWork] = useState('Manager view')
   const [editedWork, setEditedWork] = useState<any[] | false>(false)
-  // const [scroll, scrollTo] = useWindowScroll()
   const [usluga, setUsluga] = useState({value: '', price: ''})
   const [boxPart, setBoxPart] = useState({value: '', varanty: '', subPrice: '', price: ''})
   const [telegramPass, setTelegramPass] = useState(false)
@@ -173,7 +172,7 @@ function ServicePage() {
           text={text}
           leng={leng}
           />
-          <ModalWindowPrint 
+        <ModalWindowPrint 
           openedPrint={openedPrint} 
           openedPrintHandlers={openedPrintHandlers}
           openedClosePrintHandlers={openedClosePrintHandlers}
@@ -226,7 +225,6 @@ function ServicePage() {
       const res = orders.filter(item => JSON.stringify(item).toString().toLowerCase().includes(minusSimbol(filterOrdersString).toString().toLowerCase()))
       return res
     }
-    // console.log(orders)
     return orders
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[filterOrdersString, orders])
@@ -384,8 +382,6 @@ function ServicePage() {
               printDocument: printDocument,
               currency: currency,
               serCurrency: serCurrency,
-              // scroll: scroll,
-              // scrollTo: scrollTo,
               usluga: usluga,
               setUsluga: setUsluga,
               boxPart: boxPart,
@@ -403,7 +399,6 @@ function ServicePage() {
           {modalPrinNewWarranty()}
           <ModalAlert alertModal={alertModal} user={user} handlerAlertModal={handlerAlertModal} data={alertData}/>
         </AppShell>
-        // alertModal handlerAlertModal
     )
   }
   return (
