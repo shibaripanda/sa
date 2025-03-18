@@ -6,7 +6,6 @@ import { OrderService } from 'src/order/order.service'
 import { ServicesService } from 'src/service/services.service'
 import { Service } from 'src/service/services.model'
 import { User } from 'src/user/user.model'
-import mongoose from 'mongoose'
   
   // @Update()
   // @Injectable()

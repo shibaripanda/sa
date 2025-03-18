@@ -77,7 +77,7 @@ export class NewOderPrint extends Component {
 
     render() {
       return (
-        <div ref={this.props.innerRef} style={{margin: '2vmax'}}>
+        <div ref={this.props.innerRef} style={{margin: '2.5vmax'}}>
 
           <Group justify="center" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
             <Text fw={700} size="sm" className="perenos">{this.dataText.docTitle}</Text> #
