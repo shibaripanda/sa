@@ -6,6 +6,7 @@ import { OrderService } from 'src/order/order.service'
 import { ServicesService } from 'src/service/services.service'
 import { Service } from 'src/service/services.model'
 import { User } from 'src/user/user.model'
+import mongoose from 'mongoose'
   
   // @Update()
   // @Injectable()
@@ -100,17 +101,10 @@ import { User } from 'src/user/user.model'
     }
 
     async newOrderTelegramMessage(telegramId, order){
-        const text =
-          order._orderServiceId_ + '\n'  
-        // + order.title + ' ' 
-        // + order.firm + ' ' 
-        // + order.model + '\n' 
-        // + order.problem + '\n' 
-        // + order.info + '\n' 
-        // + order.clientTel + '\n'
-        // + order.manager + '\n' 
-        // + new Date(order.date).toLocaleDateString()
-        
+      const obj = {...order._doc}
+      const orderInfo = Object.entries(obj).filter(item => !['_subService_', 'createdAt', 'updatedAt', '_DeviceBlocked_', '_media_', '_id', '__v', '_subServiceId_', '_serviceId_', '_orderServiceId_', '_history_', '_information_', '_work_'].includes(item[0])).map(item => item.join(': ') + '\n').join('')
+      console.log(order)
+      const text = obj._orderServiceId_ + ' ' + obj._DeviceBlocked_ + ' (' +  obj._subService_ + ')\n' + obj.createdAt.toDateString() + '\n' + orderInfo
         if(order._media_.length){
           order._media_[0] = {...order._media_[0], caption: text, parse_mode: 'HTML'}
           await this.bot.telegram.sendMediaGroup(telegramId, order._media_).catch(error => console.log(error))

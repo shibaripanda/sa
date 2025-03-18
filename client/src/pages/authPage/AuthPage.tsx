@@ -32,8 +32,9 @@ function AuthPage() {
   const getLeguagePack = async () => {
     const res = await textClass.getTextPackFromServer()
     if(res){
+      const userSetLenguage = await textClass.getLeng()
       setAvLeng(res.lengPack)
-      setLeng(res.lengPack.map((item: { index: string }) => item.index).includes(leng) ? leng : 'en')
+      setLeng(userSetLenguage ? userSetLenguage : res.lengPack.map((item: { index: string }) => item.index).includes(leng) ? leng : 'en')
       setText(res.text)
       sessionStorage.setItem('leng', res.lengPack.map((item: { index: string }) => item.index).includes(leng) ? leng : 'en')
       sessionStorage.setItem('text', JSON.stringify(res.text))

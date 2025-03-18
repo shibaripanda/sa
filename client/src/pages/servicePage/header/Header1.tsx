@@ -15,6 +15,12 @@ export function Header1(props) {
         color: 'red', class: classes.mainLinkExit,
         action: () => {
           sessionStorage.removeItem('activescreen')
+          for (let i = 0; i < sessionStorage.length; i++) {
+            let key = sessionStorage.key(i);
+            if (key && key.startsWith("docInput_")) { 
+                sessionStorage.removeItem(key);
+            }
+          }
           props.navigate('/')
         }
       },
@@ -32,6 +38,12 @@ export function Header1(props) {
         color: 'red', class: classes.mainLinkExit,
         action: () => {
           sessionStorage.removeItem('activescreen')
+          for (let i = 0; i < sessionStorage.length; i++) {
+            let key = sessionStorage.key(i);
+            if (key && key.startsWith("docInput_")) { 
+                sessionStorage.removeItem(key);
+            }
+          }
           props.navigate('/')
         }
       },

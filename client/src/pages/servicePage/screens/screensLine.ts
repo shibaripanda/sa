@@ -56,23 +56,26 @@ export const line: Line[] = [
         name: 'orders',
         screen: NewOrderScreen,
         items: [
-            {message: 'createOrder', screenItem: CreateOrderScreen},
+            {message: 'createOrder', screenItem: CreateOrderScreen,
+                canUse: ['sendOrderToTelegram']
+            },
             {message: 'getOrdersCount', screenItem: OrdersScreen, 
-                canUse: ['addNewWork', 'deleteWork', 'deleteAllWork', 'updateOrderWork', 'addInformationOrder', 'editOrderStatus']},  
+                canUse: ['addNewWork', 'deleteWork', 'deleteAllWork', 'updateOrderWork', 'editOrderStatus']},  
         ]
     },
     {
         name: 'uslugi',
         screen: SeviceSettingsScreen,
         items: [
-            {message: 'changeWorksService', screenItem: ChangeWorksService}, 
+            {message: 'changeWorksService', screenItem: ChangeWorksService, canUse: ['deleteUsluga']}, 
         ]
     },
     {
         name: 'partsBox',
         screen: SeviceSettingsScreen,
         items: [
-            {message: 'changeBoxPartsService', screenItem: ChangeBoxPartsService}, 
+            {message: 'changeBoxPartsService', screenItem: ChangeBoxPartsService, 
+                canUse: ['deletePart']}, 
         ]
     },
     {
@@ -83,10 +86,10 @@ export const line: Line[] = [
             {message: 'changeInfoMainService', screenItem: ChangeInfoMainService},
             {message: 'changeFeeService', screenItem: ChangeFeeService}, 
             {message: 'changeCurrencyService', screenItem: ChangeCurrencyService, size: 12}, 
-            {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12},
-            {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12},
-            {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12},
-            {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12, canUse: ['addNewServiceRole', ]},
+            {message: 'changeServiceDeviceList', screenItem: ChangeServiceDeviceList, size: 12, canUse: ['replaceDevicePosition']},
+            {message: 'changeServiceStatusList', screenItem: ChangeServiceStatusList, size: 12, canUse: ['changeColorStatus', 'replaceStatusPosition']},
+            {message: 'changeServiceOrderDataList', screenItem: ChangeServiceOrderDataList, size: 12, canUse: ['orderDataEdit', 'replaceOrderDataItems']},
+            {message: 'changeServiceRole', screenItem: ChangeServiceRole, size: 12, canUse: ['addNewServiceRole']},
             {message: 'changeLocalService', screenItem: ChangeLocalService, size: 12},
             {message: 'deleteService', screenItem: DeleteService}
         ]
@@ -106,7 +109,7 @@ export const line: Line[] = [
         screen: UserSettingsScreen,
         getDataMessage: 'getServiceUsers',
         items: [
-            {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12},
+            {message: 'changeServiceUser', screenItem: ChangeServiceUser, size: 12, canUse: ['addRoleToUser', 'addStatusToUser', 'addDeviceToUser', 'deleteUserFromService']},
         ]
     },
     {
@@ -121,7 +124,7 @@ export const line: Line[] = [
         name: 'documents',
         screen: SeviceSettingsScreen,
         items: [
-            {message: 'NewOrderPrint', screenItem: ChangeNewOrderPrint, size: 12},
+            {message: 'NewOrderPrint', screenItem: ChangeNewOrderPrint, size: 12, canUse: ['updateDocument']},
             {message: 'changeWarrantyOrderPrint', screenItem: ChangeWarrantyOrderPrint, size: 12},
         ]
     },
