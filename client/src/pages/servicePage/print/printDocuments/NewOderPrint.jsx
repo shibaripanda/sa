@@ -95,17 +95,17 @@ export class NewOderPrint extends Component {
       return (
         <div ref={this.props.innerRef} style={{marginRight: '2.5vmax', marginLeft: '2.5vmax', marginTop: '1vmax'}}>
 
-          {/* <Group justify="center" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
+          <Group justify="center" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
             <Text fw={700} size="sm" className="perenos">{this.dataText.docTitle}</Text> #
             <Text fw={700} size="sm">{this.data._orderServiceId_}</Text>
-          </Group> */}
+          </Group>
 
           <Group justify="space-between" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
             <Text size="sm">{this.service.name} {this.service.subName}</Text>
-            <Group justify="center" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
+            {/* <Group justify="center" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
               <Text fw={700} size="sm" className="perenos">{this.dataText.docTitle}</Text> #
               <Text fw={700} size="sm">{this.data._orderServiceId_}</Text>
-            </Group>
+            </Group> */}
             <Text size="sm">{new Date(this.data.createdAt).toLocaleDateString([`${this.leng}`, "en"])} {new Date(this.data.createdAt).toLocaleTimeString([`${this.leng}`, "en"]).slice(0, -3)}</Text>
           </Group>
 
