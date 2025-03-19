@@ -1,7 +1,10 @@
-import { Button, Center, Grid, Group, Modal, NumberFormatter, Space, Text, Title } from '@mantine/core'
-import React from 'react'
+import { Button, Center, Grid, Group, Modal, NumberFormatter, Space, Text, TextInput, Title } from '@mantine/core'
+import React, { useState } from 'react'
+import { sendToSocket } from '../../../modules/socket/pipSendSocket.ts'
 
 export function ModalWindowPrintStatus(props) {
+
+  const [deleteInput, setDeleteInput] = useState('')
 
   const totalCost = () => {
     if(props.data._work_ && props.data._work_.length){
@@ -64,15 +67,25 @@ export function ModalWindowPrintStatus(props) {
               <hr></hr>
               <Space h='lg'/>
               <Group justify="space-between">
+                <TextInput 
+                  style={{width: 175}}
+                  onChange={event => setDeleteInput(event.target.value)}
+                />
                 <Button
+                  disabled={deleteInput !== props.data._orderServiceId_}
                   color='red'
-                  // onClick={
-                  //  props.openedClosePrintHandlers.close
-                  // }  
+                  onClick={() => {
+                    sendToSocket('deleteOrderbyId', {
+                      serviceId: props.user.serviceId, 
+                      subServiceId: props.user.subServiceId, 
+                      orderId: props.data._id
+                    })
+                    props.openedClosePrintHandlers.close()
+                    props.setOrderAcord(null)
+                  }}
                   style={{width: 175}}>
                   {props.text.delete[props.leng]}
                 </Button>
-                <div style={{width: 175}}></div>
                 <Button
                   variant='default'
                   onClick={props.openedClosePrintHandlers.close}  

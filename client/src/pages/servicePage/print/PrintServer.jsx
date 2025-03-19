@@ -20,7 +20,7 @@ export const PrintServer = (props) => {
   const cancelPrint = () => {
     if(props.data._printDocument_ === 'WarrantyOrderPrint'){
       return (
-        <Button color='red'
+        <Button variant="default"
           onClick={() => {
             props.openedPrintHandlers.close()
           }}  
@@ -38,7 +38,7 @@ export const PrintServer = (props) => {
     <div>
       <div style={{textAlign: 'center', marginTop: '1.7vmax'}}>
 
-        <Button  
+        <Button variant="default" 
           onClick={() => {
             props.openedPrintHandlers.close()
             props.openedClosePrintHandlers.close()
@@ -49,7 +49,7 @@ export const PrintServer = (props) => {
 
         {cancelPrint()}
 
-        <Button color='green' autoFocus={true} type="primary" style={{width: 375, marginBottom: '1vmax'}} 
+        <Button color="green" autoFocus={true} type="primary" style={{width: 375, marginBottom: '1vmax'}} 
           onClick={() => {
             handlePrint()
             props.openedPrintHandlers.close()

@@ -166,6 +166,7 @@ function ServicePage() {
         <ModalWindowPrintStatus 
           openedClosePrint={openedClosePrint} 
           openedClosePrintHandlers={openedClosePrintHandlers}
+          setOrderAcord={setOrderAcord}
           data={dataForPrint}
           service={service}
           user={user}
@@ -257,6 +258,11 @@ function ServicePage() {
       const getNewOrderImages = (data: any) => {
         setNewOrderImages(data)
       }
+      const deleteOrderbyId = (data: any) => {
+        setOrders((ex) => {
+          return ex.filter(item => item._id !== data)
+        })
+      }
       
       getFromSocket([
         {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
@@ -269,6 +275,7 @@ function ServicePage() {
         {message: `alert`, handler: showAlertMessage},
         {message: 'getOrderPhotos', handler: getOrderPhotos},
         {message: 'getNewOrderImages', handler: getNewOrderImages},
+        {message: 'deleteOrderbyId', handler: deleteOrderbyId},
       ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
 

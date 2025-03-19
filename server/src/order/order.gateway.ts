@@ -19,6 +19,20 @@ import { OrderService } from './order.service'
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deleteOrderbyId')
+  async deleteOrderbyId(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
+    console.log(payload)
+    const status = await this.orderService.deleteOrderbyId(payload.serviceId, payload.subServiceId, payload.orderId, req.user, req.service)
+    console.log(status)
+    if(status.deletedCount){
+      this.server.to(client.id).emit('deleteOrderbyId', payload.orderId)
+      client.to(payload.serviceId).emit('deleteOrderbyId', payload.orderId)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('getOrdersFilter')
   async getOrdersFilter(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)

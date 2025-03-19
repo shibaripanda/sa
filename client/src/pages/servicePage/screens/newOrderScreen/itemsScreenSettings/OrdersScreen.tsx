@@ -980,7 +980,7 @@ export function OrdersScreen(props, message) {
               <Image 
                 src={`data:image/jpeg;base64,${item}`}
                 radius="sm"
-                h='15vmax'
+                h='10vmax'
                 w="auto"
               />
             </Grid.Col>
@@ -1004,104 +1004,98 @@ export function OrdersScreen(props, message) {
         </Tabs.List>
 
         <Tabs.Panel value={props.text.close[props.leng]} pt="xs">
+          <Space h='lg'/>
+          <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
+            <Table.Tbody>
+              <Table.Tr>
+                      <Table.Td>
+                        <Center>
+                          {props.text.servOrPart[props.leng]}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td>
+                        <Center>
+                          {props.text.varanty[props.leng]}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td>
+                        <Center>
+                        {props.text.cost[props.leng]}
+                        </Center>
+                      </Table.Td>
+              </Table.Tr> 
+              {order._work_.map(work =>
+                  <>
+                    <Table.Tr>
+                      <Table.Td width={'70%'}>
+                        {work.work + work.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')}
+                      </Table.Td>
+                      <Table.Td width={'15%'}>
+                        <Center>
+                          {[...work.parts
+                            .filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
+                            .map(item => item.varanty), work.varanty ? work.varanty : 0]
+                            .sort((a, b) => b - a)}
+                        </Center>
+                      </Table.Td>
+                      <Table.Td width={'15%'}>
+                        <Center>
+                          {work.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, work.cost)}
+                        </Center>
+                      </Table.Td>
+                    </Table.Tr>
+                    {work.parts.filter(w => 'apart' === w.link).map(part => 
+                      <Table.Tr>
+                        <Table.Td>
+                          {part.part ? part.part : '--'}
+                        </Table.Td>
+                        <Table.Td>
+                          <Center>
+                            {part.varanty ? part.varanty : 0}
+                          </Center>
+                        </Table.Td>
+                        <Table.Td>
+                          <Center>
+                            {part.cost ? part.cost : 0}
+                          </Center>
+                        </Table.Td>
+                      </Table.Tr>
+                    )}
+                  </>
+                  )
+                }
+              <Table.Tr>
+                <Table.Td>
+                </Table.Td>
+                <Table.Td>
+                </Table.Td>
+                <Table.Td>
+                  <Center>
+                    {order._work_.reduce((acc, work) => acc + work.cost + work.parts.reduce((acc, part) => acc + part.cost, 0), 0)}
+                  </Center>
+                </Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+          <Space h='lg'/>
           <Grid justify="center" grow>
-            {[<></>,
-              // <Button
-              //   color='red'
-              //   fullWidth
-              //   onClick={async () => {
-              //     // await props.props.printDocument(order, 'WarrantyOrderPrint')
-              //   }}
-              //   >
-              //   {props.text.delete[props.leng]}
-              // </Button>,
-              // <></>,
+            {[
+              <></>,
+              <></>,
+              <></>,
               <Button
-                color='green'
+                variant='default'
+                // color='green'
                 fullWidth
                 onClick={async () => {
                   await props.props.printDocument(order, 'WarrantyOrderPrint')
                 }}
                 >
                 {props.text.closeOrder[props.leng]}
-              </Button>,
-              <></>
+              </Button>
             ]
             .map((item, index) => <Grid.Col key={index} span={props.props.screenSizeOrderButLine}>{item}</Grid.Col>)}
           </Grid>
-          <Space h='lg'/>
-          <Table withTableBorder withColumnBorders verticalSpacing="0.01vmax" variant="vertical">
-          <Table.Tbody>
-            <Table.Tr>
-                    <Table.Td>
-                      <Center>
-                        {props.text.servOrPart[props.leng]}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                        {props.text.varanty[props.leng]}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td>
-                      <Center>
-                       {props.text.cost[props.leng]}
-                      </Center>
-                    </Table.Td>
-            </Table.Tr> 
-            {order._work_.map(work =>
-                <>
-                  <Table.Tr>
-                    <Table.Td width={'70%'}>
-                      {work.work + work.parts.filter(item => item.link === 'mix').map(item => ' ' + item.part).join(' / ')}
-                    </Table.Td>
-                    <Table.Td width={'15%'}>
-                      <Center>
-                        {[...work.parts
-                          .filter(item => ['mix', 'hide'].includes(item.link) && item.varanty)
-                          .map(item => item.varanty), work.varanty ? work.varanty : 0]
-                          .sort((a, b) => b - a)}
-                      </Center>
-                    </Table.Td>
-                    <Table.Td width={'15%'}>
-                      <Center>
-                        {work.parts.filter(item => ['mix', 'hide'].includes(item.link)).reduce((acc, item) => acc + item.cost, work.cost)}
-                      </Center>
-                    </Table.Td>
-                  </Table.Tr>
-                  {work.parts.filter(w => 'apart' === w.link).map(part => 
-                    <Table.Tr>
-                      <Table.Td>
-                        {part.part ? part.part : '--'}
-                      </Table.Td>
-                      <Table.Td>
-                        <Center>
-                          {part.varanty ? part.varanty : 0}
-                        </Center>
-                      </Table.Td>
-                      <Table.Td>
-                        <Center>
-                          {part.cost ? part.cost : 0}
-                        </Center>
-                      </Table.Td>
-                    </Table.Tr>
-                  )}
-                </>
-                )
-              }
-            <Table.Tr>
-              <Table.Td>
-              </Table.Td>
-              <Table.Td>
-              </Table.Td>
-              <Table.Td>
-                <Center>
-                  {order._work_.reduce((acc, work) => acc + work.cost + work.parts.reduce((acc, part) => acc + part.cost, 0), 0)}
-                </Center>
-              </Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-          </Table>
           
         </Tabs.Panel>
 

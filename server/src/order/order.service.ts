@@ -17,6 +17,9 @@ export class OrderService {
         private botService: BotService,
     ) {}
 
+    async deleteOrderbyId(serviceId, subServiceId, orderId, user, service){
+        return await this.orderMongo.deleteOne({_id: orderId})
+    }
     async getOrderPhotos(orderId, serviceId, subServiceId, user){
         // console.log(serviceId)
         // console.log(user.services_roles.find(item => item.serviceId === serviceId))

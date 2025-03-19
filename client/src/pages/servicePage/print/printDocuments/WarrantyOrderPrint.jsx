@@ -13,6 +13,22 @@ export class WarrantyOrderPrint extends Component {
         this.dataText = props.service.serviceDocuments.find(item => item.name === 'WarrantyOrderPrint').data
     }
 
+    textSizeTableItalic(text){
+      console.log(text)
+      return (
+        <Text fs="italic" size='xs'>
+          {text}
+        </Text>
+      )
+    }
+    textSizeTable(text){
+      console.log(text)
+      return (
+        <Text size='xs'>
+          {text}
+        </Text>
+      )
+    }
     dataForTable(){
       const res = [
       ]
@@ -20,16 +36,16 @@ export class WarrantyOrderPrint extends Component {
         if(i === '_DeviceBlocked_'){
           res.push(
             <Table.Tr key={i}>
-              <Table.Th w={250}>{this.text.device[this.leng]}</Table.Th>
-              <Table.Td>{this.data[i]}</Table.Td>
+              <Table.Th w={250}>{this.textSizeTableItalic(this.text.device[this.leng])}</Table.Th>
+              <Table.Td>{this.textSizeTable(this.data[i])}</Table.Td>
             </Table.Tr>
           )
         }
         else if(i[0] !== '_' && !['createdAt', 'updatedAt'].includes(i) && this.data[i]){
           res.push(
             <Table.Tr key={i}>
-              <Table.Th w={250}>{i}</Table.Th>
-              <Table.Td>{this.data[i]}</Table.Td>
+              <Table.Th w={250}>{this.textSizeTableItalic(i)}</Table.Th>
+              <Table.Td>{this.textSizeTable(this.data[i])}</Table.Td>
             </Table.Tr>
           )
         }
@@ -37,43 +53,105 @@ export class WarrantyOrderPrint extends Component {
       if(this.service.subAddress){
         res.push(
           <Table.Tr key={this.text.changeAddressSubService[this.leng]}>
-            <Table.Th w={250}>{this.text.changeAddressSubService[this.leng]}</Table.Th>
-            <Table.Td>{this.service.subAddress}</Table.Td>
+            <Table.Th w={250}>{this.textSizeTableItalic(this.text.changeAddressSubService[this.leng])}</Table.Th>
+            <Table.Td>{this.textSizeTable(this.service.subAddress)}</Table.Td>
           </Table.Tr>
         )
       }
       if(this.service.subContact){
         res.push(
           <Table.Tr key={this.text.changeContactSubService[this.leng]}>
-            <Table.Th w={250}>{this.text.changeContactSubService[this.leng]}</Table.Th>
-            <Table.Td>{this.service.subContact}</Table.Td>
+            <Table.Th w={250}>{this.textSizeTableItalic(this.text.changeContactSubService[this.leng])}</Table.Th>
+            <Table.Td>{this.textSizeTable(this.service.subContact)}</Table.Td>
           </Table.Tr>
         )
       }
       if(this.service.subWorkTime){
         res.push(
           <Table.Tr key={this.text.changeTimeSubService[this.leng]}>
-            <Table.Th w={250}>{this.text.changeTimeSubService[this.leng]}</Table.Th>
-            <Table.Td>{this.service.subWorkTime}</Table.Td>
+            <Table.Th w={250}>{this.textSizeTableItalic(this.text.changeTimeSubService[this.leng])}</Table.Th>
+            <Table.Td>{this.textSizeTable(this.service.subWorkTime)}</Table.Td>
           </Table.Tr>
         )
       }
       res.push(
         <Table.Tr key={this.text.manager[this.leng]}>
-          <Table.Th w={250}>{this.text.manager[this.leng]}</Table.Th>
-          <Table.Td>{this.user.name ? this.user.name : this.user.email}</Table.Td>
+          <Table.Th w={250}>{this.textSizeTableItalic(this.text.manager[this.leng])}</Table.Th>
+          <Table.Td>{this.textSizeTable(this.user.name ? this.user.name : this.user.email)}</Table.Td>
         </Table.Tr>
       )
       if(this.service.dataService){
         res.push(
           <Table.Tr key={this.text.changeInfoMainService[this.leng]}>
-            <Table.Th w={250}>{this.text.changeInfoMainService[this.leng]}</Table.Th>
-            <Table.Td>{this.service.dataService}</Table.Td>
+            <Table.Th w={250}>{this.textSizeTableItalic(this.text.changeInfoMainService[this.leng])}</Table.Th>
+            <Table.Td>{this.textSizeTable(this.service.dataService)}</Table.Td>
           </Table.Tr>
         )
       }
       return res
     }
+
+    // dataForTable(){
+    //   const res = [
+    //   ]
+    //   for(const i in this.data){
+    //     if(i === '_DeviceBlocked_'){
+    //       res.push(
+    //         <Table.Tr key={i}>
+    //           <Table.Th w={250}>{this.text.device[this.leng]}</Table.Th>
+    //           <Table.Td>{this.data[i]}</Table.Td>
+    //         </Table.Tr>
+    //       )
+    //     }
+    //     else if(i[0] !== '_' && !['createdAt', 'updatedAt'].includes(i) && this.data[i]){
+    //       res.push(
+    //         <Table.Tr key={i}>
+    //           <Table.Th w={250}>{i}</Table.Th>
+    //           <Table.Td>{this.data[i]}</Table.Td>
+    //         </Table.Tr>
+    //       )
+    //     }
+    //   }
+    //   if(this.service.subAddress){
+    //     res.push(
+    //       <Table.Tr key={this.text.changeAddressSubService[this.leng]}>
+    //         <Table.Th w={250}>{this.text.changeAddressSubService[this.leng]}</Table.Th>
+    //         <Table.Td>{this.service.subAddress}</Table.Td>
+    //       </Table.Tr>
+    //     )
+    //   }
+    //   if(this.service.subContact){
+    //     res.push(
+    //       <Table.Tr key={this.text.changeContactSubService[this.leng]}>
+    //         <Table.Th w={250}>{this.text.changeContactSubService[this.leng]}</Table.Th>
+    //         <Table.Td>{this.service.subContact}</Table.Td>
+    //       </Table.Tr>
+    //     )
+    //   }
+    //   if(this.service.subWorkTime){
+    //     res.push(
+    //       <Table.Tr key={this.text.changeTimeSubService[this.leng]}>
+    //         <Table.Th w={250}>{this.text.changeTimeSubService[this.leng]}</Table.Th>
+    //         <Table.Td>{this.service.subWorkTime}</Table.Td>
+    //       </Table.Tr>
+    //     )
+    //   }
+    //   res.push(
+    //     <Table.Tr key={this.text.manager[this.leng]}>
+    //       <Table.Th w={250}>{this.text.manager[this.leng]}</Table.Th>
+    //       <Table.Td>{this.user.name ? this.user.name : this.user.email}</Table.Td>
+    //     </Table.Tr>
+    //   )
+    //   if(this.service.dataService){
+    //     res.push(
+    //       <Table.Tr key={this.text.changeInfoMainService[this.leng]}>
+    //         <Table.Th w={250}>{this.text.changeInfoMainService[this.leng]}</Table.Th>
+    //         <Table.Td>{this.service.dataService}</Table.Td>
+    //       </Table.Tr>
+    //     )
+    //   }
+    //   return res
+    // }
 
     totalPriceView(total){
       const cur = this.service.currency
@@ -214,13 +292,17 @@ export class WarrantyOrderPrint extends Component {
       return (
         <div ref={this.props.innerRef} style={{margin: '2.5vmax'}}>
 
-          <Group justify="center" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
+          {/* <Group justify="center" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
             <Text fw={700} size="sm" className="perenos">{this.dataText.docTitle}</Text> #
             <Text fw={700} size="sm">{this.data._orderServiceId_}</Text>
-          </Group>
+          </Group> */}
 
           <Group justify="space-between" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
             <Text size="sm">{this.service.name} {this.service.subName}</Text>
+            <Group justify="center" gap="xl" style={{marginRight: '1vmax', marginLeft: '1vmax'}}>
+              <Text fw={700} size="sm" className="perenos">{this.dataText.docTitle}</Text> #
+              <Text fw={700} size="sm">{this.data._orderServiceId_}</Text>
+            </Group>
             <Text size="sm">{new Date(Date.now()).toLocaleDateString([`${this.leng}`, "en"])} {new Date(Date.now()).toLocaleTimeString([`${this.leng}`, "en"]).slice(0, -3)}</Text>
           </Group>
 

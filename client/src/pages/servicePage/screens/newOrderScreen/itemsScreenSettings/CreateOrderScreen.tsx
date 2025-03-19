@@ -112,13 +112,13 @@ export function CreateOrderScreen(props, message) {
         props.props.askNewOrderImages()
       }}>{props.text[message][props.leng]}</Button>
     }
-    return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text.hide[props.leng]}</Button>
+    return <Button fullWidth variant='default' onClick={() => switchFilterOrNewOrder('newOrder')}>{props.text.hide[props.leng]}</Button>
   }
   const butOpenFilter = () => {
     if(!props.props.openedFilter){
-      return <Button fullWidth onClick={() => switchFilterOrNewOrder('filter')}>{props.text.filter[props.leng]}</Button>
+      return <Button fullWidth variant='default' onClick={() => switchFilterOrNewOrder('filter')}>{props.text.filter[props.leng]}</Button>
     }
-    return <Button fullWidth color='red' onClick={() => switchFilterOrNewOrder('filter')}>{props.text.hide[props.leng]}</Button>
+    return <Button fullWidth variant='default' onClick={() => switchFilterOrNewOrder('filter')}>{props.text.hide[props.leng]}</Button>
   }
   const filterOrderInput = () => {
     return (
@@ -190,19 +190,20 @@ export function CreateOrderScreen(props, message) {
     if(props.props.openedNewOrder){
       return (
         <div>
-
+          <Space h='lg'/>
           <Grid grow>
             {activData.map(item => 
             <Grid.Col key={item.item} span={props.props.screenSizeNewOrder}>
               {fieldCheck(item)}
             </Grid.Col>)}
           </Grid>
-            <Space h='lg'/>
+          <Space h='lg'/>
             {newOrderPhotosLine()}
+          <Space h='lg'/>
           <Grid grow>
             <Grid.Col span={props.props.screenSizeNewOrder}>
               <Button
-                color='red'
+                variant='default'
                 fullWidth
                 disabled={!props.props.newOrderImages.length}
                 onClick={async () => {
@@ -217,7 +218,7 @@ export function CreateOrderScreen(props, message) {
             </Grid.Col>
             <Grid.Col span={props.props.screenSizeNewOrder}>
               <Button
-                color='red'
+                variant='default'
                 fullWidth 
                 disabled={disabledClearButton()}
                 onClick={() => {
