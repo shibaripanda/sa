@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import './styles/App.css'
 import '@mantine/core/styles.css'
+import '@mantine/dates/styles.css'
 import { createTheme, MantineProvider } from '@mantine/core'
 import AuthPage from './pages/authPage/AuthPage.tsx'
 import ServicePage from './pages/servicePage/ServicePage.tsx'

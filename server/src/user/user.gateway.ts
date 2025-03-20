@@ -13,6 +13,7 @@ import { AddDeviceToUser } from './dto/AddDeviceToUser.dto'
 import { AddStatusToUser } from './dto/AddStatusToUser.dto'
 import { UpdateUserData } from './dto/UpdateUserData.dto'
 import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
+import { UpdateUserFilter } from './dto/UpdateUserFilter.dto'
 
 @WebSocketGateway({cors:{origin:'*'}})
 
@@ -22,7 +23,20 @@ import { UpdateOrderListData } from './dto/UpdateOrderListData.dto'
     private userSevice: UsersService
   ) {}
 
-  @WebSocketServer() server: Server
+  @WebSocketServer() server: Server 
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('editUserFilter')
+  async editUserFilter(@ConnectedSocket() client: Socket, @MessageBody() payload: UpdateUserFilter, @Request() req: any): Promise<void> {
+    console.log(payload)
+    const userRoles = await this.userSevice.editUserFilter(payload.serviceId, payload.subServiceId, payload.filter, payload.item, req.user)
+    console.log(userRoles.services_roles.find(item => item.serviceId === payload.serviceId).subServices.find(item => item.subServiceId === payload.subServiceId))
+    // if(user){
+    //   this.server.to(client.id).emit('getNewOrderImages', [])
+    // }
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)

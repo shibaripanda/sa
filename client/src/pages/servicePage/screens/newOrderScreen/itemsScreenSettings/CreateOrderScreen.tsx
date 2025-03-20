@@ -1,4 +1,4 @@
-import { Button, CloseButton, Collapse, Grid, Image, Indicator, RangeSlider, Space, TextInput } from '@mantine/core'
+import { Button, Checkbox, CloseButton, Collapse, Grid, Group, Image, Indicator, RangeSlider, Space, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
@@ -9,6 +9,7 @@ import { TextHandInput } from './ElementsInput/TextHandInput.tsx'
 import { MultSelectNoCreate } from './ElementsInput/MultSelectNoCreate.tsx'
 import { MultSelectCreateOne } from './ElementsInput/MultSelectCreateOne.tsx'
 import { MultSelectNoCreateOne } from './ElementsInput/MultSelectNoCreateOne.tsx'
+import { DateInput, DatePickerInput } from '@mantine/dates'
 
 export function CreateOrderScreen(props, message) {
 
@@ -189,7 +190,7 @@ export function CreateOrderScreen(props, message) {
   const createModule = () => {
     if(props.props.openedNewOrder){
       return (
-        <div>
+        <div style={{marginRight: '2vmax', marginLeft: '2vmax'}}>
           <Space h='lg'/>
           <Grid grow>
             {activData.map(item => 
@@ -262,50 +263,90 @@ export function CreateOrderScreen(props, message) {
   const filterModule = () => {
     if(props.props.openedFilter){
       return (
-        <div>
-          {/* <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr> */}
-                  dddd
-          {/* <Grid grow>
-            {activData.map(item => 
-            <Grid.Col key={item.item} span={props.props.screenSizeNewOrder}>
-              {fieldCheck(item)}
-            </Grid.Col>)}
-          </Grid>
-
-          <Grid style={{marginTop: '1.5vmax'}} grow>
-            <Grid.Col span={props.props.screenSizeNewOrder}>
-              <Button
-                color='green'
-                fullWidth
-                disabled={disabledCreateButton()}
-                onClick={async () => {
-                  await props.props.getAndPrintNewOrder()
-                  sendToSocket('createOrder', {
+        <div style={{marginRight: '2vmax', marginLeft: '2vmax'}}>
+          <Space h='lg'/>
+          <Group>
+            {props.service.devices.map(item => 
+            <Checkbox color='grey' key={item} label={item} checked={!props.user.deviceFilter.includes(item)}
+            onChange={() => {
+              sendToSocket('editUserFilter', {
+                serviceId: props.user.serviceId, 
+                subServiceId: props.user.subServiceId,
+                filter: 'deviceFilter',
+                item: item
+              })
+            }}
+            />)}
+          </Group>
+          <Space h='lg'/>
+          <Group>
+            {props.service.statuses.map(item => <Checkbox color='grey' key={item} label={item} checked={!props.user.statusFilter.includes(item)}
+            onChange={() => {
+              sendToSocket('editUserFilter', {
+                serviceId: props.user.serviceId, 
+                subServiceId: props.user.subServiceId,
+                filter: 'statusFilter',
+                item: item
+              })
+            }}/>)}
+          </Group>
+          <Space h='lg'/>
+          <Group>
+            {props.service.subServices.map(item => <Checkbox color='grey' key={item.subServiceId} label={item.name} checked={!props.user.deviceFilter.includes(item.subServiceId)}
+            onChange={() => {
+              sendToSocket('editUserFilter', {
+                serviceId: props.user.serviceId, 
+                subServiceId: props.user.subServiceId,
+                filter: 'subServiceFilter',
+                item: item.subServiceId
+              })
+            }}/>)}
+          </Group>
+          <Space h='lg'/>
+          <Group justify='space-between'>
+            <Group>
+              <DatePickerInput
+              type="range"
+              value={props.user.deviceDate}
+              onChange={(event) => {
+                sendToSocket('editUserFilter', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  filter: 'dateFilter',
+                  item: event
+                })
+              }}
+              placeholder="Начало и конец периода"
+              />
+              <Button variant='default'
+                onClick={() => {
+                  sendToSocket('editUserFilter', {
                     serviceId: props.user.serviceId, 
                     subServiceId: props.user.subServiceId,
-                    newOrder: createOrder()
+                    filter: 'dateFilter',
+                    item: [null, null]
                   })
                 }}
                 >
-                {props.text.createNewOrder[props.leng]}
+                Skip date
               </Button>
-            </Grid.Col>
-            <Grid.Col span={props.props.screenSizeNewOrder}>
-              <Button
-                color='red'
-                fullWidth 
-                disabled={disabledClearButton()}
-                onClick={() => {
-                  for(const i of activData.map(item => item.item)){
-                    sessionStorage.removeItem(`docInput_${i}`)
-                  }
-                  props.props.setNewOrderRend(Date.now())
-                }}
-                >
-                {props.text.clearForm[props.leng]}
-              </Button>
-            </Grid.Col>
-          </Grid> */}
+            </Group>
+            
+            <Group>
+              <Button variant='default'
+              onClick={() => {
+                sendToSocket('editUserFilter', {
+                  serviceId: props.user.serviceId, 
+                  subServiceId: props.user.subServiceId,
+                  filter: 'skip',
+                  item: 'skip'
+                })
+              }}
+              >Skip all</Button>
+              <Button variant='default'>Refresh</Button>
+            </Group>
+          </Group>
+
 
         </div>
       )

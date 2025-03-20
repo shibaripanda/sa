@@ -17,26 +17,42 @@ export class UsersService {
 
     @WebSocketServer() server: Server
 
+    async editUserFilter(serviceId: string, subServiceId: string, filter: string, item: string | [], user: User){
+        const filterExist = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
+        if(['statusFilter', 'deviceFilter', 'subServiceFilter'].includes(filter)){
+            const line = `services_roles.$[el].subServices.$[els].${filter}`
+            if(filterExist[filter].includes(item)){
+                return await this.userMongo.findOneAndUpdate(
+                    {_id: user._id}, 
+                    {$pull: {[line]: item}}, 
+                    {arrayFilters: [{'el.serviceId': serviceId}, {'els.subServiceId': subServiceId}], returnDocument: 'after'})
+            }
+            else{
+                return await this.userMongo.findOneAndUpdate(
+                    {_id: user._id}, 
+                    {$addToSet: {[line]: item}}, 
+                    {arrayFilters: [{'el.serviceId': serviceId}, {'els.subServiceId': subServiceId}], returnDocument: 'after'})
+
+            }
+        }
+        // return await this.userMongo.findOneAndUpdate({_id: user._id}, {$pull: {services_roles: {media: image, type: 'photo'}}}, {returnDocument: 'after'})
+    }
+
     async deleteImage(_id: string, image: string){
         return await this.userMongo.findOneAndUpdate({_id: _id}, {$pull: {newOrderImages: {media: image, type: 'photo'}}}, {returnDocument: 'after'})
     }
-
     async deleteAllImage(_id: string){
         return await this.userMongo.updateOne({_id: _id}, {newOrderImages: []})
     }
-    
     async disconectTelegram(_id: string){
         return await this.userMongo.updateOne({_id: _id}, {telegramId: 0, passwordToTelegram: false})
     }
-
     async changeAuthTelegram(userId: string, passwordToTelegram: boolean){
         return await this.userMongo.updateOne({_id: userId}, {passwordToTelegram: passwordToTelegram})
     }
-
     async getNewOrderImages(_id: string){
         return await this.userMongo.findOne({_id: _id}, {newOrderImages: 1, _id: 0})
     }
-
     async addNewOrderImages(telegramId: number, photo: object){
         return await this.userMongo.findOneAndUpdate({telegramId: telegramId}, {$push: {newOrderImages: {$each: [photo], $position: 0, $slice: 10}}}, {returnDocument: 'after'})
     }

@@ -5,7 +5,16 @@ export interface User {
     email: string
     exp: number
     iat: number
-    roles: {subServiceId: string, statuses: string[], devices: string[], roles: string[]}
+    roles: {
+        subServiceId: string, 
+        statuses: string[], 
+        devices: string[], 
+        roles: string[], 
+        deviceFilter: string[], 
+        statusFilter: string[], 
+        subServiceFilter: string[],
+        dateFilter: [Date | null, Date | null]
+    }
     token: string
     _id: string
     serviceId: string
@@ -48,6 +57,10 @@ export class UserClass {
     telegramId: number
     passwordToTelegram: boolean
     newOrderImages: []
+    deviceFilter: string[]
+    statusFilter: string[]
+    subServiceFilter: string[]
+    dateFilter: [Date | null, Date | null]
     
     constructor(data: User){
 
@@ -64,6 +77,10 @@ export class UserClass {
         this.telegramId = data.telegramId
         this.passwordToTelegram = data.passwordToTelegram
         this.newOrderImages = data.newOrderImages
+        this.deviceFilter = data.roles.deviceFilter
+        this.statusFilter = data.roles.statusFilter
+        this.subServiceFilter = data.roles.subServiceFilter
+        this.dateFilter = data.roles.dateFilter
 
     }
 

@@ -60,7 +60,7 @@ export const line: Line[] = [
                 canUse: ['sendOrderToTelegram']
             },
             {message: 'getOrdersCount', screenItem: OrdersScreen, 
-                canUse: ['addNewWork', 'deleteWork', 'deleteAllWork', 'updateOrderWork', 'editOrderStatus']},  
+                canUse: ['addNewWork', 'deleteOrderbyId', 'deleteWork', 'deleteAllWork', 'updateOrderWork', 'editOrderStatus']},  
         ]
     },
     {

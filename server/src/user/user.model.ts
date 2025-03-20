@@ -9,7 +9,11 @@ interface SubRoles {
   subServiceId: string,
   roles: string[],
   statuses: string[],
-  devices: string[]
+  devices: string[],
+  deviceFilter: string[],
+  statusFilter:string[],
+  subServiceFilter: string[],
+  dateFilter: Date | null []
 }
 
 interface ServicesRoles {
@@ -38,7 +42,28 @@ const roleShema1 = new mongoose.Schema({
   devices: {
     type: Array,
     required: true,
+  },
+  deviceFilter: {
+    type: Array,
+    default: [],
+    required: true,
+  },
+  statusFilter: {
+    type: Array,
+    default: [],
+    required: true,
+  },
+  subServiceFilter: {
+    type: Array,
+    default: [],
+    required: true,
+  },
+  dateFilter: {
+    type: Array,
+    default: [null, null],
+    required: true,
   }
+  
 })
 
 const roleShema = new mongoose.Schema({

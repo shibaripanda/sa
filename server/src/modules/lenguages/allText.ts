@@ -156,6 +156,28 @@ export const textArray: LengData[] = [
     {rutext: 'Редактор', index: 'Edit', info_data: 'вид редактор', update: false},
     {rutext: 'Фильтр', index: 'filter', info_data: 'фильтр', update: false},
     {rutext: 'Послать в телеграм', index: 'sendToTelegram', info_data: 'послать в телеграм', update: false},
+    {rutext: 'Отправка в свой телеграм', index: 'sendOrderToTelegram', info_data: 'отправка в свой телеграм', update: false},
+
+    {rutext: 'Добавлять услуги к заказу', index: 'addNewWork', info_data: 'добавлять услуги', update: false},
+    {rutext: 'Удаление заказа', index: 'deleteOrderbyId', info_data: 'удаление заказа', update: false},
+    {rutext: 'Удаление услуги в заказе', index: 'deleteWork', info_data: 'удаление услуги', update: false},
+    {rutext: 'Удаление всех услуг в заказе', index: 'deleteAllWork', info_data: 'удаление всех услуг', update: false},
+    {rutext: 'Обновлять услуги в заказе', index: 'updateOrderWork', info_data: 'обновление услуг', update: false},
+    {rutext: 'Изменять статус заказа', index: 'editOrderStatus', info_data: 'изменение статуса заказа', update: false},
+
+    {rutext: 'Удаление услуги из услуг', index: 'deleteUsluga', info_data: 'удаление услуги', update: false},
+    {rutext: 'Удаление запчасти из запчастей', index: 'deletePart', info_data: 'удаление запчасти', update: false},
+    {rutext: 'Изменение порядка девайсов', index: 'replaceDevicePosition', info_data: 'порядок девайсов', update: false},
+    {rutext: 'Изменение порядка статусов', index: 'replaceStatusPosition', info_data: 'порядок статусов', update: false},
+    {rutext: 'Список информации о заказе', index: 'orderDataEdit', info_data: 'список инф о заказе', update: false},
+    {rutext: 'Порядок пунктов о заказе', index: 'replaceOrderDataItems', info_data: 'пордок информации о заказе', update: false},
+    {rutext: 'Редактирование ролей', index: 'addNewServiceRole', info_data: 'редактор ролей', update: false},
     
+    {rutext: 'Добавление роли пользователю', index: 'addRoleToUser', info_data: 'роль пользователю', update: false},
+    {rutext: 'Доступ пользователя к определенному статусу', index: 'addStatusToUser', info_data: 'доступ к статусу', update: false},
+    {rutext: 'Доступ пользователя к определенному девайсу', index: 'addDeviceToUser', info_data: 'доступ к девайсу', update: false},
+    {rutext: 'Удаление пользователя из сервиса', index: 'deleteUserFromService', info_data: 'удаление из сервиса', update: false},
+
+    {rutext: 'Редактирование печатных документов', index: 'updateDocument', info_data: 'редактор печатных доков', update: false},
     
-] 
+]
