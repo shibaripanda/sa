@@ -30,12 +30,12 @@ import { UpdateUserFilter } from './dto/UpdateUserFilter.dto'
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('editUserFilter')
   async editUserFilter(@ConnectedSocket() client: Socket, @MessageBody() payload: UpdateUserFilter, @Request() req: any): Promise<void> {
-    console.log(payload)
     const userRoles = await this.userSevice.editUserFilter(payload.serviceId, payload.subServiceId, payload.filter, payload.item, req.user)
-    console.log(userRoles.services_roles.find(item => item.serviceId === payload.serviceId).subServices.find(item => item.subServiceId === payload.subServiceId))
-    // if(user){
-    //   this.server.to(client.id).emit('getNewOrderImages', [])
-    // }
+    const roles = userRoles.services_roles
+    const current = userRoles.services_roles.find(item => item.serviceId === payload.serviceId).subServices.find(item => item.subServiceId === payload.subServiceId)
+    if(userRoles){
+      this.server.to(client.id).emit('editUserFilter', {data: roles, item: payload.filter, current: current})
+    }
   }
 
   @UseGuards(JwtAuthGuard)

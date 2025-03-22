@@ -292,7 +292,7 @@ export function CreateOrderScreen(props, message) {
           </Group>
           <Space h='lg'/>
           <Group>
-            {props.service.subServices.map(item => <Checkbox color='grey' key={item.subServiceId} label={item.name} checked={!props.user.deviceFilter.includes(item.subServiceId)}
+            {props.service.subServices.map(item => <Checkbox color='grey' key={item.subServiceId} label={item.name} checked={!props.user.subServiceFilter.includes(item.subServiceId)}
             onChange={() => {
               sendToSocket('editUserFilter', {
                 serviceId: props.user.serviceId, 
@@ -307,16 +307,16 @@ export function CreateOrderScreen(props, message) {
             <Group>
               <DatePickerInput
               type="range"
-              value={props.user.deviceDate}
+              value={props.user.dateFilter.map(item => item ? new Date(item) : null)}
               onChange={(event) => {
                 sendToSocket('editUserFilter', {
                   serviceId: props.user.serviceId, 
                   subServiceId: props.user.subServiceId,
                   filter: 'dateFilter',
-                  item: event
+                  item: [event[0], event ? event[1] : null]
                 })
               }}
-              placeholder="Начало и конец периода"
+              placeholder="All dates"
               />
               <Button variant='default'
                 onClick={() => {

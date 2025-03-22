@@ -228,7 +228,14 @@ export class OrderService {
         
         const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
         // console.log(service)
-        const res = await this.orderMongo.find({_subServiceId_: subServiceId, _status_: {$nin : userFilter.statuses}}).skip(start).limit(end).sort({createdAt: -1})
+        const res = await this.orderMongo.find({
+            _serviceId_: serviceId, 
+            _status_: {$nin : [... new Set([...userFilter.statuses, ...userFilter.statusFilter])]},
+            _DeviceBlocked_: {$nin : [... new Set([...userFilter.devices, ...userFilter.deviceFilter])]},
+            _subServiceId_: {$nin : [... new Set([...userFilter.subServiceFilter])]},
+            createdAt: {$gte: userFilter.dateFilter[0] ? new Date(userFilter.dateFilter[0]) : service.createdAt, $lt: userFilter.dateFilter[1] ? new Date(userFilter.dateFilter[1]) : new Date(Date.now())}
+        
+        }).skip(start).limit(end).sort({createdAt: -1})
         for(const i of res){
             const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
             i._subService_ = name ? name.name : '--'
@@ -238,7 +245,11 @@ export class OrderService {
     async getOrder(orderId, serviceId, subServiceId, user, service){
 
         const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
-        const res = await this.orderMongo.findOne({_id: orderId, _status_: {$nin : userFilter.statuses}})
+        const res = await this.orderMongo.findOne({
+            _id: orderId, 
+            _status_: {$nin : userFilter.statuses},
+            _DeviceBlocked_: {$nin : userFilter.devices}
+        })
         if(res){
             const name = service.subServices.find(item => item.subServiceId === res._subServiceId_)
             res._subService_ = name ? name.name : '--'

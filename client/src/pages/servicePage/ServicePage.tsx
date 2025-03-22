@@ -248,6 +248,11 @@ function ServicePage() {
         authClass.updateServiceAppUsers(data, 'name')
         setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), name: data}))
       }
+      const editUserFilter = (data: any) => {
+        console.log('sss', data)
+        authClass.updateServiceAppUsers(data.data, 'roles')
+        setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), [data.item]: data[data.current]}))
+      }
       const upUserOrderList = (data: any) => {
         authClass.updateServiceAppUsers(data, 'orderDataShowItems')
         setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), orderDataShowItems: data}))
@@ -276,6 +281,7 @@ function ServicePage() {
         {message: 'getOrderPhotos', handler: getOrderPhotos},
         {message: 'getNewOrderImages', handler: getNewOrderImages},
         {message: 'deleteOrderbyId', handler: deleteOrderbyId},
+        {message: 'editUserFilter', handler: editUserFilter}
       ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
 

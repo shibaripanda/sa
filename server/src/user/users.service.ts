@@ -35,7 +35,25 @@ export class UsersService {
 
             }
         }
-        // return await this.userMongo.findOneAndUpdate({_id: user._id}, {$pull: {services_roles: {media: image, type: 'photo'}}}, {returnDocument: 'after'})
+        else if('dateFilter' === filter){
+            const line = `services_roles.$[el].subServices.$[els].dateFilter`
+            return await this.userMongo.findOneAndUpdate(
+                {_id: user._id}, 
+                {$set: {[line]: item}}, 
+                {arrayFilters: [{'el.serviceId': serviceId}, {'els.subServiceId': subServiceId}], returnDocument: 'after'})
+        }
+        else if('skip' === filter){
+            return await this.userMongo.findOneAndUpdate(
+                {_id: user._id}, 
+                {$set: {
+                    'services_roles.$[el].subServices.$[els].dateFilter': [null, null], 
+                    'services_roles.$[el].subServices.$[els].deviceFilter': [],
+                    'services_roles.$[el].subServices.$[els].statusFilter': [],
+                    'services_roles.$[el].subServices.$[els].subServiceFilter': []
+                }, 
+                }, 
+                {arrayFilters: [{'el.serviceId': serviceId}, {'els.subServiceId': subServiceId}], returnDocument: 'after'})
+        }
     }
 
     async deleteImage(_id: string, image: string){
