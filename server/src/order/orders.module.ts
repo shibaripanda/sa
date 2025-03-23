@@ -7,6 +7,7 @@ import { OrdersGateway } from './order.gateway'
 import { UsersModule } from 'src/user/users.module'
 import { ServicesModule } from 'src/service/services.module'
 import { BotModule } from 'src/bot/bot.module'
+import { AppModule } from 'src/app/app.module'
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { BotModule } from 'src/bot/bot.module'
     forwardRef(() => BotModule),
     forwardRef(() => UsersModule), 
     forwardRef(() => AuthModule),
-    // forwardRef(() => BotModule)
+    forwardRef(() => AppModule)
   ],
   providers: [OrderService, OrdersGateway],
   exports: [OrderService]

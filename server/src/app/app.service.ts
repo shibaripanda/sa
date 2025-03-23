@@ -15,7 +15,6 @@ export class AppService {
   async onApplicationBootstrap() {
     global.appText = await this.updateAppText()
   }
-
   async getText(): Promise<NewLengPack>{
     const app = await this.appMongo.findOne({mainServerAppSettings: 'mainServerAppSettings'}, {text: 1, _id: 0})
     return app.text
@@ -34,6 +33,9 @@ export class AppService {
       console.log('Текст не требует обновления')
     }
     return this.getText()
+  }
+  async addAppError(error) {
+    await this.appMongo.updateOne({$push: {errors: error}})
   }
   
 }

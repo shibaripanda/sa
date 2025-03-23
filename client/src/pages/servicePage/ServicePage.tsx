@@ -9,7 +9,7 @@ import { ScreenLine } from './screens/screensLine.ts'
 import { getFromSocket } from '../../modules/socket/pipGetSocket.ts'
 import { sendToSocket } from '../../modules/socket/pipSendSocket.ts'
 import { ServiceClass } from '../../classes/ServiceClass.ts'
-import { UserClass } from '../../classes/UserClass.ts'
+import { User, UserClass } from '../../classes/UserClass.ts'
 import { AppShell, useMatches } from '@mantine/core'
 import { LoaderShow } from '../../components/Loader/LoaderShow.tsx'
 import { useDisclosure, useListState } from '@mantine/hooks'
@@ -123,65 +123,51 @@ function ServicePage() {
     setTimeout(() => openedPrintHandlers.open(), 0)
   }
   const addNewOrderNoPrint = (data: any) => {
-    setOrders((ex) => {
-      return [{...data, _updateTime_: Date.now()}, ...ex ? ex : []]
+    setUser((exUser: User) => {
+      if(exUser.openSubServices.includes(data._subServiceId_)){
+        setOrders((ex) => {
+          return [{...data, _updateTime_: Date.now()}, ...ex ? ex : []]
+        })
+      }
+      return exUser
     })
   }
   const getAndPrintNewOrder = async () => {
     SocketApt.socket?.once(`createOrder`, (data) => addNewOrder(data))
   }
   const getOneOrder = async (data: any) => {
-    setOrders((ex) => {
-      const time = Date.now()
-      if(!ex) ex = []
-      const res = ex.findIndex(item => item._id === data._id)
-      if(res > -1){
-        let mp: [] = []
-        if(ex[res]._mediaPhotos_){
-          mp = [...ex[res]._mediaPhotos_]
-          ex[res] = {...data, _updateTime_: time, _mediaPhotos_: mp}
-        }
-        else{
-          ex[res] = {...data, _updateTime_: time}
-        }
-      }
-      else{
-        ex.push({...data, _updateTime_: time})
-      }
-      setOrderAcord((current) => {
-        if(current === data._id){
-          setEditedWork(structuredClone(data._work_))
-        }
-        return current
-      })
-      
-      return [...ex]
-    })
-    SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
-  }
-  const updateOneOrder = async (data: any) => {
-    setOrders((ex) => {
-      const time = Date.now()
-      if(!ex) ex = []
-      const res = ex.findIndex(item => item._id === data._id)
-      if(res > -1){
-        let mp: [] = []
-        if(ex[res]._mediaPhotos_){
-          mp = [...ex[res]._mediaPhotos_]
-          ex[res] = {...data, _updateTime_: time, _mediaPhotos_: mp}
-        }
-        else{
-          ex[res] = {...data, _updateTime_: time}
-        }
-        setOrderAcord((current) => {
-          if(current === data._id){
-            setEditedWork(structuredClone(data._work_))
+    setUser((exUser: User) => {
+      if(exUser.openSubServices.includes(data._subServiceId_)){
+        setOrders((ex) => {
+          const time = Date.now()
+          if(!ex) ex = []
+          const res = ex.findIndex(item => item._id === data._id)
+          if(res > -1){
+            let mp: [] = []
+            if(ex[res]._mediaPhotos_){
+              mp = [...ex[res]._mediaPhotos_]
+              ex[res] = {...data, _updateTime_: time, _mediaPhotos_: mp}
+            }
+            else{
+              ex[res] = {...data, _updateTime_: time}
+            }
           }
-          return current
+          else{
+            ex.push({...data, _updateTime_: time})
+          }
+          setOrderAcord((current) => {
+            if(current === data._id){
+              setEditedWork(structuredClone(data._work_))
+            }
+            return current
+          })
+          
+          return [...ex]
         })
       }
-      return [...ex]
+      return exUser
     })
+    SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
   }
   const modalPrinNewWarranty = () => {
     if(dataForPrint){
@@ -292,6 +278,15 @@ function ServicePage() {
           return ex.filter(item => item._id !== data)
         })
       }
+      const exceptionError = (data: any) => {
+        if(data.action === 'exit'){
+          sessionStorage.removeItem('serviceAppUsers')
+          sessionStorage.removeItem('currentUser')
+          sessionStorage.removeItem('serviceId')
+          alert(data.message + '\n! Copy for support: ' + data.indexError)
+          navigate('/')
+        }
+      }
       
       getFromSocket([
         {message: `getServiceById${authClass.getServiceId()}`, handler: filterService},
@@ -306,13 +301,11 @@ function ServicePage() {
         {message: 'getNewOrderImages', handler: getNewOrderImages},
         {message: 'deleteOrderbyId', handler: deleteOrderbyId},
         {message: 'editUserFilter', handler: editUserFilter},
-        {message: 'updateOneOrder', handler: updateOneOrder}
+        {message: 'exception', handler: exceptionError},
       ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
-
       sendToSocket('getServiceById', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
       sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: countLoadOrders[0], end: countLoadOrders[1]})
-      // sendToSocket('getOrders', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
     }
     else{
       navigate('/')

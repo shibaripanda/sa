@@ -23,12 +23,10 @@ export class AuthService {
 
         if(loginStatus){
             const user = await this.usersService.getUserByEmail(loginStatus.email.toLowerCase())
-            // const newCode = Math.round(Math.random() * (9999 - 1000) + 1000)
             if(!user){
                 const newUser = await this.usersService.createUser(loginStatus.email.toLowerCase(), loginStatus.name ? loginStatus.name : '')
                 return this.generateToken(newUser)
             }
-            console.log(user.telegramId, user.passwordToTelegram)
             if(user.telegramId){
                 this.botService.sendCodeToBot(
                     user.telegramId, 
@@ -53,7 +51,6 @@ export class AuthService {
     }
 
     private async generateToken(user: User){
-        console.log('3')
         const payload = {
             email: user.email, 
             _id: user._id, 

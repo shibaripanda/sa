@@ -48,7 +48,7 @@ import { User } from 'src/user/user.model'
     }
 
     async sendOrderToTelegram(orderId: string, serviceId: string, subServiceId: string, user: User, service: Service){
-      const order = await this.orderService.getOrder(orderId, serviceId, subServiceId, user, service)
+      const order = await this.orderService.getOrder(orderId, user, service)
       if(order){
         this.newOrderTelegramMessage(user.telegramId, order)
         return true

@@ -1,6 +1,9 @@
+// import { useNavigate } from 'react-router-dom'
 import io, { Socket } from 'socket.io-client'
 
 export class SocketApt {
+
+    // static navigate = useNavigate()
 
     static socket: null | Socket = null
 
@@ -18,7 +21,6 @@ export class SocketApt {
 
         this.socket.on('exception', (data) => {
             console.log(data)
-            // window.location.assign(process.env.REACT_APP_BOTNAME!)
         })
 
     }

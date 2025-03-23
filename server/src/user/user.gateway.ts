@@ -140,6 +140,18 @@ import { UpdateUserFilter } from './dto/UpdateUserFilter.dto'
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('deleteUserFromLocalService')
+  async deleteUserFromLocalService(@ConnectedSocket() client: Socket, @MessageBody() payload: DeleteServiceUser): Promise<void> {
+    await this.userSevice.deleteUserFromLocalService(payload.email, payload.serviceId, payload.subServiceId)
+    const users = await this.userSevice.getServiceUsers(payload.serviceId)
+    this.server.to(client.id).emit(`getServiceUsers${payload.serviceId}`, users)
+    const users1 = await this.userSevice.getServiceLocalUsers(payload.serviceId, payload.subServiceId)
+    this.server.to(client.id).emit(`getServiceLocalUsers${payload.serviceId}`, users1)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('deleteUserFromService')
   async deleteUserFromService(@ConnectedSocket() client: Socket, @MessageBody() payload: DeleteServiceUser): Promise<void> {
     await this.userSevice.deleteUserFromService(payload.email, payload.serviceId)

@@ -14,4 +14,5 @@ export const canUse = [
     'getOrderPhotos',
     'addInformationOrder',
     'addOrDelListVariant',
+    'editUserFilter'
 ]

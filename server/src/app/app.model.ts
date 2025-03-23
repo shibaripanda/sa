@@ -7,6 +7,14 @@ export interface NewLengPack {
   [key: string]: LengResult
 }
 
+export interface AppErrors {
+  error: string,
+  time: Date,
+  serviceId: string,
+  userId: string,
+  indexError: string
+}
+
 export const AppSchema = new mongoose.Schema({
     text: {
       type: Object, 
@@ -20,11 +28,17 @@ export const AppSchema = new mongoose.Schema({
     restartCount: {
       type: Number, 
       default: 0
+    },
+    errors: {
+      type: Array,
+      default: [],
+      require: true
     }
   }, {timestamps: true})
   
   export interface App {
     text: NewLengPack,
+    errors: AppErrors[]
   }
   
   

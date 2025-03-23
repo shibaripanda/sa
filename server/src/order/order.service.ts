@@ -5,6 +5,10 @@ import { Order, OrderSchema } from './order.model'
 import { rendomLetteOrder } from './tech/rendomLetteOrder'
 import { rendomNumberOrder } from './tech/rendomNumberOrder'
 import { BotService } from 'src/bot/bot.service'
+import { AppService } from 'src/app/app.service'
+import { AppErrors } from 'src/app/app.model'
+import { ObjectId }  from 'mongodb'
+import { WsException } from '@nestjs/websockets'
 
 
 @Injectable()
@@ -15,6 +19,8 @@ export class OrderService {
         private orderMongo: Model<Order>,
         @Inject(forwardRef(() => BotService))
         private botService: BotService,
+        @Inject(forwardRef(() => AppService))
+        private appService: AppService,
     ) {}
 
     async closePayOrderStatus(serviceId, subServiceId, orderId, user, service){
@@ -40,9 +46,8 @@ export class OrderService {
         }
         return false   
     }
-
     async deleteOrderbyId(serviceId, subServiceId, orderId, user, service){
-        return await this.orderMongo.deleteOne({_id: orderId})
+        return await this.orderMongo.deleteOne({_id: orderId, _serviceId_: service._id})
     }
     async getOrderPhotos(orderId, serviceId, subServiceId, user){
         // console.log(serviceId)
@@ -229,56 +234,80 @@ export class OrderService {
         }
     }
     async getOrdersFilter(serviceId, subServiceId, orderId, exist, user, service){
-        console.log(service.orderData.map(item => item.item))
-        const line = service.orderData.filter(item => !item.number).map(item => ({[item.item]: {$regex: orderId, $options: "i"}}))
-        
-        line.push({'_orderServiceId_': {$regex: orderId, $options: "i"}})
-        line.push({'_status_': {$regex: orderId, $options: "i"}})
-        line.push({'_manager_': {$regex: orderId, $options: "i"}})
-        console.log(line)
-        const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
-        // const res = await this.orderMongo.find({_orderServiceId_: {$regex: orderId}, _subServiceId_: subServiceId, _status_: {$nin : userFilter.statuses}}).limit(100).sort({createdAt: -1})
-        const res = await this.orderMongo.find({$or: line, _id: {$nin : exist}, _subServiceId_: subServiceId, _status_: {$nin : userFilter.statuses}}).limit(100).sort({createdAt: -1})
-        console.log(res.length)
-        for(const i of res){
-            const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
-            i._subService_ = name ? name.name : '--'
-        }
-        return res 
-    }
-    async getOrders(serviceId, subServiceId, start, end, user, service){
+        try{
+            const openSubServices = user.services_roles.find(item => item.serviceId === serviceId).subServices.map(item => item.subServiceId)
+            const line = service.orderData.filter(item => !item.number).map(item => ({[item.item]: {$regex: orderId, $options: "i"}}))
+            line.push({'_orderServiceId_': {$regex: orderId, $options: "i"}})
+            line.push({'_status_': {$regex: orderId, $options: "i"}})
+            line.push({'_manager_': {$regex: orderId, $options: "i"}})
+            const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
+            const res = await this.orderMongo.find({
+                $or: line, 
+                _id: {$nin : exist}, 
+                _subServiceId_: {$in: openSubServices}, 
+                _status_: {$nin : userFilter.statuses},
+                _DeviceBlocked_: {$nin : userFilter.devices},
+            }).limit(100).sort({createdAt: -1})
 
-        // console.log(user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId))
-        
-        const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
-        // console.log(service)
-        const res = await this.orderMongo.find({
-            _serviceId_: serviceId, 
-            _status_: {$nin : [... new Set([...userFilter.statuses, ...userFilter.statusFilter])]},
-            _DeviceBlocked_: {$nin : [... new Set([...userFilter.devices, ...userFilter.deviceFilter])]},
-            _subServiceId_: {$nin : [... new Set([...userFilter.subServiceFilter])]},
-            createdAt: {$gte: userFilter.dateFilter[0] ? new Date(userFilter.dateFilter[0]) : service.createdAt, $lt: userFilter.dateFilter[1] ? new Date(userFilter.dateFilter[1]) : new Date(Date.now())}
-        
-        }).skip(start).limit(end).sort({createdAt: -1})
-        for(const i of res){
-            const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
-            i._subService_ = name ? name.name : '--'
-        }
-        return res
-    }
-    async getOrder(orderId, serviceId, subServiceId, user, service){
-
-        const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
-        const res = await this.orderMongo.findOne({
-            _id: orderId, 
-            _status_: {$nin : userFilter.statuses},
-            _DeviceBlocked_: {$nin : userFilter.devices}
-        })
-        if(res){
-            const name = service.subServices.find(item => item.subServiceId === res._subServiceId_)
-            res._subService_ = name ? name.name : '--'
+            for(const i of res){
+                const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
+                i._subService_ = name ? name.name : '--'
+            }
             return res 
         }
+        catch(error){
+            await this.errorSave(error, service._id, user._id)
+        }
+        
+    }
+    async getOrders(serviceId, subServiceId, start, end, user, service){
+        try{
+            console.log('USERROLES', user.services_roles.find(item => item.serviceId === serviceId).subServices.map(item => item.subServiceId))
+            const openSubServices = user.services_roles.find(item => item.serviceId === serviceId).subServices.map(item => item.subServiceId)
+            const userFilter = user.services_roles.find(item => item.serviceId === serviceId).subServices.find(item => item.subServiceId === subServiceId)
+            const res = await this.orderMongo.find({
+                _serviceId_: serviceId, 
+                _status_: {$nin : [... new Set([...userFilter.statuses, ...userFilter.statusFilter])]},
+                _DeviceBlocked_: {$nin : [... new Set([...userFilter.devices, ...userFilter.deviceFilter])]},
+                _subServiceId_: {$nin : [... new Set([...userFilter.subServiceFilter])], $in: openSubServices},
+                createdAt: {$gte: userFilter.dateFilter[0] ? new Date(userFilter.dateFilter[0]) : service.createdAt, $lt: userFilter.dateFilter[1] ? new Date(userFilter.dateFilter[1]) : new Date(Date.now())}
+            
+            }).skip(start).limit(end).sort({createdAt: -1})
+            for(const i of res){
+                const name = service.subServices.find(item => item.subServiceId === i._subServiceId_)
+                i._subService_ = name ? name.name : '--'
+            }
+            return res
+        }
+        catch(error){
+            await this.errorSave(error, service._id, user._id)
+        }
+        
+    }
+    async getOrder(orderId, user, service){
+        try{
+            const openSubServices = user.services_roles.find(item => item.serviceId == service._id).subServices.map(item => item.subServiceId)
+            const res = await this.orderMongo.findOne({_id: orderId, _serviceId_: service._id, _subServiceId_: {$in: openSubServices}})
+            const name = service.subServices.find(item => item.subServiceId === res._subServiceId_)
+            res._subService_ = name ? name.name : '--'
+            return res
+        }
+        catch(error){
+            await this.errorSave(error, service._id, user._id)
+        }        
+    }
+    async errorSave(error, serviceId, userId){
+        console.log(error)
+        const indexError = new ObjectId()
+        const appError: AppErrors = {
+            error: error ? error : undefined,
+            time: new Date(Date.now()),
+            serviceId: serviceId ? serviceId : undefined,
+            userId: userId ? userId : undefined,
+            indexError: indexError.toString()
+        }
+        await this.appService.addAppError(appError)
+        throw new WsException({message: 'Server orders error', indexError: indexError})
     }
 
 }

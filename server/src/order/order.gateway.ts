@@ -24,11 +24,9 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.closePayOrderStatus(payload.serviceId, payload.subServiceId, payload.orderId, req.user, req.service)
     if(order){
-      this.server.to(client.id).emit('getOrders', order)
-      client.to(payload.serviceId).emit('updateOneOrder', order)
-
-      // this.server.in(payload.serviceId).emit('getOrders', order)
+      this.server.in(client.id).emit('getOrders', order)
       this.server.to(client.id).emit('alert', {title: 'Order closed', message: 'Done ✅'})
+      // client.to(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -41,9 +39,9 @@ import { OrderService } from './order.service'
     const status = await this.orderService.deleteOrderbyId(payload.serviceId, payload.subServiceId, payload.orderId, req.user, req.service)
     console.log(status)
     if(status.deletedCount){
-      this.server.to(client.id).emit('deleteOrderbyId', payload.orderId)
-      client.to(payload.serviceId).emit('deleteOrderbyId', payload.orderId)
+      this.server.in(client.id).emit('deleteOrderbyId', payload.orderId)
       this.server.to(client.id).emit('alert', {title: 'Order deleted', message: 'Done ✅'})
+      // client.to(payload.serviceId).emit('deleteOrderbyId', payload.orderId)
     }
   }
 
@@ -56,7 +54,6 @@ import { OrderService } from './order.service'
     const orders = await this.orderService.getOrdersFilter(payload.serviceId, payload.subServiceId, payload.orderId, payload.exist, req.user, req.service)
     if(orders){
       for(const order of orders){
-        console.log('send', order._orderServiceId_)
         this.server.to(client.id).emit('getOrders', order)
       }
     }
@@ -70,7 +67,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.updateOrderWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
     if(order){
-      this.server.in(payload.serviceId).emit('updateOneOrder', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -82,7 +79,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.deleteAllWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
     if(order){
-      this.server.in(payload.serviceId).emit('updateOneOrder', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -94,7 +91,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.deleteWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
     if(order){
-      this.server.in(payload.serviceId).emit('updateOneOrder', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -106,7 +103,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.addNewWork(payload.serviceId, payload.subServiceId, payload.orderId, payload.work, req.user, req.service)
     if(order){
-      this.server.in(payload.serviceId).emit('updateOneOrder', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -118,7 +115,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.addInformationOrder(payload.serviceId, payload.subServiceId, payload.orderId, payload.data, req.user, req.service)
     if(order){
-      this.server.in(payload.serviceId).emit('updateOneOrder', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     } 
   }
 
@@ -130,7 +127,7 @@ import { OrderService } from './order.service'
     console.log(payload)
     const order = await this.orderService.editOrderStatus(payload.serviceId, payload.subServiceId, payload.orderId, payload.newStatus, req.user, req.service)
     if(order){
-      this.server.in(payload.serviceId).emit('updateOneOrder', order)
+      this.server.in(payload.serviceId).emit('getOrders', order)
     }
   }
 
@@ -162,7 +159,7 @@ import { OrderService } from './order.service'
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('getOrder')
   async getOrder(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
-    const order = await this.orderService.getOrder(payload.orderId, payload.serviceId, payload.subServiceId, req.user, req.service)
+    const order = await this.orderService.getOrder(payload.orderId, req.user, req.service)
     if(order){
       this.server.to(client.id).emit('getOrders', order)
     }

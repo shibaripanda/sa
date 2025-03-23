@@ -20,5 +20,6 @@ import { BotModule } from 'src/bot/bot.module'
     BotModule
   ],
   providers: [AppService, AppGateway],
+  exports: [AppService]
 })
 export class AppModule {}

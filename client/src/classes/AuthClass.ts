@@ -23,7 +23,12 @@ export class AuthClass {
         if(!sessionStorage.getItem('currentUser')) return false
          // @ts-ignore
         const user = JSON.parse(sessionStorage.getItem('currentUser'))
+        user.openSubServices = structuredClone(
+            user.roles.find(item => item.serviceId === this.getServiceId()) ?
+            user.roles.find(item => item.serviceId === this.getServiceId()).subServices.map(item => item.subServiceId) : []
+        )
         user.roles = user.roles.filter(item => item.serviceId === this.getServiceId())[0].subServices.filter(item => item.subServiceId === this.getSubServiceId())[0]
+        
         user.serviceId = this.getServiceId()
         return user
     }
@@ -49,16 +54,12 @@ export class AuthClass {
     }
 
     updateServiceAppUsers(data, field){
-        // console.log('start', this.getServiceAppUsers()[0].roles)
-        // console.log('start', this.getCurrentUser().roles)
         const users = this.getServiceAppUsers()
         const user = this.getCurrentUser()
         user[field] = data
         users.find(item => item._id === user._id)[field] = data
         sessionStorage.setItem('currentUser', JSON.stringify(user))
         sessionStorage.setItem('serviceAppUsers', JSON.stringify(users))
-        // console.log('done', this.getServiceAppUsers()[0].roles)
-        // console.log('done', this.getCurrentUser().roles)
     }
 
     async startRequest(email, leng, authCode, setDescriptionText, setUsersThisSession, usersThisSession, setAuthCode, setEmail, setClickEmailSend){

@@ -22,6 +22,7 @@ export interface User {
     telegramId: number
     passwordToTelegram: boolean
     newOrderImages: []
+    openSubServices: string[]
 }
 
 const upUserDataLine = (data, sid, subsId) => {
@@ -61,6 +62,7 @@ export class UserClass {
     statusFilter: string[]
     subServiceFilter: string[]
     dateFilter: [Date | null, Date | null]
+    openSubServices: string[]
     
     constructor(data: User){
 
@@ -81,6 +83,7 @@ export class UserClass {
         this.statusFilter = data.roles.statusFilter
         this.subServiceFilter = data.roles.subServiceFilter
         this.dateFilter = data.roles.dateFilter
+        this.openSubServices = data.openSubServices
 
     }
 

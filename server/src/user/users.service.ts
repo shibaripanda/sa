@@ -160,7 +160,7 @@ export class UsersService {
                         {email: email}, 
                         {$pull: {"services_roles.$[el].subServices.$[al].statuses": status}}, 
                         {arrayFilters: [{"el.serviceId": serviceId}, {"al.subServiceId": subServiceId}]}
-                    )
+                    ) 
                 }
                 else{
                     console.log('2')
@@ -196,6 +196,9 @@ export class UsersService {
                 }
             }
         }
+    }
+    async deleteUserFromLocalService(email: string, serviceId: string, subServiceId: string){
+        await this.userMongo.updateOne({email: email}, {$pull: {'services_roles.$[el].subServices': {subServiceId: subServiceId}}}, {arrayFilters: [{'el.serviceId': serviceId}]})
     }
     async deleteUserFromService(email: string, serviceId: string){
         await this.userMongo.updateOne({email: email}, {$pull: {services_roles: {serviceId: serviceId}}})
@@ -236,11 +239,17 @@ export class UsersService {
             const subServ = roles.subServices.find(item => item.subServiceId === subServiceId)
             if(subServ){
                 if(subServ.roles.includes(role)){
-                    await this.userMongo.updateOne(
-                        {email: email}, 
-                        {$pull: {"services_roles.$[el].subServices.$[al].roles": role}}, 
-                        {arrayFilters: [{"el.serviceId": serviceId}, {"al.subServiceId": subServiceId}]}
-                    )
+                    if(subServ.roles.length === 1 && subServ.roles[0] === role){
+                            console.log('delete')
+                            await this.deleteUserFromLocalService(email, serviceId, subServiceId)
+                        }
+                        else{
+                            await this.userMongo.updateOne(
+                                {email: email}, 
+                                {$pull: {"services_roles.$[el].subServices.$[al].roles": role}}, 
+                                {arrayFilters: [{"el.serviceId": serviceId}, {"al.subServiceId": subServiceId}]}
+                            ) 
+                    }
                 }
                 else{
                     await this.userMongo.updateOne(
