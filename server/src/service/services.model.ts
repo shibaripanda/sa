@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose'
+import { ObjectId }  from 'mongodb'
 
 interface ServiceRoles {
   role: string
@@ -46,6 +47,29 @@ interface LocalUsers {
   email: string, 
   id: string
 }
+
+interface Account {
+  name: string, 
+  value: number,
+}
+
+export const AccountSchema = new mongoose.Schema({
+  name: {
+    type: String, 
+    default: 'Account1',
+    require: true
+  },
+  value: {
+    type: Number, 
+    default: 0,
+    require: true
+  },
+  accountHistory: {
+    type: Array, 
+    default: [],
+    require: true
+  }
+})
 
 export const ServiceSchema = new mongoose.Schema({
     name: {
@@ -197,6 +221,14 @@ export const ServiceSchema = new mongoose.Schema({
       type: Array,
       default: [{value: 'Hard drive 550gb', subPrice: 70, price: 100, varanty: 120}],
       require: true
+    },
+    accounts: {
+      type: Array,
+      default: [
+        {name: 'Account 1', value: 0, activ: true, color: 'green', accountHistory: [], accounId: new ObjectId()}, 
+        {name: 'Account 2', value: 0, activ: true, color: 'green', accountHistory: [], accounId: new ObjectId()}
+      ],
+      require: true
     }
   }, {timestamps: true})
 
@@ -218,6 +250,7 @@ export const ServiceSchema = new mongoose.Schema({
     colorStatuses: ColorStatus[]
     localUsers: LocalUsers[]
     fee: number
+    accounts: Account[]
   }
   
   

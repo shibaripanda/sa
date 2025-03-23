@@ -17,6 +17,30 @@ export class OrderService {
         private botService: BotService,
     ) {}
 
+    async closePayOrderStatus(serviceId, subServiceId, orderId, user, service){
+        const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId}, {_status_: 1, _id: 0})
+        if(old){
+            const updated = await this.orderMongo.findOneAndUpdate(
+                {_id: orderId, _serviceId_: serviceId}, 
+                {_status_: service.statuses[service.statuses.length - 1] ? service.statuses[service.statuses.length - 1] : 'noStatus', $push: {
+                    _history_: {
+                        user: user.name ? user.name + ' (' + user.email + ')' : user.email,
+                        userId: user._id,
+                        edit: '_status_',
+                        old: old._status_ ? old._status_ : '',
+                        new: service.statuses[service.statuses.length - 1] ? service.statuses[service.statuses.length - 1] : 'noStatus',
+                        date: Date.now()
+                        }
+                    }
+                }, 
+                {returnDocument: 'after'})
+            const name = service.subServices.find(item => item.subServiceId === updated._subServiceId_)
+            updated._subService_ = name ? name.name : '--'
+            return updated
+        }
+        return false   
+    }
+
     async deleteOrderbyId(serviceId, subServiceId, orderId, user, service){
         return await this.orderMongo.deleteOne({_id: orderId})
     }
@@ -256,37 +280,5 @@ export class OrderService {
             return res 
         }
     }
-
-    // async createOrder(serviceId, subServiceId, newOrder1, user, service){
-
-    //     await this.orderMongo.deleteMany()
-    
-    //     console.log(ordersUp)
-    //     console.log(newOrder1)
-    
-    //     for(const newOrder of ordersUp){
-    
-    //         const orderSh = async () => {
-    //             const res = {}
-    //             for(const i of Object.entries(newOrder)){
-    //                 res[i[0]] = 'string'
-    //             }
-    //             return res
-    //         }
-    //         const orderData = async () => {
-    //             const res = {
-    //                 _status_: service.statuses[0] ? service.statuses[0] : 'New',
-    //                 _serviceId_: serviceId, 
-    //                 _subServiceId_: subServiceId,
-    //                 _manager_: user.name ? user.name + ` (${user.email})` : user.email,
-    //             }
-    //             return {...res, ...newOrder}
-    //         }
-    //         OrderSchema.add(await orderSh())
-    //         await this.orderMongo.create(await orderData())
-    //     }
-    
-    //     return false
-    // }
 
 }

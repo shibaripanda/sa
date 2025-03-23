@@ -159,6 +159,30 @@ function ServicePage() {
     })
     SocketApt.socket?.once('getOrders', (data) => getOneOrder(data))
   }
+  const updateOneOrder = async (data: any) => {
+    setOrders((ex) => {
+      const time = Date.now()
+      if(!ex) ex = []
+      const res = ex.findIndex(item => item._id === data._id)
+      if(res > -1){
+        let mp: [] = []
+        if(ex[res]._mediaPhotos_){
+          mp = [...ex[res]._mediaPhotos_]
+          ex[res] = {...data, _updateTime_: time, _mediaPhotos_: mp}
+        }
+        else{
+          ex[res] = {...data, _updateTime_: time}
+        }
+        setOrderAcord((current) => {
+          if(current === data._id){
+            setEditedWork(structuredClone(data._work_))
+          }
+          return current
+        })
+      }
+      return [...ex]
+    })
+  }
   const modalPrinNewWarranty = () => {
     if(dataForPrint){
       return (
@@ -281,7 +305,8 @@ function ServicePage() {
         {message: 'getOrderPhotos', handler: getOrderPhotos},
         {message: 'getNewOrderImages', handler: getNewOrderImages},
         {message: 'deleteOrderbyId', handler: deleteOrderbyId},
-        {message: 'editUserFilter', handler: editUserFilter}
+        {message: 'editUserFilter', handler: editUserFilter},
+        {message: 'updateOneOrder', handler: updateOneOrder}
       ])
       SocketApt.socket?.once(`getOrders`, (data) => getOneOrder(data))
 

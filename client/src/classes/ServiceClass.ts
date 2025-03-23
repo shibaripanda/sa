@@ -14,6 +14,7 @@ interface Service {
     currency: Object
     uslugi: {value: string, price: number}[]
     boxParts: {value: string, varanty: number, subPrice: number, price: number}[] 
+    accounts: [] 
 }
 
 interface OrderData {
@@ -45,7 +46,8 @@ export class ServiceClass {
     serviceDocuments: []
     currency: Object
     uslugi: {value: string, price: number}[]
-    boxParts: {value: string, varanty: number, subPrice: number, price: number}[] 
+    boxParts: {value: string, varanty: number, subPrice: number, price: number}[]
+    accounts: [] 
 
     constructor(data: Service){
 
@@ -72,6 +74,7 @@ export class ServiceClass {
         this.currency = data.currency
         this.uslugi = data.uslugi.reverse()
         this.boxParts = data.boxParts.reverse()
+        this.accounts = data.accounts
 
 
         
