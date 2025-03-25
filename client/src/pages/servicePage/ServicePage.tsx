@@ -95,6 +95,7 @@ function ServicePage() {
   const [alertData, setAlertData] = useState(false)
   const [passwordToTelegram, setPasswordToTelegram] = useState(false)
   const [newOrderImages, setNewOrderImages] = useState(false)
+  const [businessAccount, setBusinessAccount] = useState(false)
 
   const authClass = new AuthClass()
   const textClass = new TextClass()
@@ -423,7 +424,9 @@ function ServicePage() {
               passwordToTelegram: passwordToTelegram,
               setPasswordToTelegram: setPasswordToTelegram,
               askNewOrderImages: askNewOrderImages,
-              newOrderImages: newOrderImages
+              newOrderImages: newOrderImages,
+              businessAccount: businessAccount,
+              setBusinessAccount: setBusinessAccount
               }
             )}
           </AppShell.Main>

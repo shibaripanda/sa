@@ -30,6 +30,7 @@ import { ChangeWarrantyOrderPrint } from "./serviceSettingsScreen/itemsScreenSet
 import { ChangeCurrencyService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeCurrencyService.tsx";
 import { ChangeWorksService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeWorksService.tsx";
 import { ChangeBoxPartsService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeBoxPartsService.tsx";
+import { Businessaccounts } from "./serviceSettingsScreen/itemsScreenSettings/Businessaccounts.tsx";
 
 
 interface ItemData {
@@ -43,7 +44,6 @@ interface ItemData {
     res?: string
     size?: number
 }
-
 interface Line {
     name: string
     screen: Function
@@ -126,6 +126,13 @@ export const line: Line[] = [
         items: [
             {message: 'NewOrderPrint', screenItem: ChangeNewOrderPrint, size: 12, canUse: ['updateDocument']},
             {message: 'changeWarrantyOrderPrint', screenItem: ChangeWarrantyOrderPrint, size: 12},
+        ]
+    },
+    {
+        name: 'business',
+        screen: SeviceSettingsScreen,
+        items: [
+            {message: 'businessAccounts', screenItem: Businessaccounts, size: 12, canUse: ['deleteBusinessAccount', 'addNewBusinessAccount']},
         ]
     },
     {

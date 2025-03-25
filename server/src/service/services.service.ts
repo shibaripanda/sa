@@ -1,8 +1,9 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model, ObjectId } from 'mongoose'
+import { Model } from 'mongoose'
 import { Service } from './services.model'
 import { UsersService } from 'src/user/users.service'
+import { ObjectId } from "mongodb"
 
 @Injectable()
 export class ServicesService {
@@ -13,6 +14,18 @@ export class ServicesService {
         @Inject(forwardRef(() => UsersService))
         private userService: UsersService
     ) {}
+
+    async deleteBusinessAccount(serviceId: string, accounId: string){
+        console.log('deleting', accounId)
+        console.log(
+            (await this.serviceMongo.findOneAndUpdate({_id: serviceId}, 
+            {$pull: {accounts: { value: 0, accounId: accounId }}}, 
+            {returnDocument: 'after'})).accounts.map(item => item._id)
+        )
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, 
+            {$pull: {accounts: {$elemMatch: {value: 0, c: accounId}}}}, 
+            {returnDocument: 'after'})
+    }
 
     async deletePart(serviceId: string, deletePart: object){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {boxParts: deletePart}}, {returnDocument: 'after'})

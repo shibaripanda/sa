@@ -5,29 +5,24 @@ interface ServiceRoles {
   role: string
   access: string[]
 }
-
 interface SubService {
   name: string,
   options: {address: string, workTime: string, contact: string}
   subServiceId: string
 }
-
 interface Price {
   title: string,
   cost: number
 }
-
 interface ServiceDocuments {
   name: string,
   info: {name: string, text: string}[]
   image: {name: string, image: string}[]
 }
-
 interface ColorStatus {
   status: string,
   color: string
 }
-
 interface OrderData {
   item: string
   control: boolean
@@ -41,7 +36,6 @@ interface OrderData {
   hold: boolean
   blocked: boolean
 }
-
 interface LocalUsers {
   name: string | undefined, 
   email: string, 
@@ -50,26 +44,40 @@ interface LocalUsers {
 
 interface Account {
   name: string, 
-  value: number,
+  value: number, 
+  activ: boolean, 
+  color: string, 
+  accountHistory: {orderId: string, userId: string}[], 
+  enabledSubServices: string[], 
+  _id: ObjectId
 }
 
-export const AccountSchema = new mongoose.Schema({
-  name: {
-    type: String, 
-    default: 'Account1',
-    require: true
-  },
-  value: {
-    type: Number, 
-    default: 0,
-    require: true
-  },
-  accountHistory: {
-    type: Array, 
-    default: [],
-    require: true
-  }
+const accountSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  value: { type: Number, required: true },
+  activ: { type: Boolean, required: true },
+  color: { type: String, required: true },
+  accountHistory: { type: Array, default: [] },
+  enabledSubServices: { type: Array, default: [] }
 })
+
+// export const AccountSchema = new mongoose.Schema({
+//   name: {
+//     type: String, 
+//     default: 'Account1',
+//     require: true
+//   },
+//   value: {
+//     type: Number, 
+//     default: 0,
+//     require: true
+//   },
+//   accountHistory: {
+//     type: Array, 
+//     default: [],
+//     require: true
+//   }
+// })
 
 export const ServiceSchema = new mongoose.Schema({
     name: {
@@ -223,10 +231,10 @@ export const ServiceSchema = new mongoose.Schema({
       require: true
     },
     accounts: {
-      type: Array,
+      type: [accountSchema],
       default: [
-        {name: 'Account 1', value: 0, activ: true, color: 'green', accountHistory: [], accounId: new ObjectId()}, 
-        {name: 'Account 2', value: 0, activ: true, color: 'green', accountHistory: [], accounId: new ObjectId()}
+        {name: 'Account 1', value: 0, activ: true, color: 'green', accountHistory: [], enabledSubServices: []}, 
+        {name: 'Account 2', value: 0, activ: true, color: 'green', accountHistory: [], enabledSubServices: []}
       ],
       require: true
     }
