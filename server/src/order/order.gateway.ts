@@ -22,11 +22,14 @@ import { OrderService } from './order.service'
   @SubscribeMessage('closePayOrderStatus')
   async closeOrderStatus(@ConnectedSocket() client: Socket, @MessageBody() payload: any, @Request() req: any): Promise<void> {
     console.log(payload)
-    const order = await this.orderService.closePayOrderStatus(payload.serviceId, payload.subServiceId, payload.orderId, req.user, req.service)
+    const order = await this.orderService.closePayOrderStatus(payload.serviceId, payload.subServiceId, payload.orderId, payload.order, payload.value, payload.accounId, req.user, req.service)
     if(order){
       this.server.in(client.id).emit('getOrders', order)
       this.server.to(client.id).emit('alert', {title: 'Order closed', message: 'Done ✅'})
       // client.to(payload.serviceId).emit('getOrders', order)
+    }
+    else{
+      this.server.to(client.id).emit('alert', {title: '⚠️ Warning ⚠️', message: 'Error ❌'})
     }
   }
 

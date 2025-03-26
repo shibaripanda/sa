@@ -36,6 +36,17 @@ export class ServicesGateway {
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @UsePipes(new WSValidationPipe())
+  @SubscribeMessage('addNewBusinessAccount')
+  async addNewBusinessAccount(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+    const service = await this.serviceSevice.addNewBusinessAccount(payload.serviceId, payload.newBusinessAccountName)
+    if(service){
+      this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @UsePipes(new WSValidationPipe())
   @SubscribeMessage('deleteBusinessAccount')
   async deleteBusinessAccount(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
     const service = await this.serviceSevice.deleteBusinessAccount(payload.serviceId, payload.accounId)

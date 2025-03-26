@@ -50,17 +50,20 @@ export function ModalWindowPrintStatus(props) {
                 <Grid.Col span={12}>
                   
                 </Grid.Col>
-                {props.service.accounts.map(ac => <Grid.Col span={12}>
+                {props.service.accounts.map(ac => <Grid.Col key={ac._id} span={12}>
                   <>
                   <Button fullWidth
                     disabled={!ac.activ}
                     color={ac.color}
                     onClick={() => {
-                      console.log(ac.accounId)
+                      console.log(ac._id)
                       sendToSocket('closePayOrderStatus', {
                         serviceId: props.user.serviceId, 
                         subServiceId: props.user.subServiceId, 
-                        orderId: props.data._id
+                        orderId: props.data._id,
+                        accounId: ac._id,
+                        order: props.data._orderServiceId_,
+                        value: totalCost()
                       })
                       props.openedClosePrintHandlers.close()
                     }}  

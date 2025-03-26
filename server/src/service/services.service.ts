@@ -4,6 +4,12 @@ import { Model } from 'mongoose'
 import { Service } from './services.model'
 import { UsersService } from 'src/user/users.service'
 import { ObjectId } from "mongodb"
+import { defDoc } from 'src/modules/defaultDocuments'
+
+enum StatusBusinessAccount {
+    CloseOrder = "closeorder",
+    
+}
 
 @Injectable()
 export class ServicesService {
@@ -15,18 +21,39 @@ export class ServicesService {
         private userService: UsersService
     ) {}
 
-    async deleteBusinessAccount(serviceId: string, accounId: string){
-        console.log('deleting', accounId)
-        console.log(
-            (await this.serviceMongo.findOneAndUpdate({_id: serviceId}, 
-            {$pull: {accounts: { value: 0, accounId: accounId }}}, 
-            {returnDocument: 'after'})).accounts.map(item => item._id)
-        )
-        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, 
-            {$pull: {accounts: {$elemMatch: {value: 0, c: accounId}}}}, 
-            {returnDocument: 'after'})
+    async closeOrderWithPay(serviceId: string, subServiceId: string, orderId: string, order: string, accounId: string, payUserId: string, value: number){
+        const res = await this.serviceMongo.updateOne(
+            { 
+              _id: serviceId, 
+              "accounts._id": accounId,
+              "accounts.activ": true,
+            //   "accounts.enabledSubServices": {$in: [subServiceId]} 
+            },
+            { 
+              $inc: {"accounts.$.value": value}, 
+              $push: {"accounts.$.accountHistory": {status: StatusBusinessAccount.CloseOrder, order: order, payUserId: payUserId, orderId: new ObjectId(orderId), value: value, date: new Date(Date.now())}}
+            }
+          )
+
+        console.log(res)
+        const res1 = await this.serviceMongo.findOne({_id: serviceId})
+        console.log(res1.accounts[0].accountHistory)
+        if(res.acknowledged && res.modifiedCount === 1 && res.matchedCount === 1){
+            return true
+        }
+        return false
     }
 
+    async addNewBusinessAccount(serviceId: string, newBusinessAccountName: string){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, 
+            {$push: {accounts: {name: newBusinessAccountName, value: 0, activ: true, color: 'green', accountHistory: [], enabledSubServices: []}}}, 
+            {returnDocument: 'after'})
+    }
+    async deleteBusinessAccount(serviceId: string, accounId: string){
+        return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, 
+            {$pull: {accounts: {value: 0, _id: new ObjectId(accounId)}}}, 
+            {returnDocument: 'after'})
+    }
     async deletePart(serviceId: string, deletePart: object){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {$pull: {boxParts: deletePart}}, {returnDocument: 'after'})
     }
@@ -166,7 +193,19 @@ export class ServicesService {
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, {name: newName}, {returnDocument: 'after'})
     }
     async createNewService(name: string, ownerId: string, email: string){
-        const newService = await this.serviceMongo.create({owner: ownerId, name: name})
+        const newService = await this.serviceMongo.create(
+            {
+                owner: ownerId, 
+                name: name,
+                accounts: [
+                    {name: 'Account 1', value: 0, activ: true, color: 'green', accountHistory: [], enabledSubServices: []}, 
+                    {name: 'Account 2', value: 0, activ: true, color: 'green', accountHistory: [], enabledSubServices: []}
+                  ],
+                boxParts: [{value: 'Hard drive 550gb', subPrice: 70, price: 100, varanty: 120}],
+                uslugi: [{value: 'Laptop repair', price: 100}],
+                currency: {suffixOrPrefix: 'suffix', value: '$', afterNumbers: 2, comma1000: true},
+                serviceDocuments: defDoc
+            })
         // await this.userService.addRoleToUser(email, newService._id.toHexString(), 'owner')
         await this.userService.addRoleToUser(email, newService._id.toString(), 'owner', newService.subServices[0].subServiceId)
     }

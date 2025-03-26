@@ -31,6 +31,7 @@ import { ChangeCurrencyService } from "./serviceSettingsScreen/itemsScreenSettin
 import { ChangeWorksService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeWorksService.tsx";
 import { ChangeBoxPartsService } from "./serviceSettingsScreen/itemsScreenSettings/ChangeBoxPartsService.tsx";
 import { Businessaccounts } from "./serviceSettingsScreen/itemsScreenSettings/Businessaccounts.tsx";
+import { Accounts } from "./serviceSettingsScreen/itemsScreenSettings/Accounts.tsx";
 
 
 interface ItemData {
@@ -132,6 +133,7 @@ export const line: Line[] = [
         name: 'business',
         screen: SeviceSettingsScreen,
         items: [
+            {message: 'businessAccounts', screenItem: Accounts, size: 12, canUse: []},
             {message: 'businessAccounts', screenItem: Businessaccounts, size: 12, canUse: ['deleteBusinessAccount', 'addNewBusinessAccount']},
         ]
     },

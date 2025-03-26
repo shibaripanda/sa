@@ -9,6 +9,9 @@ import { AppService } from 'src/app/app.service'
 import { AppErrors } from 'src/app/app.model'
 import { ObjectId }  from 'mongodb'
 import { WsException } from '@nestjs/websockets'
+import { ServicesService } from 'src/service/services.service'
+import { Service } from 'src/service/services.model'
+import { User } from 'src/user/user.model'
 
 
 @Injectable()
@@ -21,28 +24,33 @@ export class OrderService {
         private botService: BotService,
         @Inject(forwardRef(() => AppService))
         private appService: AppService,
+        private serviceService: ServicesService
     ) {}
 
-    async closePayOrderStatus(serviceId, subServiceId, orderId, user, service){
+    async closePayOrderStatus(serviceId: string, subServiceId: string, orderId: string, order: string, value: number, accounId: string, user: User, service: Service){
         const old = await this.orderMongo.findOne({_id: orderId, _serviceId_: serviceId}, {_status_: 1, _id: 0})
         if(old){
-            const updated = await this.orderMongo.findOneAndUpdate(
-                {_id: orderId, _serviceId_: serviceId}, 
-                {_status_: service.statuses[service.statuses.length - 1] ? service.statuses[service.statuses.length - 1] : 'noStatus', $push: {
-                    _history_: {
-                        user: user.name ? user.name + ' (' + user.email + ')' : user.email,
-                        userId: user._id,
-                        edit: '_status_',
-                        old: old._status_ ? old._status_ : '',
-                        new: service.statuses[service.statuses.length - 1] ? service.statuses[service.statuses.length - 1] : 'noStatus',
-                        date: Date.now()
+            const resultCash = await this.serviceService.closeOrderWithPay(serviceId, subServiceId, orderId, order, accounId, user._id, value)
+            if(resultCash){
+                const updated = await this.orderMongo.findOneAndUpdate(
+                    {_id: orderId, _serviceId_: serviceId}, 
+                    {_status_: service.statuses[service.statuses.length - 1] ? service.statuses[service.statuses.length - 1] : 'noStatus', $push: {
+                        _history_: {
+                            user: user.name ? user.name + ' (' + user.email + ')' : user.email,
+                            userId: user._id,
+                            edit: '_status_',
+                            old: old._status_ ? old._status_ : '',
+                            new: service.statuses[service.statuses.length - 1] ? service.statuses[service.statuses.length - 1] : 'noStatus',
+                            date: Date.now()
+                            }
                         }
-                    }
-                }, 
-                {returnDocument: 'after'})
-            const name = service.subServices.find(item => item.subServiceId === updated._subServiceId_)
-            updated._subService_ = name ? name.name : '--'
-            return updated
+                    }, 
+                    {returnDocument: 'after'})
+                const name = service.subServices.find(item => item.subServiceId === updated._subServiceId_)
+                updated._subService_ = name ? name.name : '--'
+                return updated
+            }
+            
         }
         return false   
     }
