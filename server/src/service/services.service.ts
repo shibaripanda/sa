@@ -24,20 +24,22 @@ export class ServicesService {
     async closeOrderWithPay(serviceId: string, subServiceId: string, orderId: string, order: string, accounId: string, payUserId: string, value: number){
         const res = await this.serviceMongo.updateOne(
             { 
-              _id: serviceId, 
-              "accounts._id": accounId,
-              "accounts.activ": true,
-            //   "accounts.enabledSubServices": {$in: [subServiceId]} 
+              _id: serviceId,
+              accounts: {
+                $elemMatch: {
+                    _id: accounId, 
+                    activ: true,
+                    // enabledSubServices: {$in: [subServiceId]}
+                }}
             },
             { 
-              $inc: {"accounts.$.value": value}, 
-              $push: {"accounts.$.accountHistory": {status: StatusBusinessAccount.CloseOrder, order: order, payUserId: payUserId, orderId: new ObjectId(orderId), value: value, date: new Date(Date.now())}}
-            }
+              $inc: {"accounts.$[el].value": value}, 
+              $push: {"accounts.$[el].accountHistory": {status: StatusBusinessAccount.CloseOrder, order: order, payUserId: payUserId, orderId: new ObjectId(orderId), value: value, date: new Date(Date.now())}}
+            },
+            {arrayFilters: [{'el._id': accounId, 'el.activ': true}]}
           )
 
         console.log(res)
-        const res1 = await this.serviceMongo.findOne({_id: serviceId})
-        console.log(res1.accounts[0].accountHistory)
         if(res.acknowledged && res.modifiedCount === 1 && res.matchedCount === 1){
             return true
         }

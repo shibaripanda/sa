@@ -1,48 +1,45 @@
-import { Button, Grid, Group, Text, TextInput } from '@mantine/core'
+import { Button, Divider, Grid, Group, Space, Text, TextInput } from '@mantine/core'
 import React from 'react'
 import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
-import { IconSquareX } from '@tabler/icons-react'
-import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function Accounts(props, message) {
 
   console.log('Accounts')
+  console.log(props.service.accounts)
+
+  const multiOrder = (order) => {
+    console.log(props.service.accounts.map(ac => ac.accountHistory).flat().filter(item => item.orderId === order).length)
+    const countOrders = props.service.accounts.map(ac => ac.accountHistory).flat().filter(item => item.orderId === order).length
+    if(countOrders === 1){
+      return {color: 'green', count: ''}
+    }
+    return {color: 'red', count: `(${countOrders})`}
+  } 
 
   return (
     <div>
         <Text fw={700} style={{marginBottom: 10}}>{props.text[message][props.leng]}</Text>
+        <Space h='lg'/>
         
-        <Grid style={{marginBottom: 10}}>{props.service.accounts.map(item => 
+        <Grid style={{marginBottom: 10}}>{props.service.accounts.map(item =>
+        <>
+          <Grid.Col span={12}><Group justify="space-between"><Text fw={700}>{item.name}</Text> <Text c='green' fs="italic">{item.value}</Text></Group><hr></hr></Grid.Col> 
           <Grid.Col span={12}>
             <Grid>
               {item.accountHistory.map(ac => 
                 <Grid.Col span={12}>
-                  {ac.order + ' ' + ac.value}
+                  <Group justify='space-between'>
+                    <Text c={multiOrder(ac.orderId).color} size="sm">{ac.order} {multiOrder(ac.orderId).count}</Text>
+                    <Text c={multiOrder(ac.orderId).color} size="sm">{ac.value}</Text>
+                  </Group>
+                  <Divider my="xs" />
                 </Grid.Col>
               )}
             </Grid>
-          </Grid.Col>)}
+          </Grid.Col>
+        </>
+        )}
         </Grid>
-
-        {/* businessAccount setBusinessAccount */}
-
-        {/* <TextInput
-        value={props.props.businessAccount ? props.props.businessAccount : ''}
-        onChange={(event) => {
-          props.props.setBusinessAccount(editString(event.target.value))
-        }}/>
-        <Button style={{marginTop: 10}}
-        disabled={!props.props.businessAccount || props.service.accounts.map(item => item.name).includes(props.props.businessAccount)}
-        onClick={() => {
-          sendToSocket('addNewBusinessAccount', {
-            serviceId: props.user.serviceId, 
-            subServiceId: props.user.subServiceId, 
-            newBusinessAccountName: props.props.businessAccount.toString()
-          })
-          props.props.setBusinessAccount(false)
-        }}
-        >{props.text.add[props.leng]}
-        </Button> */}
     </div>
   )
 }
