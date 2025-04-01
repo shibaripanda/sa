@@ -3,8 +3,6 @@ import React from 'react'
 
 export function NewOrderScreen(props) {
 
-    console.log('NewOrderScreen')
-
     return (
       <>
         <div style={{margin: 15}}>

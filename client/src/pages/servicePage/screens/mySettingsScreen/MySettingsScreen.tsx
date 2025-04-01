@@ -4,10 +4,6 @@ import React from 'react'
 
 export function MySettingsScreen(props) {
 
-  console.log('MySettingsScreen')
-
-  console.log(props.items)
-
   return (
       <>
         <div style={{margin: 15}}>

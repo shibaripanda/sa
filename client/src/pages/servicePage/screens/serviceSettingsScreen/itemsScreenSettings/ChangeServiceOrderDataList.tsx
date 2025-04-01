@@ -1,12 +1,12 @@
 import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { DragAndDrop } from './DragAndDrop/DragAndDrop.tsx'
 import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeServiceOrderDataList(props, message) {
 
-  console.log('ChangeServiceOrderDataList')
+  console.log('now1', message)
+
 
   if(props.props.dragDrop.length !== props.service.orderData.length){
     props.props.setDragDrop.setState(props.service.orderData)
@@ -31,11 +31,7 @@ export function ChangeServiceOrderDataList(props, message) {
           props.props.newOrderData.includes('_')
         }
         onClick={() => {
-          sendToSocket(message, {
-            serviceId: props.user.serviceId, 
-            subServiceId: props.user.subServiceId, 
-            newOrderData: props.props.newOrderData.toString()
-          })
+          props.user.changeServiceOrderDataList(props.props.newOrderData.toString())
           props.props.setNewOrderData('')
           
         }}

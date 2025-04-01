@@ -6,8 +6,6 @@ import { WarrantyOrderPrint } from "./printDocuments/WarrantyOrderPrint"
 
 export const PrintServer = (props) => {
 
-  console.log(props)
-
   const documentForPrint = () => {
     if(props.data._printDocument_ === 'NewOderPrint'){
       return <NewOderPrint innerRef={contentRef} {...props}/>

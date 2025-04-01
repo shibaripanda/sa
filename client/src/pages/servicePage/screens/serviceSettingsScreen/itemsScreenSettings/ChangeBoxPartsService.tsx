@@ -1,10 +1,7 @@
 import { Autocomplete, Button, Center, Grid, NumberInput, Space, Text } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeBoxPartsService(props, message) {
-
-  console.log('ChangeBoxPartsService')
 
   return (
     <div>
@@ -18,7 +15,6 @@ export function ChangeBoxPartsService(props, message) {
               placeholder={props.text.part[props.leng]}
               // data={props.service.boxParts.map(item => item.value)}
               onChange={(event) => {
-                console.log(event)
                 props.props.setBoxPart({...props.props.boxPart, value: event})
               }}
             />
@@ -55,11 +51,7 @@ export function ChangeBoxPartsService(props, message) {
               fullWidth
               disabled={!props.props.boxPart.value || !props.props.boxPart.price || !props.props.boxPart.subPrice || !props.props.boxPart.varanty}
               onClick={() => {
-                sendToSocket(message, {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  newPart: props.props.boxPart
-                })
+                props.user.changeBoxPartsService(props.props.boxPart)
                 props.props.setBoxPart({value: '', varanty: '', subPrice: '', price: ''})
               }}
               >{props.text.add[props.leng]}
@@ -90,11 +82,7 @@ export function ChangeBoxPartsService(props, message) {
               color={'red'}
               fullWidth
               onClick={() => {
-                sendToSocket('deletePart', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  deletePart: {value: item.value, price: item.price, subPrice: item.subPrice, varanty: item.varanty}
-                })
+                props.user.deletePart({value: item.value, price: item.price, subPrice: item.subPrice, varanty: item.varanty})
               }}
               >{props.text.delete[props.leng]}
             </Button>

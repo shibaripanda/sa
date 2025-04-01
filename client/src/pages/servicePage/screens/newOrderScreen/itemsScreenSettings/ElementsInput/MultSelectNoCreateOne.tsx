@@ -4,7 +4,6 @@ import React from 'react'
 
 
 export function MultSelectNoCreateOne(props) {
-  // console.log(props.props.field)
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){
@@ -30,14 +29,6 @@ export function MultSelectNoCreateOne(props) {
 
     if(val === '$create'){
       setData((current) => [...current, search])
-      // if(props.props.field.saveNewVariants){
-      //   sendToSocket('addOrDelListVariant', {
-      //               serviceId: props.props.user.serviceId, 
-      //               subServiceId: props.props.user.subServiceId, 
-      //               item: props.props.field.item,
-      //               variant: search
-      //               })
-      //             }
       setValue([search])
       sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([search]))
     }

@@ -1,10 +1,7 @@
 import { Button, Grid, Text } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeMyTelegram(props, item) {
-
-  console.log('ChangeMyTelegram')
 
   const disconect = () => {
     if(props.user.telegramId){
@@ -15,10 +12,7 @@ export function ChangeMyTelegram(props, item) {
             disabled={!props.user.telegramId}
             onClick={() => {
               props.props.updateUserData(0 ,'telegramId')
-              sendToSocket('disconectTelegram', {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId
-              })
+              props.user.disconectTelegram()
               props.props.setTelegramPass('Disconnect')
             }}
           >
@@ -35,10 +29,7 @@ export function ChangeMyTelegram(props, item) {
           variant='default'
           disabled={!props.user.telegramId}
           onClick={() => {
-            sendToSocket('testTelegram', {
-              serviceId: props.user.serviceId, 
-              subServiceId: props.user.subServiceId
-            })
+            props.user.testTelegram()
           }}
           >{props.text.test[props.leng]}
         </Button>
@@ -56,10 +47,7 @@ export function ChangeMyTelegram(props, item) {
               fullWidth
               variant='default'
               onClick={() => {
-                sendToSocket('getTelegramPass', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId
-                })
+                props.user.getTelegramPass()
               }}
               >
               Connect

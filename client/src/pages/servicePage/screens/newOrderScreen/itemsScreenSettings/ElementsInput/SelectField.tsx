@@ -3,7 +3,6 @@ import React from 'react'
 
 
 export function SelectField(props) {
-  console.log(props.props)
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){

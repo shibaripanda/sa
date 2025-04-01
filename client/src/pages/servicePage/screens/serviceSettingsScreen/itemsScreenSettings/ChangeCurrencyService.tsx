@@ -1,11 +1,7 @@
 import { Button, Checkbox, Group, NumberFormatter, NumberInput, Select, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeCurrencyService(props, message) {
-
-  console.log('ChangeCurrencyService')
-  console.log(props.service.currency)
 
   if(!props.props.currency){
     props.props.serCurrency(structuredClone(props.service.currency))
@@ -77,11 +73,7 @@ export function ChangeCurrencyService(props, message) {
             <Button style={{marginTop: 10}}
               disabled={JSON.stringify(props.props.currency) === JSON.stringify(props.service.currency)}
               onClick={() => {
-                sendToSocket('updateCurrency', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  newCurrency: props.props.currency
-                })
+                props.user.updateCurrency(props.props.currency)
                 props.props.setPrinDocs(false)
               }}
               >{props.text.save[props.leng]}

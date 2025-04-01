@@ -1,10 +1,8 @@
 import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function DeleteService(props, message) {
 
-    console.log('DeleteService')
 
   return (
     <div>
@@ -18,10 +16,7 @@ export function DeleteService(props, message) {
         disabled={!props.props.deleteServiceName || props.props.deleteServiceName.toLowerCase() !== props.service.name.toLowerCase()}
         color='red'
         onClick={() => {
-          sendToSocket(message, {
-            serviceId: props.user.serviceId, 
-            subServiceId: props.user.subServiceId,
-          })
+          props.user.deleteService()
           props.props.setDeleteServiceName('')
         }}
         >{props.text.deleteServiceWarning[props.leng]}

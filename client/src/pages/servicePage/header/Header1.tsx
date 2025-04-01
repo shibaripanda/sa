@@ -114,7 +114,6 @@ export function Header1(props) {
       data-active={item === props.activeScreen || undefined}
       onClick={(event) => {
         event.preventDefault()
-        // console.log(item, index)
         props.setActiveScreen(item)
         sessionStorage.setItem('activescreen', item)
         if(opened){

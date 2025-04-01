@@ -1,20 +1,7 @@
 import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
-import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 
 export function ChangeMyName(props, item) {
-
-  console.log('ChangeMyName')
-
-  // if(!props.props[item.newData]){
-  //   sendToSocket(item.message, {
-  //     serviceId: props.user.serviceId, 
-  //     subServiceId: props.user.subServiceId
-  //   })
-  // }
-  
-  // if(props.props[item.newData]){
 
       return (
         <div>
@@ -28,21 +15,11 @@ export function ChangeMyName(props, item) {
               <Button style={{marginTop: 10}}
               disabled={!props.props[item.newData]}
               onClick={() => {
-                sendToSocket(item.message, {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  [item.res]: props.props[item.newData].toString()
-                })
+                props.user.changeMyName(props.props[item.newData].toString())
                 props.props[item.setData]('')
               }}
               >{props.text.save[props.leng]}
               </Button>
         </div>
       )
-    // }
-    // else{
-    //   return (
-    //     LoaderShow()
-    //   )
-    // }
 }

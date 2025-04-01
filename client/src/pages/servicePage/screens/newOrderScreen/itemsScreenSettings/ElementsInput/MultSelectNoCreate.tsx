@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import { CheckIcon, Combobox, Group, Pill, PillsInput, useCombobox } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts';
 
 
 export function MultSelectNoCreate(props) {
-  // console.log(props.props.field)
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){
@@ -31,14 +29,6 @@ export function MultSelectNoCreate(props) {
 
     if(val === '$create'){
       setData((current) => [...current, search])
-      // if(props.props.field.saveNewVariants){
-      //   sendToSocket('addOrDelListVariant', {
-      //               serviceId: props.props.user.serviceId, 
-      //               subServiceId: props.props.user.subServiceId, 
-      //               item: props.props.field.item,
-      //               variant: search
-      //               })
-      //             }
       setValue((current) => [...current, search])
       sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([...value, search]))
     }

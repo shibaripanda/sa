@@ -1,12 +1,9 @@
 import { Button, Group, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { IconSquareX } from '@tabler/icons-react'
 import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeLocalService(props, message) {
-
-  console.log('ChangeLocalService')
 
   return (
     <div>
@@ -16,11 +13,7 @@ export function ChangeLocalService(props, message) {
             <Button variant='default' key={item.subServiceId}
             disabled={item.subServiceId === props.user.subServiceId}
             onClick={() => {
-              sendToSocket(message, {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId,
-                subServiceIdDeleteOrNew: item.subServiceId
-              })
+              props.user.changeLocalService(item.subServiceId)
             }}>
               <IconSquareX color='red'/>{'\u00A0'}<Text>{item.name}</Text>
             </Button>)}
@@ -38,11 +31,7 @@ export function ChangeLocalService(props, message) {
         <Button style={{marginTop: 10}}
         disabled={!props.props.newSubService || props.service.subServices.map(item => item.name).includes(props.props.newSubService)}
         onClick={() => {
-          sendToSocket(message, {
-            serviceId: props.user.serviceId, 
-            subServiceId: props.user.subServiceId, 
-            subServiceIdDeleteOrNew: props.props.newSubService.toString()
-          })
+          props.user.changeLocalService(props.props.newSubService.toString())
           props.props.setSubNewSevice('')
         }}
         >{props.text.add[props.leng]}

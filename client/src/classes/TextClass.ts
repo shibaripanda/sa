@@ -27,8 +27,6 @@ export class TextClass {
 
     async getTextPackFromServer(): Promise<Leng | false>{
 
-        console.log(this.link)
-
         return await axios({
             method: 'GET',
             url: this.link + '/auth/text',
@@ -40,7 +38,6 @@ export class TextClass {
             return res.data
         })
         .catch((e) => {
-            console.log(false)
             return false
         })
 

@@ -134,7 +134,7 @@ export const line: Line[] = [
         screen: SeviceSettingsScreen,
         items: [
             {message: 'businessAccounts', screenItem: Accounts, size: 12, canUse: []},
-            {message: 'businessAccounts', screenItem: Businessaccounts, size: 12, canUse: ['deleteBusinessAccount', 'addNewBusinessAccount']},
+            {message: 'businessAccounts', screenItem: Businessaccounts, size: 12, canUse: ['deleteBusinessAccount', 'addNewBusinessAccount', 'closePayOrderStatus']},
         ]
     },
     {
@@ -206,8 +206,6 @@ export class ScreenLine {
             }
             return this.user.userRoles.includes('owner')
         }
-        // console.log('this.getMessagesForUser()', this.getMessagesForUser().join())
-        // console.log(this.line.filter(lin => filterLine(lin.items.map(m => m.message), this.getMessagesForUser())).map(item => item.name))
         return this.line.filter(lin => filterLine(lin.items.map(m => m.message), this.getMessagesForUser())).map(item => item.name)
     }
 

@@ -217,7 +217,6 @@ function ServicePage() {
   const filterOrders = useMemo(() => {
     if(filterOrdersString){
       if(filterOrdersString[filterOrdersString.length - 1] === '='){
-        console.log(filterOrdersString)
         sendToSocket('getOrdersFilter', {
           serviceId: authClass.getServiceId(), 
           subServiceId: authClass.getSubServiceId(), 
@@ -260,7 +259,6 @@ function ServicePage() {
         setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), name: data}))
       }
       const editUserFilter = (data: any) => {
-        console.log('sss', data)
         authClass.updateServiceAppUsers(data.data, 'roles')
         setUser(new UserClass({...authClass.getCurrentUserForCurrentService(), [data.item]: data[data.current]}))
       }

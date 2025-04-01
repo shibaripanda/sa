@@ -1,11 +1,8 @@
 import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeNameSubService(props, message) {
 
-    // console.log('ChangeNameSubService', props, message)
-    console.log('ChangeNameSubService')
 
   return (
     <div>
@@ -19,11 +16,7 @@ export function ChangeNameSubService(props, message) {
         <Button style={{marginTop: 10}}
         disabled={!props.props.newSubServiceName}
         onClick={() => {
-          sendToSocket(message, {
-            serviceId: props.user.serviceId, 
-            subServiceId: props.user.subServiceId, 
-            newName: props.props.newSubServiceName.toString()
-          })
+          props.user.changeNameSubService(props.props.newSubServiceName.toString())
           props.props.setSubNewSeviceName('')
         }}
         >{props.text.save[props.leng]}

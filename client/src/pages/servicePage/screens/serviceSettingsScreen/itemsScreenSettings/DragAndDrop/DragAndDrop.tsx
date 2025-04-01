@@ -4,10 +4,10 @@ import { Button, Center, Checkbox, Group, Switch, Table, Text } from '@mantine/c
 // @ts-ignore
 import classes from './DragAndDrop.module.css'
 import React from 'react'
-import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts'
 import { ModalListVariant } from '../ListVariant/ModalListVariant.tsx'
 
 export function DragAndDrop(props, message) {
+
 
   const colorTextDisableItem = (check) => {
     if(check){
@@ -16,7 +16,6 @@ export function DragAndDrop(props, message) {
   }
 
   const listBut = (item) => {
-    // console.log(item.variant)
     if(item.variant){
       return (
             <Button
@@ -55,14 +54,8 @@ export function DragAndDrop(props, message) {
                 checked={!item.hidden}
                 color='green'
                 onChange={() => {
-                  sendToSocket('orderDataEdit', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId,
-                    item: item.item, 
-                    data: 'hidden',
-                    newValue: !item.hidden
-                    })
-                    props.props.setDragDrop.setItem(index, {...item, hidden: !item.hidden})
+                  props.user.orderDataEdit(item.item, 'hidden', !item.hidden)
+                  props.props.setDragDrop.setItem(index, {...item, hidden: !item.hidden})
                   }
                 }
                 thumbIcon={
@@ -85,14 +78,8 @@ export function DragAndDrop(props, message) {
                   checked={item.number}
                   disabled={item.hidden || item.blocked}
                   onChange={() => {
-                    sendToSocket('orderDataEdit', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      item: item.item, 
-                      data: 'number',
-                      newValue: !item.number
-                      })
-                      props.props.setDragDrop.setItem(index, {...item, number: !item.number})
+                    props.user.orderDataEdit(item.item, 'number', !item.number)
+                    props.props.setDragDrop.setItem(index, {...item, number: !item.number})
                     }
                   }
                   />
@@ -104,14 +91,8 @@ export function DragAndDrop(props, message) {
                   checked={item.control}
                   disabled={item.hidden || item.blocked}
                   onChange={() => {
-                    sendToSocket('orderDataEdit', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      item: item.item, 
-                      data: 'control',
-                      newValue: !item.control
-                      })
-                      props.props.setDragDrop.setItem(index, {...item, control: !item.control})
+                    props.user.orderDataEdit(item.item, 'control', !item.control)
+                    props.props.setDragDrop.setItem(index, {...item, control: !item.control})
                     }
                   }
                   />
@@ -125,14 +106,8 @@ export function DragAndDrop(props, message) {
                     color='green'
                     disabled={item.hidden || item.number || item.blocked}
                     onChange={() => {
-                      sendToSocket('orderDataEdit', {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: props.user.subServiceId,
-                        item: item.item, 
-                        data: 'variant',
-                        newValue: !item.variant
-                        })
-                        props.props.setDragDrop.setItem(index, {...item, variant: !item.variant})
+                      props.user.orderDataEdit(item.item, 'variant', !item.variant)
+                      props.props.setDragDrop.setItem(index, {...item, variant: !item.variant})
                       }
                     }
                     thumbIcon={
@@ -153,14 +128,8 @@ export function DragAndDrop(props, message) {
                   checked={item.onlyVariants}
                   disabled={!item.variant || item.hidden || item.number || item.blocked}
                   onChange={() => {
-                    sendToSocket('orderDataEdit', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      item: item.item, 
-                      data: 'onlyVariants',
-                      newValue: !item.onlyVariants
-                      })
-                      props.props.setDragDrop.setItem(index, {...item, onlyVariants: !item.onlyVariants})
+                    props.user.orderDataEdit(item.item, 'onlyVariants', !item.onlyVariants)
+                    props.props.setDragDrop.setItem(index, {...item, onlyVariants: !item.onlyVariants})
                     }
                   }
                   />
@@ -172,14 +141,8 @@ export function DragAndDrop(props, message) {
                   checked={item.multiVariants}
                   disabled={!item.variant || item.hidden || item.number || item.blocked}
                   onChange={() => {
-                    sendToSocket('orderDataEdit', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      item: item.item, 
-                      data: 'multiVariants',
-                      newValue: !item.multiVariants
-                      })
-                      props.props.setDragDrop.setItem(index, {...item, multiVariants: !item.multiVariants})
+                    props.user.orderDataEdit(item.item, 'multiVariants', !item.multiVariants)
+                    props.props.setDragDrop.setItem(index, {...item, multiVariants: !item.multiVariants})
                     }
                   }
                   />
@@ -191,14 +154,8 @@ export function DragAndDrop(props, message) {
                   checked={item.saveNewVariants}
                   disabled={!item.variant || item.hidden || item.onlyVariants || item.number}
                   onChange={() => {
-                    sendToSocket('orderDataEdit', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      item: item.item, 
-                      data: 'saveNewVariants',
-                      newValue: !item.saveNewVariants
-                      })
-                      props.props.setDragDrop.setItem(index, {...item, saveNewVariants: !item.saveNewVariants})
+                    props.user.orderDataEdit(item.item, 'saveNewVariants', !item.saveNewVariants)
+                    props.props.setDragDrop.setItem(index, {...item, saveNewVariants: !item.saveNewVariants})
                     }
                   }
                   />
@@ -212,11 +169,7 @@ export function DragAndDrop(props, message) {
                     size='xs'
                     c='red'
                     onClick={() => {
-                        sendToSocket(message, {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: props.user.subServiceId, 
-                        newOrderData: item.item
-                        })
+                      props.user.changeServiceOrderDataList(item.item)
                         props.props.setDragDrop.remove(index)
                     }}
                     >{props.text.delete[props.leng]}
@@ -241,12 +194,7 @@ export function DragAndDrop(props, message) {
       <Table.ScrollContainer minWidth={420}>
         <DragDropContext
           onDragEnd={({ destination, source }) => {
-            sendToSocket('replaceOrderDataItems', {
-              serviceId: props.user.serviceId, 
-              subServiceId: props.user.subServiceId, 
-              index1: source.index,
-              index2: destination?.index || 0 
-              })
+            props.user.replaceOrderDataItems(source.index, destination?.index || 0 )
                 props.props.setDragDrop.reorder({ from: source.index, to: destination?.index || 0 })
               }
           }

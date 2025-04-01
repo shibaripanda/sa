@@ -4,13 +4,10 @@ import { LoaderShow } from '../../../../../components/Loader/LoaderShow.tsx'
 // @ts-ignore
 import classes from './OrderList.module.css'
 import { IconSquareCheck, IconSquareX } from '@tabler/icons-react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { emptyWork } from '../../../ServicePage.tsx'
 
 export function OrdersScreen(props, message) {
 
-  console.log('OrdersScreen')
-  
   if(!props.props.newWork.master){
     props.props.setNewWork({...props.props.newWork, master: props.props.newWork.master ? props.props.newWork.master : props.user._id})
   }
@@ -281,7 +278,6 @@ export function OrdersScreen(props, message) {
 
             if(props.service.boxParts.find(item => item.value === event.split(' | ')[0])){
               const res = props.service.boxParts.find(item => item.value === event.split(' | ')[0])
-              console.log(res)
               item.part = res.value
               item.cost = res.price
               item.subCost = res.subPrice
@@ -333,7 +329,6 @@ export function OrdersScreen(props, message) {
   const activButEditWork = (data, order) => {
     for(const i of data){
       if(!i.work || !i.cost || !i.master){
-        console.log('s', true)
         return true
       }
       if(i.parts.length){
@@ -344,7 +339,6 @@ export function OrdersScreen(props, message) {
         }
       }
     }
-    console.log('d', false)
     return JSON.stringify(order) === JSON.stringify(props.props.editedWork)
   }
   const activButAddNewWork = (data) => {
@@ -420,13 +414,8 @@ export function OrdersScreen(props, message) {
           <Button fullWidth variant='default' c={!activButAddNewWork(props.props.newWork) ? 'green' : ''}
             disabled={activButAddNewWork(props.props.newWork)}
             onClick={() => {
-                sendToSocket('addNewWork', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  orderId: order._id,
-                  work: {...props.props.newWork, total: total().sumCost}
-                })
-                props.props.setNewWork(structuredClone(emptyWork))
+              props.user.addNewWork(order._id, {...props.props.newWork, total: total().sumCost})
+              props.props.setNewWork(structuredClone(emptyWork))
             }}>
           {props.text.add[props.leng]}
           </Button>
@@ -552,12 +541,7 @@ export function OrdersScreen(props, message) {
         if(work._id){
           return (
             <Anchor size='sm' c='red' onClick={() => {
-              sendToSocket('deleteWork', {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId,
-                orderId: order._id,
-                work: work
-              })
+              props.user.deleteWork(order._id, work)
             }}>
               {props.text.delete[props.leng]}
             </Anchor>
@@ -565,12 +549,7 @@ export function OrdersScreen(props, message) {
         }
         return (
           <Anchor size='sm' c='green' onClick={() => {
-            sendToSocket('addNewWork', {
-              serviceId: props.user.serviceId, 
-              subServiceId: props.user.subServiceId,
-              orderId: order._id,
-              work: {...props.props.newWork, total: total().sumCost}
-            })
+            props.user.addNewWork(order._id, {...props.props.newWork, total: total().sumCost})
             props.props.setNewWork(structuredClone(emptyWork))
           }}>
             {props.text.add[props.leng]}
@@ -593,11 +572,7 @@ export function OrdersScreen(props, message) {
         if(order._work_.length > 1){
           return (
             <Anchor size='sm' c='red' onClick={() => {
-              sendToSocket('deleteAllWork', {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId,
-                orderId: order._id
-              })
+              props.user.deleteAllWork(order._id)
             }}>
               {props.text.deleteAll[props.leng]}
             </Anchor>
@@ -908,7 +883,6 @@ export function OrdersScreen(props, message) {
                   <TextInput value={item.work} placeholder={props.text.servOrPart[props.leng]} error={!item.work}
                     onChange={(event) => {
                       item.work = event.target.value
-                      console.log('ddd')
                       props.props.setEditedWork([...props.props.editedWork])
                     }}/>
                 </Grid.Col>
@@ -953,12 +927,7 @@ export function OrdersScreen(props, message) {
             <Button
               disabled={activButEditWork(props.props.editedWork, order._work_)}
               onClick={() => {
-                sendToSocket('updateOrderWork', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  orderId: order._id,
-                  work: props.props.editedWork
-                })
+                props.user.updateOrderWork(order._id, props.props.editedWork)
               }}
             > 
             {props.text.save[props.leng]}
@@ -1110,13 +1079,9 @@ export function OrdersScreen(props, message) {
             <Grid.Col span={props.props.screenSizeOrderButLine < 12 ? 2 : 12}>
               <Button fullWidth variant='default'
                 onClick={() => {
+                  
                   if(props.props.dataInformation){
-                    sendToSocket('addInformationOrder', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      orderId: order._id,
-                      data: props.props.dataInformation
-                    })
+                    props.user.addInformationOrder(order._id, props.props.dataInformation)
                     props.props.setDataInformation('')
                   }
                 }}>
@@ -1221,13 +1186,7 @@ export function OrdersScreen(props, message) {
                   color={item === element._status_ ? colorOrder(element._status_) : 'grey'} 
                   fullWidth
                   onClick={() => {
-                    sendToSocket('editOrderStatus', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      orderId: element._id,
-                      newStatus: item
-                    })
-                    console.log(element._id, item)
+                    props.user.editOrderStatus(element._id, item)
                   }}
                 >
                   {checkStatus(element._status_, item)}{'\u00A0'}{item}
@@ -1246,11 +1205,7 @@ export function OrdersScreen(props, message) {
               disabled={!element._media_.length || element._mediaPhotos_}
               variant='default'
               onClick={() => {
-                sendToSocket('getOrderPhotos', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  orderId: element._id,
-                })
+                props.user.getOrderPhotos(element._id)
               }}
             >
             {props.text.photos[props.leng]}
@@ -1259,11 +1214,7 @@ export function OrdersScreen(props, message) {
               disabled={!props.user.telegramId}
               variant='default'
               onClick={() => {
-                sendToSocket('sendOrderToTelegram', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  orderId: element._id,
-                })
+                props.user.sendOrderToTelegram(element._id)
               }}
             >
             {props.text.sendToTelegram[props.leng]}
@@ -1320,12 +1271,7 @@ export function OrdersScreen(props, message) {
             onChange={(event) => {
               if(event){
                 props.props.setEditedWork([])
-                sendToSocket('getOrder', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId,
-                    orderId: event
-                  }
-                )
+                props.user.getOrder(event)
               }
               props.props.setOrderAcord(event)
             }} 

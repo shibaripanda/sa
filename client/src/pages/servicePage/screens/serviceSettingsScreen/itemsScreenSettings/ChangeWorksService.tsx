@@ -1,11 +1,7 @@
 import { Autocomplete, Button, Center, Grid, NumberInput, Space, Text } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeWorksService(props, message) {
-
-    // console.log('ChangeNameMainService', props, message)
-    console.log('ChangeWorksService')
 
   return (
     <div>
@@ -18,7 +14,6 @@ export function ChangeWorksService(props, message) {
               placeholder="Pick value or enter anything"
               data={props.service.uslugi.map(item => item.value)}
               onChange={(event) => {
-                console.log(event)
                 props.props.setUsluga({...props.props.usluga, value: event})
               }}
             />
@@ -37,11 +32,7 @@ export function ChangeWorksService(props, message) {
               fullWidth
               disabled={!props.props.usluga.value || !props.props.usluga.price}
               onClick={() => {
-                sendToSocket(message, {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  newUsluga: props.props.usluga
-                })
+                props.user.changeWorksService(props.props.usluga)
                 props.props.setUsluga({value: '', price: ''})
               }}
               >{props.text.add[props.leng]}
@@ -66,11 +57,7 @@ export function ChangeWorksService(props, message) {
               color={'red'}
               fullWidth
               onClick={() => {
-                sendToSocket('deleteUsluga', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  deleteUsluga: {value: item.value, price: item.price}
-                })
+                props.user.deleteUsluga({value: item.value, price: item.price})
               }}
               >{props.text.delete[props.leng]}
             </Button>

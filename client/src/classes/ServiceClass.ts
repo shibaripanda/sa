@@ -1,3 +1,4 @@
+
 interface Service {
     name: string
     subServices: {name: string, subServiceId: string, options: {workTime: string, contact: string, address: string}}[]
@@ -75,12 +76,10 @@ export class ServiceClass {
         this.uslugi = data.uslugi.reverse()
         this.boxParts = data.boxParts.reverse()
         this.accounts = data.accounts
-
-
-        
-
         // data.subServices = data.subServices.filter(item => item.subServiceId !== authClass.getSubServiceId())
-
     }
+
+    
+    
    
 }

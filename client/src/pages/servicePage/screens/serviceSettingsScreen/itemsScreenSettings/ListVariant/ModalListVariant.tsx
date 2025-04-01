@@ -1,10 +1,8 @@
 import React from 'react'
 import { Button, Grid, Modal, TextInput } from '@mantine/core'
-import { sendToSocket } from '../../../../../../modules/socket/pipSendSocket.ts'
 
 export function ModalListVariant(props) {
 
-    console.log('ModalListVariant', props)
 
     if(props.props.listVariantName){
         const deviceName = (name) => {
@@ -28,12 +26,7 @@ export function ModalListVariant(props) {
                     <Button style={{marginTop: 10}}
                     disabled={!props.props.newVariant || variant.variants.includes(props.props.newVariant)}
                     onClick={() => {
-                        sendToSocket('addOrDelListVariant', {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: props.user.subServiceId, 
-                        item: variant.item,
-                        variant: props.props.newVariant.toString()
-                        })
+                        props.user.addOrDelListVariant(variant.item, props.props.newVariant.toString())
                         props.props.setNewVariant('')
                         
                     }}
@@ -50,12 +43,7 @@ export function ModalListVariant(props) {
                             <Button
                             color='red'
                             onClick={() => {
-                                sendToSocket('addOrDelListVariant', {
-                                serviceId: props.user.serviceId, 
-                                subServiceId: props.user.subServiceId, 
-                                item: variant.item,
-                                variant: item
-                                })
+                                props.user.addOrDelListVariant(variant.item, item)
                             }}
                             >{props.text.delete[props.leng]}
                             </Button>

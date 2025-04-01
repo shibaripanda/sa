@@ -92,7 +92,6 @@ export class AuthClass {
         })
         .catch((e) => {
             setDescriptionText(e.response.data.message ? e.response.data.message : 'error')
-            console.log(e.response.data.message ? e.response.data.message : 'error')
             return false
         })
 
@@ -124,7 +123,6 @@ export class AuthClass {
         })
         .catch((e) => {
             setDescriptionText(e.response.data.message ? e.response.data.message : 'error')
-            console.log(e.response.data.message ? e.response.data.message : 'error')
             return false
         })
 

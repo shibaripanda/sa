@@ -1,10 +1,8 @@
 import { Button, Group, Select, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeLocalServiceUser(props, message) {
 
-  console.log('ChangeLocalServiceUser')
 
     return (
       <div>
@@ -29,12 +27,7 @@ export function ChangeLocalServiceUser(props, message) {
             !props.props.role
           }
           onClick={() => {
-            sendToSocket('addRoleToUser', {
-              serviceId: props.user.serviceId, 
-              subServiceId: props.user.subServiceId, 
-              email: props.props.emailForNewUser.toLowerCase(),
-              role: props.props.role
-            })
+            props.user.addRoleToUser(props.props.emailForNewUser.toLowerCase(), props.props.role)
             props.props.setEmailForNewUser('')
             props.props.setSettingsFilter(props.props.emailForNewUser.toLowerCase())
           }}

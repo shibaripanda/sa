@@ -1,11 +1,7 @@
 import { Button, Group, Select, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeServiceUser(props, message) {
-
-  console.log('ChangeServiceUser')
-  
 
     return (
       <div>
@@ -36,12 +32,7 @@ export function ChangeServiceUser(props, message) {
             !props.props.role
           }
           onClick={() => {
-            sendToSocket('addRoleToUser', {
-              serviceId: props.user.serviceId, 
-              subServiceId: props.service.subServices.find(item => item.name === props.props.subService).subServiceId, 
-              email: props.props.emailForNewUser.toLowerCase(),
-              role: props.props.role
-            })
+            props.user.addRoleToUser(props.props.emailForNewUser.toLowerCase(), props.props.role)
             props.props.setSubService('')
             props.props.setEmailForNewUser('')
             props.props.setSettingsFilter(props.props.emailForNewUser.toLowerCase())

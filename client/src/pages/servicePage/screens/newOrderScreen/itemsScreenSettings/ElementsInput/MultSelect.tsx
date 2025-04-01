@@ -4,7 +4,6 @@ import React from 'react'
 
 
 export function MultSelect(props) {
-  // console.log(props.props.field)
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){

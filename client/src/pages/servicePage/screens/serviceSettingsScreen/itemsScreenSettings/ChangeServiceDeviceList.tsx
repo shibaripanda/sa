@@ -1,15 +1,13 @@
-import { Button, Grid, Group, HoverCard, Text, TextInput } from '@mantine/core'
+import { Button, Grid, HoverCard, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
-import { IconHandStop, IconSquareX } from '@tabler/icons-react'
+import { IconHandStop } from '@tabler/icons-react'
 import { upFirstString } from '../../../../../modules/upFirstString.ts'
 import { editString } from '../../../../../modules/testStringSimbols.js'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 
 export function ChangeServiceDeviceList(props, message) {
 
-    
-  console.log('ChangeServiceDeviceList')
+  console.log('now', message)
 
 
   const items = props.service.devices.map((item, index) => (
@@ -33,11 +31,7 @@ export function ChangeServiceDeviceList(props, message) {
               <HoverCard.Dropdown>
               <Button color='red' key={item} size='xs'
                 onClick={() => {
-                  sendToSocket(message, {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId, 
-                    device: item
-                  })
+                  props.user.changeServiceDeviceList(item)
                 }}>
                   {props.text.delete[props.leng]} {item}
                 </Button>
@@ -63,12 +57,7 @@ export function ChangeServiceDeviceList(props, message) {
 
       <DragDropContext
         onDragEnd={({ destination, source }) => {
-          sendToSocket('replaceDevicePosition', {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: props.user.subServiceId, 
-                        index1: source.index,
-                        index2: destination?.index || 0 
-                        })
+          props.user.replaceDevicePosition(source.index, destination?.index || 0 )
         
           props.props.setStateColorListhandlers.reorder({ from: source.index, to: destination?.index || 0 })
         }}
@@ -91,11 +80,7 @@ export function ChangeServiceDeviceList(props, message) {
       <Button style={{marginTop: 10}}
       disabled={!props.props.device || props.service.devices.includes(props.props.device)}
       onClick={() => {
-        sendToSocket(message, {
-          serviceId: props.user.serviceId, 
-          subServiceId: props.user.subServiceId, 
-          device: props.props.device.toString()
-        })
+        props.user.changeServiceDeviceList(props.props.device.toString())
         props.props.setDevice('')
       }}
       >{props.text.add[props.leng]}

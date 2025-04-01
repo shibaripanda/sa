@@ -6,8 +6,7 @@ import { IconHandStop } from '@tabler/icons-react'
 
 export function ChangeColorStatus(props, message) {
 
-  console.log('ChangeColorStatus')
-  console.log('d', props)
+  console.log('ChangeColorStatus', message)
 
   if(props.props.stateColorList.length !== props.service.statuses.length){
     props.props.setStateColorListhandlers.setState(props.service.statuses)
@@ -53,9 +52,7 @@ export function ChangeColorStatus(props, message) {
             <ColorPicker
               value={props.props.colorStatus.color}
               onChange={(color) => {
-                console.log(props.props.colorStatus)
                 props.props.setColorStatus({status: item, color: color})
-                console.log(props.props.colorStatus)
               }}
               format="hex"
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}

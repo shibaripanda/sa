@@ -1,6 +1,5 @@
 import { Button, Center, Grid, Group, Modal, NumberFormatter, Space, Text, TextInput, Title } from '@mantine/core'
 import React, { useState } from 'react'
-import { sendToSocket } from '../../../modules/socket/pipSendSocket.ts'
 
 export function ModalWindowPrintStatus(props) {
 
@@ -12,7 +11,6 @@ export function ModalWindowPrintStatus(props) {
       for(const i of props.data._work_){
         total = total + i.parts.reduce((acc, item) => acc + item.cost, 0)
       }
-      console.log(total)
       return total
     }
     return 0
@@ -56,15 +54,7 @@ export function ModalWindowPrintStatus(props) {
                     disabled={!ac.activ}
                     color={ac.color}
                     onClick={() => {
-                      console.log(ac._id)
-                      sendToSocket('closePayOrderStatus', {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: props.user.subServiceId, 
-                        orderId: props.data._id,
-                        accounId: ac._id,
-                        order: props.data._orderServiceId_,
-                        value: totalCost()
-                      })
+                      props.user.closePayOrderStatus(props.data._id, ac._id, props.data._orderServiceId_, totalCost())
                       props.openedClosePrintHandlers.close()
                     }}  
                     >
@@ -88,11 +78,7 @@ export function ModalWindowPrintStatus(props) {
                   disabled={deleteInput !== props.data._orderServiceId_}
                   color='red'
                   onClick={() => {
-                    sendToSocket('deleteOrderbyId', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId, 
-                      orderId: props.data._id
-                    })
+                    props.user.deleteOrderbyId(props.data._id)
                     props.openedClosePrintHandlers.close()
                     props.setOrderAcord(null)
                   }}

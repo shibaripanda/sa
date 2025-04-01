@@ -14,7 +14,6 @@ export class WarrantyOrderPrint extends Component {
     }
 
     textSizeTableItalic(text){
-      console.log(text)
       return (
         <Text fs="italic" size='xs'>
           {text}
@@ -22,7 +21,6 @@ export class WarrantyOrderPrint extends Component {
       )
     }
     textSizeTable(text){
-      console.log(text)
       return (
         <Text size='xs'>
           {text}

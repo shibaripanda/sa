@@ -3,8 +3,6 @@ import { IconBackspace } from '@tabler/icons-react'
 import React from 'react'
 
 export function SeviceSettingsScreen(props) {
-
-  console.log('SeviceSettingsScreen')
   
   return (
     <>

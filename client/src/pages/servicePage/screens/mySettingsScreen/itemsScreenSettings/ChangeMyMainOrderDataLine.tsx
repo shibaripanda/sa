@@ -1,12 +1,9 @@
 import { Button, Chip, Grid, Group, Space, Text } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { IconHandStop } from '@tabler/icons-react'
 
 export function ChangeMyMainOrderDataLine(props, item1) {
-
-  console.log('ChangeMyMainOrderDataLine')
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){
@@ -73,14 +70,7 @@ export function ChangeMyMainOrderDataLine(props, item1) {
         <Text fw={700} style={{marginBottom: 10}}>{props.text[item1.message][props.leng]}</Text>
         <DragDropContext
             onDragEnd={({ destination, source }) => {
-              sendToSocket(item1.message, {
-                            serviceId: props.user.serviceId, 
-                            subServiceId: props.user.subServiceId, 
-                            index1: source.index,
-                            index2: destination?.index || 0,
-                            action: 'replace'  
-                            })
-            
+              props.user.changeMyMainOrderDataLine(source.index, destination?.index || 0, 'replace')
               props.props.setDataOrderLine.reorder({ from: source.index, to: destination?.index || 0 })
             }}
           >
@@ -102,13 +92,7 @@ export function ChangeMyMainOrderDataLine(props, item1) {
             disabled={item.name === '_DeviceBlocked_'}
             onChange={() => {
               if(item.name !== '_DeviceBlocked_'){
-                sendToSocket(item1.message, {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  data: item.data,
-                  status: !activeData(item.data),
-                  action: 'addDelete' 
-                })
+                props.user.changeMyMainOrderDataLine(null, null, 'addDelete', item.data, !activeData(item.data))
               }
               if(activeData(item.data)){
                 props.props.setDataOrderLine.setState([...props.props.stateDataOrderLine.filter(i => i !== item.data)])

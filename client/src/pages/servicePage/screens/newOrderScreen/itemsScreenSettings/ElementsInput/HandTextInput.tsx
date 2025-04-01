@@ -3,7 +3,6 @@ import React from 'react'
 
 
 export function HandTextInput(props) {
-  console.log('HandTextInput')
 
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){

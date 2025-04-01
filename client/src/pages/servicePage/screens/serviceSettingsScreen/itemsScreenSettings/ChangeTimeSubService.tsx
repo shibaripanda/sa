@@ -1,11 +1,7 @@
 import { Button, Text, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeTimeSubService(props, message) {
-
-    // console.log('ChangeTimeSubService', props, message)
-    console.log('ChangeTimeSubService')
 
   return (
     <div>
@@ -19,12 +15,7 @@ export function ChangeTimeSubService(props, message) {
         <Button style={{marginTop: 10}}
         disabled={!props.props.workTime}
         onClick={() => {
-          sendToSocket(message, {
-            serviceId: props.user.serviceId, 
-            subServiceId: props.user.subServiceId, 
-            workTime: props.props.workTime.toString(),
-            data: 'workTime'
-          })
+          props.user.changeTimeSubService(props.props.workTime.toString(), 'workTime')
           props.props.setWorkTime('')
         }}
         >{props.text.save[props.leng]}

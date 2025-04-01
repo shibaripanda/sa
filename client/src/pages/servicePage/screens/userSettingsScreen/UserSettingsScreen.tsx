@@ -1,13 +1,11 @@
 import { Grid, Group, Paper, TextInput } from '@mantine/core'
 import { IconBackspace } from '@tabler/icons-react'
 import React from 'react'
-import { sendToSocket } from '../../../../modules/socket/pipSendSocket.ts'
 import { UserItem } from './itemsScreenSettings/UserItem.tsx'
 import { LoaderShow } from '../../../../components/Loader/LoaderShow.tsx'
 
 export function UserSettingsScreen(props) {
 
-  console.log('UserSettingsScreen')
 
   const localService = () => {
     if(props.getDataMessage === 'getServiceLocalUsers'){
@@ -19,10 +17,12 @@ export function UserSettingsScreen(props) {
   }
 
   if(localService() === false){
-    sendToSocket(props.getDataMessage, {
-               serviceId: props.user.serviceId, 
-               subServiceId: props.user.subServiceId
-             })
+    if(props.getDataMessage === 'getServiceUsers'){
+      props.user.getServiceUsers()
+    }
+    else if(props.getDataMessage === 'getServiceLocalUsers'){
+      props.user.getServiceLocalUsers()
+    }
   }
 
   

@@ -1,6 +1,5 @@
 import { Button, Checkbox, CloseButton, Collapse, Grid, Group, Image, Indicator, RangeSlider, Space, TextInput } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
 import { MultSelect } from './ElementsInput/MultSelect.tsx'
@@ -9,13 +8,9 @@ import { TextHandInput } from './ElementsInput/TextHandInput.tsx'
 import { MultSelectNoCreate } from './ElementsInput/MultSelectNoCreate.tsx'
 import { MultSelectCreateOne } from './ElementsInput/MultSelectCreateOne.tsx'
 import { MultSelectNoCreateOne } from './ElementsInput/MultSelectNoCreateOne.tsx'
-import { DateInput, DatePickerInput } from '@mantine/dates'
+import { DatePickerInput } from '@mantine/dates'
 
 export function CreateOrderScreen(props, message) {
-
-  // console.log(props.props.openedNewOrder)
-
-  console.log('CreateOrderScreen')
 
   const activData = props.service.orderData.filter(item => !item.hidden)
 
@@ -149,11 +144,7 @@ export function CreateOrderScreen(props, message) {
               inline
               size={'1.5vmax'}
               onClick={async () => {
-                sendToSocket('deleteImage', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  image: item.media
-                })
+                props.user.deleteImage(item.media)
               }}
               >
               <Image 
@@ -208,10 +199,7 @@ export function CreateOrderScreen(props, message) {
                 fullWidth
                 disabled={!props.props.newOrderImages.length}
                 onClick={async () => {
-                  sendToSocket('deleteAllImage', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId
-                  })
+                  props.user.deleteAllImage()
                 }}
                 >
                 {props.text.deleteAllImages[props.leng]}
@@ -238,16 +226,8 @@ export function CreateOrderScreen(props, message) {
                 fullWidth
                 disabled={disabledCreateButton()}
                 onClick={async () => {
-                  await props.props.getAndPrintNewOrder()
-                      sendToSocket('createOrder', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId,
-                      newOrder: createOrder()
-                    })
-                  sendToSocket('deleteAllImage', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId
-                  })
+                  props.user.createOrder(createOrder())
+                  props.user.deleteAllImage()
                   switchFilterOrNewOrder('newOrder')   //сворачивание нового заказа
                 }}
                 >
@@ -269,12 +249,7 @@ export function CreateOrderScreen(props, message) {
             {props.service.devices.map(item => 
             <Checkbox color='grey' key={item} label={item} checked={!props.user.deviceFilter.includes(item)}
             onChange={() => {
-              sendToSocket('editUserFilter', {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId,
-                filter: 'deviceFilter',
-                item: item
-              })
+              props.user.editUserFilter('deviceFilter', item)
             }}
             />)}
           </Group>
@@ -282,24 +257,14 @@ export function CreateOrderScreen(props, message) {
           <Group>
             {props.service.statuses.map(item => <Checkbox color='grey' key={item} label={item} checked={!props.user.statusFilter.includes(item)}
             onChange={() => {
-              sendToSocket('editUserFilter', {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId,
-                filter: 'statusFilter',
-                item: item
-              })
+              props.user.editUserFilter('statusFilter', item)
             }}/>)}
           </Group>
           <Space h='lg'/>
           <Group>
             {props.service.subServices.map(item => <Checkbox color='grey' key={item.subServiceId} label={item.name} checked={!props.user.subServiceFilter.includes(item.subServiceId)}
             onChange={() => {
-              sendToSocket('editUserFilter', {
-                serviceId: props.user.serviceId, 
-                subServiceId: props.user.subServiceId,
-                filter: 'subServiceFilter',
-                item: item.subServiceId
-              })
+              props.user.editUserFilter('subServiceFilter', item.subServiceId)
             }}/>)}
           </Group>
           <Space h='lg'/>
@@ -309,23 +274,13 @@ export function CreateOrderScreen(props, message) {
               type="range"
               value={props.user.dateFilter.map(item => item ? new Date(item) : null)}
               onChange={(event) => {
-                sendToSocket('editUserFilter', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  filter: 'dateFilter',
-                  item: [event[0], event ? event[1] : null]
-                })
+                props.user.editUserFilter('dateFilter', [event[0], event ? event[1] : null])
               }}
               placeholder="All dates"
               />
               <Button variant='default'
                 onClick={() => {
-                  sendToSocket('editUserFilter', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId,
-                    filter: 'dateFilter',
-                    item: [null, null]
-                  })
+                  props.user.editUserFilter('dateFilter', [null, null])
                 }}
                 >
                 Skip date
@@ -335,12 +290,7 @@ export function CreateOrderScreen(props, message) {
             <Group>
               <Button variant='default'
               onClick={() => {
-                sendToSocket('editUserFilter', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId,
-                  filter: 'skip',
-                  item: 'skip'
-                })
+                props.user.editUserFilter('skip', 'skip')
               }}
               >Skip all</Button>
               <Button variant='default'>Refresh</Button>
@@ -361,52 +311,6 @@ export function CreateOrderScreen(props, message) {
 
       <Collapse in={props.props.openedNewOrder}>
       {createModule()}
-        {/* <div>
-          <hr style={{marginTop: '1vmax', marginBottom: '1vmax'}}></hr>
-
-          <Grid grow>
-            {activData.map(item => 
-            <Grid.Col key={item.item} span={props.props.screenSizeNewOrder}>
-              {fieldCheck(item)}
-            </Grid.Col>)}
-          </Grid>
-
-          <Grid style={{marginTop: '1.5vmax'}} grow>
-            <Grid.Col span={props.props.screenSizeNewOrder}>
-              <Button
-                color='green'
-                fullWidth
-                disabled={disabledCreateButton()}
-                onClick={async () => {
-                  await props.props.getAndPrintNewOrder()
-                  sendToSocket('createOrder', {
-                    serviceId: props.user.serviceId, 
-                    subServiceId: props.user.subServiceId,
-                    newOrder: createOrder()
-                  })
-                }}
-                >
-                {props.text.createNewOrder[props.leng]}
-              </Button>
-            </Grid.Col>
-            <Grid.Col span={props.props.screenSizeNewOrder}>
-              <Button
-                color='red'
-                fullWidth 
-                disabled={disabledClearButton()}
-                onClick={() => {
-                  for(const i of activData.map(item => item.item)){
-                    sessionStorage.removeItem(`docInput_${i}`)
-                  }
-                  props.props.setNewOrderRend(Date.now())
-                }}
-                >
-                {props.text.clearForm[props.leng]}
-              </Button>
-            </Grid.Col>
-          </Grid>
-
-        </div> */}
       </Collapse>
       <Collapse in={props.props.openedFilter}>
       {filterModule()}

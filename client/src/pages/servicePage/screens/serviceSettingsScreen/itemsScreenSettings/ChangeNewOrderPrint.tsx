@@ -1,10 +1,7 @@
 import { Button, Group, Space, Text, Textarea } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function ChangeNewOrderPrint(props, message) {
-
-    console.log('ChangeNewOrderPrint')
 
     if(!props.props.printDocs){
       props.props.setPrinDocs(structuredClone(props.service.serviceDocuments))
@@ -52,12 +49,7 @@ export function ChangeNewOrderPrint(props, message) {
             <Button style={{marginTop: 10}}
               disabled={JSON.stringify(props.props.printDocs.find(item => item.name === 'NewOrderPrint')) === JSON.stringify(props.service.serviceDocuments.find(item => item.name === 'NewOrderPrint'))}
               onClick={() => {
-                sendToSocket('updateDocument', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  docName: 'NewOrderPrint',
-                  newDoc: dataPrint
-                })
+                props.user.updateDocument('NewOrderPrint', dataPrint)
                 props.props.setPrinDocs(false)
               }}
               >{props.text.save[props.leng]}

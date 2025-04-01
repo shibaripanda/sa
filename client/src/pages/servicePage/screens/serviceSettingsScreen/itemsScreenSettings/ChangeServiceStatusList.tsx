@@ -1,6 +1,5 @@
 import { Button, ColorPicker, Grid, Group, Text, TextInput, HoverCard } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { upFirstString } from '../../../../../modules/upFirstString.ts'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { IconHandStop } from '@tabler/icons-react'
@@ -8,7 +7,8 @@ import { editString } from '../../../../../modules/testStringSimbols.js'
 
 export function ChangeServiceStatusList(props, message) {
 
-  console.log('ChangeServiceStatusList')
+  console.log('now3', message)
+
 
   if(props.props.stateColorList.length !== props.service.statuses.length){
     props.props.setStateColorListhandlers.setState(props.service.statuses)
@@ -42,12 +42,7 @@ export function ChangeServiceStatusList(props, message) {
                 color={props.props.colorStatus.color}
                 disabled={!props.props.colorStatus}
                   onClick={() => {
-                    sendToSocket('changeColorStatus', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: props.user.subServiceId, 
-                      status: props.props.colorStatus.status,
-                      color: props.props.colorStatus.color
-                    })
+                    props.user.changeColorStatus(props.props.colorStatus.status, props.props.colorStatus.color)
                     props.props.setColorStatus(false)
                   }}>
                   {props.text.save[props.leng]}
@@ -58,9 +53,7 @@ export function ChangeServiceStatusList(props, message) {
                   value={props.props.colorStatus.color}
                   // value={colorBut(item)}
                   onChange={(color) => {
-                    console.log(props.props.colorStatus)
                     props.props.setColorStatus({status: item, color: color})
-                    console.log(props.props.colorStatus)
                   }}
                   format="hex"
                     swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
@@ -69,11 +62,7 @@ export function ChangeServiceStatusList(props, message) {
                   <Button size='xs'
                     color='red'
                     onClick={() => {
-                      sendToSocket(message, {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: props.user.subServiceId, 
-                        status: item
-                      })
+                      props.user.changeServiceStatusList(item)
                     }}>
                     {props.text.delete[props.leng]}
                   </Button>
@@ -99,13 +88,7 @@ export function ChangeServiceStatusList(props, message) {
 
       <DragDropContext
         onDragEnd={({ destination, source }) => {
-          sendToSocket('replaceStatusPosition', {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: props.user.subServiceId, 
-                        index1: source.index,
-                        index2: destination?.index || 0 
-                        })
-        
+          props.user.replaceStatusPosition(source.index, destination?.index || 0)
           props.props.setStateColorListhandlers.reorder({ from: source.index, to: destination?.index || 0 })
         }}
       >
@@ -128,11 +111,7 @@ export function ChangeServiceStatusList(props, message) {
       <Button style={{marginTop: 10}}
       disabled={!props.props.status || props.service.statuses.includes(props.props.status)}
       onClick={() => {
-        sendToSocket(message, {
-          serviceId: props.user.serviceId, 
-          subServiceId: props.user.subServiceId, 
-          status: props.props.status.toString()
-        })
+        props.user.changeServiceStatusList(props.props.status.toString())
         props.props.setStatus('')
       }}
       >{props.text.add[props.leng]}

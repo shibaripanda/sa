@@ -177,7 +177,6 @@ import { IconSun } from '@tabler/icons-react'
     }
     const login = useGoogleLogin({
         onSuccess: async tokenResponse  => {
-          console.log(tokenResponse)
           await props.authClass.startGoogleAuthRequest(tokenResponse.access_token, setDescriptionText, props.setUsersThisSession, props.usersThisSession)
         }
     })

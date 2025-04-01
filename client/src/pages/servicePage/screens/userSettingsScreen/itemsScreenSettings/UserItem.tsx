@@ -1,12 +1,10 @@
 import { Button, Center, Checkbox, Table, Text, Tooltip } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 import { IconSquareX } from '@tabler/icons-react'
 
 export function UserItem(props, user) {
 
-  console.log('UserItem')
-  
+
   const userTable = () => {
 
     const subServStatus = (service) => {
@@ -77,12 +75,7 @@ export function UserItem(props, user) {
                     false
                   }
                   onChange={() => {
-                    sendToSocket('addRoleToUser', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: service.subServiceId, 
-                      email: user.email,
-                      role: serviceRole.role
-                    })
+                    props.user.addRoleToUser(user.email, serviceRole.role)
                   }}
                       />
                   </Tooltip>
@@ -128,12 +121,7 @@ export function UserItem(props, user) {
                       true
                     }
                     onChange={() => {
-                      sendToSocket('addStatusToUser', {
-                        serviceId: props.user.serviceId, 
-                        subServiceId: service.subServiceId, 
-                        email: user.email,
-                        status: status
-                      })
+                      props.user.addStatusToUser(user.email, status)
                     }}
                         />
                   </Tooltip>
@@ -179,12 +167,7 @@ export function UserItem(props, user) {
                     true
                   }
                   onChange={() => {
-                    sendToSocket('addDeviceToUser', {
-                      serviceId: props.user.serviceId, 
-                      subServiceId: service.subServiceId, 
-                      email: user.email,
-                      device: dev
-                    })
+                    props.user.addDeviceToUser(user.email, dev)
                   }}
                       />
                   </Tooltip>
@@ -208,11 +191,12 @@ export function UserItem(props, user) {
           <Tooltip label={props.text.deletUser[props.leng]}>
             <Button variant='default'
               onClick={() => {
-                sendToSocket(props.getDataMessage === 'getServiceLocalUsers' ? 'deleteUserFromLocalService' : 'deleteUserFromService', {
-                  serviceId: props.user.serviceId, 
-                  subServiceId: props.user.subServiceId, 
-                  email: user.email
-                  })
+                if(props.getDataMessage === 'getServiceLocalUsers'){
+                  props.user.deleteUserFromLocalService(user.email)
+                }
+                else{
+                  props.user.deleteUserFromService(user.email)
+                }
               }}>
               <IconSquareX color='red'/>{'\u00A0'}<Text fw={700}>{user.name ? user.name + ' (' + user.email + ')' : user.email}</Text>
             </Button>

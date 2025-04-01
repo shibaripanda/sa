@@ -29,7 +29,6 @@ export function ServiceModal(props: any) {
     const [opened, { close, open }] = useDisclosure(false)
 
     useEffect(() => {
-        console.log('uEf 1')
         const upUserRole = (data: any) => {
                 props.authClass.updateServiceAppUsers(data, 'roles')
                 setRoles(data)
@@ -41,7 +40,6 @@ export function ServiceModal(props: any) {
     }, [])
 
     useEffect(() => {
-        console.log('uEf 2')
         const addService = (data: any) => {
             if(data){
                 const index = services.findIndex(item => item._id === data._id)
@@ -56,8 +54,6 @@ export function ServiceModal(props: any) {
             getFromSocket([{message: `getServiceById${serviceId}`, handler: addService}])
             sendToSocket('getServiceById', {serviceId: serviceId})
         }
-        // console.log(roles)
-        // console.log(services)
     }, [roles])
 
     const createNewService = () => {

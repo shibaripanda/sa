@@ -1,14 +1,9 @@
-import { Button, Divider, Grid, Group, Space, Text, TextInput } from '@mantine/core'
+import { Divider, Grid, Group, Space, Text } from '@mantine/core'
 import React from 'react'
-import { sendToSocket } from '../../../../../modules/socket/pipSendSocket.ts'
 
 export function Accounts(props, message) {
 
-  console.log('Accounts')
-  console.log(props.service.accounts)
-
   const multiOrder = (order) => {
-    console.log(props.service.accounts.map(ac => ac.accountHistory).flat().filter(item => item.orderId === order).length)
     const countOrders = props.service.accounts.map(ac => ac.accountHistory).flat().filter(item => item.orderId === order).length
     if(countOrders === 1){
       return {color: 'green', count: ''}
