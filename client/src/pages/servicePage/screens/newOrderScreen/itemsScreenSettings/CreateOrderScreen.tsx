@@ -226,6 +226,7 @@ export function CreateOrderScreen(props, message) {
                 fullWidth
                 disabled={disabledCreateButton()}
                 onClick={async () => {
+                  await props.props.getAndPrintNewOrder()
                   props.user.createOrder(createOrder())
                   props.user.deleteAllImage()
                   switchFilterOrNewOrder('newOrder')   //сворачивание нового заказа
