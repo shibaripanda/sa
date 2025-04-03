@@ -3,12 +3,9 @@
     "app": "concurrently \"(npm run start --prefix client)\" \"(npm run start:dev --prefix server)\"",
     "npmi": "npm i && cd server && npm i && cd .. && cd client && npm i && cd ..",
     "gitpush": "git add . && git commit -m 'home' && git push origin main",
-    "gitpull": "git pull origin main",
-    "buildapp": "cd server && npm run build && cd .. && cd client && npm run build && cd ..",
-    "uploadapp": "cd server && scp -r dist dima@142.93.1.154:/home/dima/apptest.by/appServer && cd .. && cd client && scp -r build dima@142.93.1.154:/home/dima/apptest.by/appClient && cd ..",
-    "uploadenv": "cd server && scp -r .env.production dima@142.93.1.154:/home/dima/sa/server && cd .. && cd client && scp -r .env.production dima@142.93.1.154:/home/dima/sa/client && cd .."
+    "gitpull": "git pull origin main"
   },
   "dependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.2"
   }
 }
