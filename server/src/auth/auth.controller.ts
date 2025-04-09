@@ -11,6 +11,14 @@ export class AuthController {
 
     constructor(private authService: AuthService) {}
 
+    @Post('/demo')
+    @UsePipes(new WSValidationPipe())
+    async demo(@Body() data: {demo: string}, @Ip() ip: string){
+        const local = await lastValueFrom(new HttpService().get(`https://ipinfo.io/${ip}/json`))
+        console.log(local, data)
+        // return this.authService.demo(data, ip, local.data)
+    }
+
     @Post('/googleLogin')
     @UsePipes(new WSValidationPipe())
     async googleLogin(@Body() data: RequestGoogleLogin, @Req() req: any, @Ip() ip: any){

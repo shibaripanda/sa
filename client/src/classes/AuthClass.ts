@@ -128,4 +128,35 @@ export class AuthClass {
 
     }
 
+    async startDemo(setDescriptionText, setUsersThisSession, usersThisSession){
+
+        return await axios({
+            method: 'POST',
+            url: this.link + '/auth/demo',
+            data: {demo: 'demo'},
+            headers: {},
+            timeout: 10000
+        })
+        .then(async (res) => {
+            if(!usersThisSession.map(item => item._id).includes(jwtDecode(res.data.token)['_id'])){
+                await setUsersThisSession([{...jwtDecode(res.data.token), token: res.data['token']}, ...usersThisSession])
+                if(!sessionStorage.getItem('serviceAppUsers')){
+                    sessionStorage.setItem('serviceAppUsers', JSON.stringify([{...jwtDecode(res.data.token), token: res.data['token']}]))
+                }
+                else{
+                    // @ts-ignore
+                    const serviceAppUsers = JSON.parse(sessionStorage.getItem('serviceAppUsers'))
+                    const newSETusers = [{...jwtDecode(res.data.token), token: res.data['token']}, ...serviceAppUsers]
+                    sessionStorage.setItem('serviceAppUsers', JSON.stringify(newSETusers))
+                }
+            }
+            return true
+        })
+        .catch((e) => {
+            setDescriptionText(e.response.data.message ? e.response.data.message : 'error')
+            return false
+        })
+
+    }
+
 }

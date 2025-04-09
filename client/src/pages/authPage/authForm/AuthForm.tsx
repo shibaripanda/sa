@@ -236,6 +236,17 @@ import { IconSun } from '@tabler/icons-react'
               onClick={() => login()}>
                 Sign in with Google 🚀
             </Button>
+            <Button
+              variant='default'
+              fullWidth
+              mt="xl"
+              size="md" 
+              onClick={async () => {
+                await props.authClass.startDemo(setDescriptionText, props.setUsersThisSession, props.usersThisSession)
+              }} 
+              >
+                Demo
+            </Button>
         </Paper>
         {modalBlock()}
       </div>
