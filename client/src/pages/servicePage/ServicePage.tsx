@@ -98,6 +98,7 @@ function ServicePage() {
   const [businessAccount, setBusinessAccount] = useState(false)
 
   const authClass = new AuthClass()
+  const [usersThisSession, setUsersThisSession] = useState<[]>(authClass.getServiceAppUsers())
   const textClass = new TextClass()
 
   useEffect(() => {
@@ -424,12 +425,22 @@ function ServicePage() {
               askNewOrderImages: askNewOrderImages,
               newOrderImages: newOrderImages,
               businessAccount: businessAccount,
-              setBusinessAccount: setBusinessAccount
+              setBusinessAccount: setBusinessAccount,
+              // usersThisSession: usersThisSession,
+              // setUsersThisSession: setUsersThisSession
               }
             )}
           </AppShell.Main>
           {modalPrinNewWarranty()}
-          <ModalAlert alertModal={alertModal} user={user} handlerAlertModal={handlerAlertModal} data={alertData}/>
+          <ModalAlert 
+          alertModal={alertModal} 
+          user={user} 
+          handlerAlertModal={handlerAlertModal} 
+          data={alertData} 
+          usersThisSession={usersThisSession} 
+          setUsersThisSession={setUsersThisSession}
+          authClass={authClass}
+          />
         </AppShell>
     )
   }

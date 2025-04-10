@@ -242,7 +242,7 @@ import { IconSun } from '@tabler/icons-react'
               mt="xl"
               size="md" 
               onClick={async () => {
-                await props.authClass.startDemo(setDescriptionText, props.setUsersThisSession, props.usersThisSession)
+                await props.authClass.startDemo(props.setUsersThisSession, props.usersThisSession)
               }} 
               >
                 Demo

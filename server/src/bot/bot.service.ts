@@ -80,6 +80,8 @@ import { User } from 'src/user/user.model'
 
     async start(telegramId, payload){
       const user = await this.userService.getUserById(payload.split('getactivcode')[1])
+      console.log(payload.split('getactivcode')[1])
+      console.log(user)
       if(user.activCodeTelegram.code === payload.split('getactivcode')[0] && Date.now() - user.activCodeTelegram.time < 300000){
         await this.userService.setTelegramId(user._id, telegramId)
         return true
