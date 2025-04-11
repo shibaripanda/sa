@@ -158,36 +158,36 @@ export class AuthClass {
 
     }
 
-    async upDemo(setUsersThisSession, usersThisSession, email){
-        console.log('updemo')
-        return await axios({
-            method: 'POST',
-            url: this.link + '/auth/updemo',
-            data: {email: email, demo: 'demo'},
-            headers: {},
-            timeout: 10000
-        })
-        .then(async (res) => {
-            console.log('updemo2')
-            if(!usersThisSession.map(item => item._id).includes(jwtDecode(res.data.token)['_id'])){
-                await setUsersThisSession([{...jwtDecode(res.data.token), token: res.data['token']}, ...usersThisSession])
-                if(!sessionStorage.getItem('serviceAppUsers')){
-                    sessionStorage.setItem('serviceAppUsers', JSON.stringify([{...jwtDecode(res.data.token), token: res.data['token']}]))
-                }
-                else{
-                    // @ts-ignore
-                    const serviceAppUsers = JSON.parse(sessionStorage.getItem('serviceAppUsers'))
-                    const newSETusers = [{...jwtDecode(res.data.token), token: res.data['token']}, ...serviceAppUsers]
-                    sessionStorage.setItem('serviceAppUsers', JSON.stringify(newSETusers))
-                }
-            }
-            sessionStorage.setItem('currentUser', JSON.stringify({...jwtDecode(res.data.token), token: res.data['token']}))
-            return true
-        })
-        .catch((e) => {
-            return false
-        })
+    // async upDemo(setUsersThisSession, usersThisSession, email){
+    //     console.log('updemo')
+    //     return await axios({
+    //         method: 'POST',
+    //         url: this.link + '/auth/updemo',
+    //         data: {email: email, demo: 'demo'},
+    //         headers: {},
+    //         timeout: 10000
+    //     })
+    //     .then(async (res) => {
+    //         console.log('updemo2')
+    //         if(!usersThisSession.map(item => item._id).includes(jwtDecode(res.data.token)['_id'])){
+    //             await setUsersThisSession([{...jwtDecode(res.data.token), token: res.data['token']}, ...usersThisSession])
+    //             if(!sessionStorage.getItem('serviceAppUsers')){
+    //                 sessionStorage.setItem('serviceAppUsers', JSON.stringify([{...jwtDecode(res.data.token), token: res.data['token']}]))
+    //             }
+    //             else{
+    //                 // @ts-ignore
+    //                 const serviceAppUsers = JSON.parse(sessionStorage.getItem('serviceAppUsers'))
+    //                 const newSETusers = [{...jwtDecode(res.data.token), token: res.data['token']}, ...serviceAppUsers]
+    //                 sessionStorage.setItem('serviceAppUsers', JSON.stringify(newSETusers))
+    //             }
+    //         }
+    //         sessionStorage.setItem('currentUser', JSON.stringify({...jwtDecode(res.data.token), token: res.data['token']}))
+    //         return true
+    //     })
+    //     .catch((e) => {
+    //         return false
+    //     })
 
-    }
+    // }
 
 }

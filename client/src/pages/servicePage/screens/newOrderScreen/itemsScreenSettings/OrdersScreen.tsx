@@ -198,6 +198,29 @@ export function OrdersScreen(props, message) {
       )
     }
   }
+  const printList = (order) => {
+    // selectPrintDocument setSelectPrintDocument
+    return (
+      <>
+        <Select 
+        value={props.props.selectPrintDocument}
+        data={['NewOderPrint', 'WarrantyOrderPrint']}
+        onChange={(event) => {
+          props.props.setSelectPrintDocument(event)
+        }}
+        />
+        <Space h='sm'/>
+        <Button 
+        variant='default'
+        disabled={!props.props.selectPrintDocument} 
+        onClick={() => {
+          props.props.printDocument(order, props.props.selectPrintDocument)
+        }}
+        >
+        Print</Button>
+      </>
+    )
+  }
   const textBigToSmall = (text, l) => {
     if(text.length > l){
       return <Tooltip label={text}><Text size='sm'>{deviceName(text).slice(0, l) + '...'}</Text></Tooltip>
@@ -969,6 +992,7 @@ export function OrdersScreen(props, message) {
           <Tabs.Tab value={props.text.information[props.leng]}>{props.text.information[props.leng]}</Tabs.Tab>
           <Tabs.Tab value={props.text.works[props.leng]}>{props.text.works[props.leng]}</Tabs.Tab>
           <Tabs.Tab value={props.text.history[props.leng]}>{props.text.history[props.leng]}</Tabs.Tab>
+          <Tabs.Tab value={props.text.print[props.leng]}>{props.text.print[props.leng]}</Tabs.Tab>
           <Tabs.Tab value={props.text.close[props.leng]} ml="auto">{props.text.close[props.leng]}</Tabs.Tab>
         </Tabs.List>
 
@@ -1166,6 +1190,10 @@ export function OrdersScreen(props, message) {
           <Space h='xl'/>
           {controlNewWorkButtonsPanel(order)}
           {orderWorksPanel(order)}
+        </Tabs.Panel>
+
+        <Tabs.Panel value={props.text.print[props.leng]} pt="xs">
+          {printList(order)}
         </Tabs.Panel>
 
         <Tabs.Panel value={props.text.history[props.leng]} pt="xs">

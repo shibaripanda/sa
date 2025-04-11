@@ -4,9 +4,6 @@ import React from 'react'
 
 export function ModalAlert(props) {
 
-
-  
-
   if(props.data.telegramCode){
     // @ts-ignore
     const link = process.env.REACT_APP_BOTLINK
@@ -41,7 +38,7 @@ export function ModalAlert(props) {
 
   }
   else if(props.data){
-    console.log(props.data)
+    
     const image = () => {
       if(props.data.buffer){
           return (
@@ -72,10 +69,7 @@ export function ModalAlert(props) {
           <Button variant='default'
           autoFocus
           onClick={async () => {
-            if(props.data.title === 'Telegram connect'){
-              console.log('fffffffffff')
-              await props.authClass.upDemo(props.setUsersThisSession, props.usersThisSession, props.user.email)
-            }
+            
             props.handlerAlertModal.close()
           }}
           >

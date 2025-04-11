@@ -93,13 +93,14 @@ export class BotGateway {
   @Start()
   async start(@Ctx() ctx: any){
     const res = await this.botService.start(ctx.from.id, ctx.startPayload)
-    if(res){
+    console.log('res', res)
+    if(res.res){
       await ctx.reply('Connect status OK. Exit and login.')
-      this.server.to(ctx.from.id.toString()).emit('alert', {title: 'Telegram connect', message: 'Status ✅'})
+      this.server.to(res.userId).emit('alert', {title: 'Telegram connect', message: 'Status ✅', tId: ctx.from.id})
     }
     else{
       await ctx.reply('Connect status BAD')
-      this.server.to(ctx.from.id.toString()).emit('alert', {title: 'Telegram connect', message: 'Status ❌'})
+      this.server.to(res.userId).emit('alert', {title: 'Telegram connect', message: 'Status ❌'})
     }
   }
 

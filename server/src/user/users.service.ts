@@ -55,7 +55,6 @@ export class UsersService {
                 {arrayFilters: [{'el.serviceId': serviceId}, {'els.subServiceId': subServiceId}], returnDocument: 'after'})
         }
     }
-
     async deleteImage(_id: string, image: string){
         return await this.userMongo.findOneAndUpdate({_id: _id}, {$pull: {newOrderImages: {media: image, type: 'photo'}}}, {returnDocument: 'after'})
     }
@@ -74,7 +73,7 @@ export class UsersService {
     async addNewOrderImages(telegramId: number, photo: object){
         return await this.userMongo.findOneAndUpdate({telegramId: telegramId}, {$push: {newOrderImages: {$each: [photo], $position: 0, $slice: 10}}}, {returnDocument: 'after'})
     }
-    async setTelegramId(_id: string, telegramId: string){
+    async setTelegramId(_id: string, telegramId: number){
         await this.userMongo.updateOne({_id: _id}, {telegramId: telegramId})
     }
     async getTelegramPass(_id: string){
@@ -227,6 +226,9 @@ export class UsersService {
     }
     async getUserById(_id){
         return await this.userMongo.findOne({_id: _id})
+    }
+    async getUserByTelegramId(telegramId){
+        return await this.userMongo.find({telegramId})
     }
     async addRoleToUser(email: string, serviceId: string, role: string, subServiceId: string){
         const user = await this.userMongo.findOne({email: email})

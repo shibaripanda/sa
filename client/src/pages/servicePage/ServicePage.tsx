@@ -96,9 +96,10 @@ function ServicePage() {
   const [passwordToTelegram, setPasswordToTelegram] = useState(false)
   const [newOrderImages, setNewOrderImages] = useState(false)
   const [businessAccount, setBusinessAccount] = useState(false)
+  const [selectPrintDocument, setSelectPrintDocument] = useState('')
 
   const authClass = new AuthClass()
-  const [usersThisSession, setUsersThisSession] = useState<[]>(authClass.getServiceAppUsers())
+  // const [usersThisSession, setUsersThisSession] = useState<[]>(authClass.getServiceAppUsers())
   const textClass = new TextClass()
 
   useEffect(() => {
@@ -107,6 +108,10 @@ function ServicePage() {
   }, [])
 
   const showAlertMessage = (data: any) => {
+    if(data.title === 'Telegram connect'){
+      console.log(data)
+      updateUserData(data.tId, 'telegramId')
+    }
     setAlertData(data)
     handlerAlertModal.open()
   }
@@ -426,6 +431,8 @@ function ServicePage() {
               newOrderImages: newOrderImages,
               businessAccount: businessAccount,
               setBusinessAccount: setBusinessAccount,
+              selectPrintDocument: selectPrintDocument,
+              setSelectPrintDocument: setSelectPrintDocument
               // usersThisSession: usersThisSession,
               // setUsersThisSession: setUsersThisSession
               }
@@ -437,9 +444,9 @@ function ServicePage() {
           user={user} 
           handlerAlertModal={handlerAlertModal} 
           data={alertData} 
-          usersThisSession={usersThisSession} 
-          setUsersThisSession={setUsersThisSession}
-          authClass={authClass}
+          // usersThisSession={usersThisSession} 
+          // setUsersThisSession={setUsersThisSession}
+          // authClass={authClass}
           />
         </AppShell>
     )

@@ -40,39 +40,12 @@ export class AuthService {
         throw new UnauthorizedException({message: 'Error auth :-/'})
     }
 
-    async upDemo(data: Pick<AuthDto, 'email' | 'demo'>){
-        
-        console.log(data)
-
+    async demo(data: Pick<AuthDto, 'demo'>){
         if(data.demo === 'demo'){
-            const user = await this.usersService.getUserByEmail(data.email.toLowerCase())
-            if(user){
-                return this.generateToken(user)
-            }
+            const demoId = uuidv4()
+            const newUser = await this.usersService.createUser(demoId + '@demo.demo', 'demouser_' + demoId.substring(0, 8))
+            return this.generateToken(newUser)
         }
-        throw new UnauthorizedException({message: 'Error auth :-/'})
-    }
-
-    async demo(data: Pick<AuthDto, 'demo'>, ip: string, local: object){
-        
-        console.log(data)
-
-        if(data.demo === 'demo'){
-            // const user = await this.usersService.getUserByEmail(loginStatus.email.toLowerCase())
-            // if(!user){
-                const demoId = uuidv4()
-                const newUser = await this.usersService.createUser(demoId + '@demo.demo', 'demouser_' + demoId.substring(0, 8))
-                return this.generateToken(newUser)
-            // }
-            // if(user.telegramId){
-            //     this.botService.sendCodeToBot(
-            //         user.telegramId, 
-            //         '⚠️ Login' + ' from IP: ' + ip + '\n\n' + Object.entries(local).filter(item => !['readme', 'bogon', 'ip'].includes(item[0])).map(item => item.join(': ') + '\n').join('')
-            //     )
-            // }
-            // return this.generateToken(user)
-        }
-
         throw new UnauthorizedException({message: 'Error auth :-/'})
     }
 

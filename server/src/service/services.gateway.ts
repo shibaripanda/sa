@@ -371,6 +371,7 @@ export class ServicesGateway {
   async getServiceById(@ConnectedSocket() client: Socket, @MessageBody() payload: GetServiceByIdDto, @Request() reg: any): Promise<any> {
     console.log('Gateway getServiceById')
     client.join(payload.serviceId)
+    client.join(reg.user._id.toString())
     if(reg.user.telegramId){
       client.join(reg.user.telegramId.toString())
     }
