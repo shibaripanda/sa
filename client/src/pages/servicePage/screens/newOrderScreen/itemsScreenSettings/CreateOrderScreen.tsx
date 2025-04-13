@@ -1,4 +1,4 @@
-import { Button, Checkbox, CloseButton, Collapse, Grid, Group, Image, Indicator, RangeSlider, Space, TextInput } from '@mantine/core'
+import { Button, Checkbox, CloseButton, Collapse, Grid, Group, Image, Indicator, NumberInput, RangeSlider, Space, TextInput } from '@mantine/core'
 import React from 'react'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
@@ -163,16 +163,6 @@ export function CreateOrderScreen(props, message) {
   }
 
   const butLine = [
-    // <div>
-    //   <Button size={'xs'} fullWidth color='red' onClick={() => props.props.getCountOfOrders(props.props.countLoadOrders[0], props.props.countLoadOrders[1])}>Определенное количество</Button>
-    //   <RangeSlider color='red' size="xs" labelAlwaysOn defaultValue={props.props.countLoadOrders} classNames={classes} 
-    //   onChange={(event) => {
-    //       console.log(event)
-    //       props.props.setCountLoadOrders(event)
-    //     }
-    //   }
-    //   />
-    // </div>,
     butOpenCreateOrder(),
     filterOrderInput(),
     butOpenFilter(),
@@ -287,14 +277,31 @@ export function CreateOrderScreen(props, message) {
                 Skip date
               </Button>
             </Group>
-            
+
+            <NumberInput value={props.props.countLoadOrders[1]}
+              min={1}
+              max={50}
+              onChange={(event) => {
+                console.log(event)
+                props.props.setCountLoadOrders([props.props.countLoadOrders[0], event])
+              }
+            }
+            />
+
             <Group>
               <Button variant='default'
+                onClick={() => {
+                  props.user.editUserFilter('skip', 'skip')
+                }}
+                >
+                Skip all
+              </Button>
+              <Button variant='default'
               onClick={() => {
-                props.user.editUserFilter('skip', 'skip')
-              }}
-              >Skip all</Button>
-              <Button variant='default'>Refresh</Button>
+                props.props.upateOrdersFilter()
+              }}>
+                Refresh
+              </Button>
             </Group>
           </Group>
 

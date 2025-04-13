@@ -223,7 +223,8 @@ export class ScreenLine {
                 {
                     ...{...this.data, orders: this.orders},
                     getDataMessage: res.getDataMessage,
-                    items: items.filter(item => this.text[item.message][this.leng].toLowerCase().includes(props.settingsFilter.toLowerCase())), 
+                    items: items, 
+                    // items: items.filter(item => this.text[item.message][this.leng].toLowerCase().includes(props.settingsFilter.toLowerCase())), 
                     props: props
                 }
             ): [] 

@@ -49,7 +49,7 @@ export function UserSettingsScreen(props) {
 
     return (
       <>
-        <div style={{margin: 15}}>
+        {/* <div style={{margin: 15}}>
           <Group gap={0} justify="center">
             <TextInput inputSize={'45'} rightSection={<IconBackspace onClick={() => props.props.setSettingsFilter('')} stroke={2}/>}
             value={props.props.settingsFilter}
@@ -58,7 +58,7 @@ export function UserSettingsScreen(props) {
               props.props.setSettingsFilter(event.target.value)
             }}/>
           </Group>
-        </div>
+        </div> */}
         <div style={{margin: 15}}>
 
           <Grid grow align="stretch">

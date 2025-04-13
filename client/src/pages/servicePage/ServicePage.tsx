@@ -220,6 +220,10 @@ function ServicePage() {
   const askNewOrderImages = () => {
     sendToSocket('getNewOrderImages', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId()})
   }
+  const upateOrdersFilter = () => {
+    setOrders([])
+    sendToSocket('getOrdersCount', {serviceId: authClass.getServiceId(), subServiceId: authClass.getSubServiceId(), start: countLoadOrders[0], end: countLoadOrders[1]})
+  }
   const filterOrders = useMemo(() => {
     if(filterOrdersString){
       if(filterOrdersString[filterOrdersString.length - 1] === '='){
@@ -432,7 +436,10 @@ function ServicePage() {
               businessAccount: businessAccount,
               setBusinessAccount: setBusinessAccount,
               selectPrintDocument: selectPrintDocument,
-              setSelectPrintDocument: setSelectPrintDocument
+              setSelectPrintDocument: setSelectPrintDocument,
+              upateOrdersFilter: upateOrdersFilter,
+              // countLoadOrders: countLoadOrders,
+              // setCountLoadOrders: setCountLoadOrders,
               // usersThisSession: usersThisSession,
               // setUsersThisSession: setUsersThisSession
               }
