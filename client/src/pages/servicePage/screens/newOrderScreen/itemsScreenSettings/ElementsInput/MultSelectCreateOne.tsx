@@ -22,6 +22,7 @@ export function MultSelectCreateOne(props) {
     data={props.props.field.variants} 
     value={value[0]} 
     onChange={(event) => {
+      setValue(JSON.parse([event]))
       sessionStorage.setItem(`docInput_${fieldName}`, JSON.stringify([event]))
     }} 
     />
