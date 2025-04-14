@@ -74,7 +74,8 @@ export function CreateOrderScreen(props, message) {
     for(const i of activData){
       // @ts-ignore
       newOrder.push({data: sessionStorage.getItem(`docInput_${i.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${i.item}`)).join(', ') : '', 
-        field: i.item, number: i.number,
+        field: i.item, 
+        number: i.number,
         control: i.control
       })
     }
