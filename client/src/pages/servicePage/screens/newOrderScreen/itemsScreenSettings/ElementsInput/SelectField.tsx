@@ -1,15 +1,10 @@
 import { Select} from '@mantine/core'
 import React from 'react'
+import { deviceName } from '../../../../../../modules/deviceName.ts'
 
 
 export function SelectField(props) {
-
-  const deviceName = (name) => {
-    if(name === '_DeviceBlocked_'){
-      return props.props.text.device[props.props.leng]
-    }
-    return name
-  }
+  const fieldName = props.props.field.item
 
   const dataData = (name) => {
     if(name === '_DeviceBlocked_'){
@@ -20,14 +15,14 @@ export function SelectField(props) {
   
     return (
             <Select
-              label={deviceName(props.props.field.item)}
+              label={deviceName(fieldName, props.props.text.device[props.props.leng])}
               withAsterisk={props.props.field.control}
               // @ts-ignore
-              value={sessionStorage.getItem(`docInput_${props.props.field.item}`) ? JSON.parse(sessionStorage.getItem(`docInput_${props.props.field.item}`))[0] : null}
-              placeholder={deviceName(props.props.field.item)}
-              data={dataData(props.props.field.item)}
+              value={sessionStorage.getItem(`docInput_${fieldName}`) ? JSON.parse(sessionStorage.getItem(`docInput_${fieldName}`))[0] : null}
+              placeholder={deviceName(fieldName, props.props.text.device[props.props.leng])}
+              data={dataData(fieldName)}
               onChange={(option) => {
-                sessionStorage.setItem(`docInput_${props.props.field.item}`, option ? JSON.stringify([option]) : JSON.stringify(['']))
+                sessionStorage.setItem(`docInput_${fieldName}`, option ? JSON.stringify([option]) : JSON.stringify(['']))
                 props.props.props.setNewOrderRend(Date.now())
               }}
             />

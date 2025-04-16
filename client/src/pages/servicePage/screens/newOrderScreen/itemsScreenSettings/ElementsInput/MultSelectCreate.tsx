@@ -5,6 +5,7 @@ import React from 'react'
 
 export function MultSelectCreate(props) {
 
+
   const deviceName = (name) => {
     if(name === '_DeviceBlocked_'){
       return props.props.text.device[props.props.leng]
@@ -30,7 +31,7 @@ export function MultSelectCreate(props) {
     if(val === '$create'){
       setData((current) => [...current, search])
       if(props.props.field.saveNewVariants){
-        props.user.addOrDelListVariant(props.props.field.item, search)
+        props.props.user.addOrDelListVariant(props.props.field.item, search)
       }
       setValue((current) => [...current, search])
       sessionStorage.setItem(`docInput_${props.props.field.item}`, JSON.stringify([...value, search]))

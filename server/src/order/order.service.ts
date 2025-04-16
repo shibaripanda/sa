@@ -206,7 +206,24 @@ export class OrderService {
         }
         return false   
     }
+    async orderListUpdater(order, service){
+        let updated = false
+        for(const i of order){
+            console.log(i)
+            const d = service.orderData.find(item => item.item === i.field)
+            console.log(d)
+            if(d && d.saveNewVariants && !d.variants.includes(i.data) && !d.multiVariants){
+                d.variants.push(i.data)
+                updated = true
+            }
+        }
+        if(updated){
+            service.markModified('orderData')
+            await service.save()
+        }
+    }
     async createOrder(serviceId, subServiceId, newOrder, user, service){
+        await this.orderListUpdater(newOrder, service)
         const orderSh = async () => {
             const res = {}
             for(const i of newOrder){
@@ -230,7 +247,6 @@ export class OrderService {
         }
         OrderSchema.add(await orderSh())
         const ord = await this.orderMongo.create(await orderData())
-        console.log(ord._id)
         if(ord){
             const name = await service.subServices.find(item => item.subServiceId === ord._subServiceId_)
             ord._subService_ = name ? name.name : '--'

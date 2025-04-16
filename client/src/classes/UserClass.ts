@@ -124,6 +124,7 @@ export class UserClass {
         this.callServer('deleteAllImage', {})
     }
     createOrder(newOrder){
+        console.log('newOrder', newOrder)
         this.callServer('createOrder', {newOrder})
     }
     editUserFilter(filter, item){
