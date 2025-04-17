@@ -20,6 +20,8 @@ import { ServiceModal } from '../serviceForm/ServiceModal.tsx'
 // import { GoogleLogin, googleLogout } from '@react-oauth/google'
 import { useGoogleLogin } from '@react-oauth/google'
 import { IconSun } from '@tabler/icons-react'
+ // @ts-ignore
+import mainPic from '../../../images/mainpic.png'
 
 // const validEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   
@@ -182,8 +184,8 @@ import { IconSun } from '@tabler/icons-react'
     })
 
     return (
-      <div className={classes.wrapper}>
-        <Paper className={classes.form} radius={0} p={30}>
+      <div className={classes.wrapper}  style={{ backgroundImage: `url(${mainPic}` }}>
+        <Paper className={classes.form} p={30}>
 
           <Grid justify="space-between" align="center">
             <Grid.Col span={11}>
