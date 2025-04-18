@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Grid, Modal } from '@mantine/core'
+import { Button, Grid, Modal, Space } from '@mantine/core'
 import { useConnectSocket } from '../../../modules/socket/hooks/useConnectSocket.ts'
 import { sendToSocket } from '../../../modules/socket/pipSendSocket.ts'
 import { getFromSocket } from '../../../modules/socket/pipGetSocket.ts'
@@ -76,6 +76,7 @@ export function ServiceModal(props: any) {
                 <Grid.Col key={item1._id} span={12}>
                     <>
                         {item1.name}
+                        <Space h='sm'/>
                         <Grid>
                             {item1.subServices
                             .filter(subServ => roles.map(role => role.subServices).flat().map(subs => subs.subServiceId).includes(subServ.subServiceId))
@@ -98,6 +99,7 @@ export function ServiceModal(props: any) {
                         </Grid.Col>
                             )}  
                         </Grid>
+                        <Space h='sm'/>
                         <hr></hr>          
                     </>
                 </Grid.Col>)}
@@ -107,7 +109,7 @@ export function ServiceModal(props: any) {
                 </Grid.Col>
 
                 <Grid.Col span={12}>
-                    <Button size='xs' color='green'
+                    <Button size='xs' variant='default'
                     onClick={() => {
                         createNewService()
                     }}>

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {
   ActionIcon,
     Button,
+    Checkbox,
     Grid,
     // Group,
     Paper,
@@ -33,6 +34,7 @@ import mainPic from '../../../images/mainpic.png'
     // const [clickEmailSend, setClickEmailSend] = useState<boolean>(false)
     const [descriptionText, setDescriptionText] = useState<string>('')
     const [opened, { close, open }] = useDisclosure(false)
+    const [agreement, setAgreement] = useState(false)
     // const [timer, setTimer] = useState<number>()
     // let [time, setTime] = useState<number>(60)
 
@@ -196,7 +198,7 @@ import mainPic from '../../../images/mainpic.png'
             </Grid.Col>
           </Grid>
             
-          <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
+          <Title order={3} className={classes.title} ta="center" mt="md" mb={50}>
             {props.text.welcome[props.leng]}
           </Title>
             {/* <TextInput 
@@ -231,6 +233,7 @@ import mainPic from '../../../images/mainpic.png'
             {authBlok()} */}
             {usersBlock()}
             <Button
+              disabled={!agreement}
               variant='default'
               fullWidth
               mt="xl"
@@ -238,6 +241,12 @@ import mainPic from '../../../images/mainpic.png'
               onClick={() => login()}>
                 Sign in with Google 🚀
             </Button>
+            <Space h='md'/>
+            <Checkbox
+            checked={agreement}
+            color='grey'
+            onChange={(event) => setAgreement(event.currentTarget.checked)}
+            />
             <Button
               variant='default'
               fullWidth
