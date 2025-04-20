@@ -1,0 +1,20 @@
+{
+    "name": "AppTest",
+    "short_name": "AppTest",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "icons": [
+      {
+        "src": "/iconcat.png",
+        "sizes": "250x238",
+        "type": "image/png"
+      },
+      {
+        "src": "/iconcat.png",
+        "sizes": "250x238",
+        "type": "image/png"
+      }
+    ]
+  }
