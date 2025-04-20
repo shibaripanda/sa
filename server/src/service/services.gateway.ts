@@ -38,6 +38,7 @@ export class ServicesGateway {
   @UsePipes(new WSValidationPipe())
   @SubscribeMessage('addNewBusinessAccount')
   async addNewBusinessAccount(@ConnectedSocket() client: Socket, @MessageBody() payload: any): Promise<void> {
+    console.log('dddd')
     const service = await this.serviceSevice.addNewBusinessAccount(payload.serviceId, payload.newBusinessAccountName)
     if(service){
       this.server.in(payload.serviceId).emit(`getServiceById${payload.serviceId}`, service)

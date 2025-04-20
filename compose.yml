@@ -1,6 +1,6 @@
 services:
   client:
-    image: pandadoker/clientprod:200425
+    image: pandadoker/clientprod:200425v3
     build:
       context: ./client
     container_name: client
@@ -11,7 +11,7 @@ services:
       - server
 
   server:
-    image: pandadoker/serverprod:200425
+    image: pandadoker/serverprod:200425v3
     build:
       context: ./server
     container_name: server

@@ -164,7 +164,8 @@ export class UserClass {
         this.callServer('deleteBusinessAccount', {accounId})
     }
     addNewBusinessAccount(newBusinessAccountName){
-        this.callServer('newBusinessAccountName', {newBusinessAccountName})
+        console.log('ffff')
+        this.callServer('addNewBusinessAccount', {newBusinessAccountName})
     }
     changeAddressSubService(address, data){
         this.callServer('changeAddressSubService', {address, data})

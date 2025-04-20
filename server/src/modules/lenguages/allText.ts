@@ -182,5 +182,10 @@ export const textArray: LengData[] = [
     {rutext: 'Бизнес', index: 'business', info_data: 'бизнес', update: false},
     {rutext: 'Бизнес счета', index: 'businessAccounts', info_data: 'бизнес счета', update: false},
     {rutext: 'Закрыть заказ на счет', index: 'closePayOrderStatus', info_data: 'закрыть на бизнес счет', update: false},
+    {rutext: 'Максимальное количество результатов', index: 'maxOrderCount', info_data: 'максимальное количество', update: false},
+    {rutext: 'Применить', index: 'use', info_data: 'применить', update: false},
+    {rutext: 'Сбросить всё', index: 'skipAll', info_data: 'сбросить всё', update: false},
+    {rutext: 'Сбросить даты', index: 'skipDate', info_data: 'сбросить даты', update: false},
+    {rutext: 'Войти через Google', index: 'googleLogin', info_data: 'логин гугл', update: false},
     
 ]

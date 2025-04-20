@@ -239,7 +239,7 @@ import mainPic from '../../../images/mainpic.png'
               mt="xl"
               size="md" 
               onClick={() => login()}>
-                Sign in with Google 🚀
+                {props.text.googleLogin[props.leng]} 🚀
             </Button>
             <Space h='md'/>
             <Checkbox

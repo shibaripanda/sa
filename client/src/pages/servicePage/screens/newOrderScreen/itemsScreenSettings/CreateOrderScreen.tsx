@@ -1,4 +1,4 @@
-import { Button, Checkbox, CloseButton, Collapse, Grid, Group, Image, Indicator, NumberInput, RangeSlider, Space, TextInput } from '@mantine/core'
+import { Box, Button, Checkbox, CloseButton, Collapse, Divider, Grid, Group, Image, Indicator, NumberInput, RangeSlider, Space, TextInput } from '@mantine/core'
 import React from 'react'
 import { MultSelectCreate } from './ElementsInput/MultSelectCreate.tsx'
 import { SelectField } from './ElementsInput/SelectField.tsx'
@@ -172,6 +172,12 @@ export function CreateOrderScreen(props, message) {
   const createModule = () => {
     if(props.props.openedNewOrder){
       return (
+        <Box style={{
+          border: '2px solid #6ef54c',
+          borderRadius: '7px',
+          padding: '16px',
+          marginTop: '15px'
+        }}>
         <div style={{marginRight: '2vmax', marginLeft: '2vmax'}}>
           <Space h='lg'/>
           <Grid grow>
@@ -229,12 +235,19 @@ export function CreateOrderScreen(props, message) {
           </Grid>
 
         </div>
+        </Box>
       )
     }
   }
   const filterModule = () => {
     if(props.props.openedFilter){
       return (
+        <Box style={{
+          border: '2px solid #6ef54c',
+          borderRadius: '7px',
+          padding: '16px',
+          marginTop: '15px'
+        }}>
         <div style={{marginRight: '2vmax', marginLeft: '2vmax'}}>
           <Space h='lg'/>
           <Group>
@@ -245,6 +258,7 @@ export function CreateOrderScreen(props, message) {
             }}
             />)}
           </Group>
+          <Divider size="xs" color="gray.4" my="xs" />
           <Space h='lg'/>
           <Group>
             {props.service.statuses.map(item => <Checkbox color='grey' key={item} label={item} checked={!props.user.statusFilter.includes(item)}
@@ -252,6 +266,7 @@ export function CreateOrderScreen(props, message) {
               props.user.editUserFilter('statusFilter', item)
             }}/>)}
           </Group>
+          <Divider size="xs" color="gray.4" my="xs" />
           <Space h='lg'/>
           <Group>
             {props.service.subServices.map(item => <Checkbox color='grey' key={item.subServiceId} label={item.name} checked={!props.user.subServiceFilter.includes(item.subServiceId)}
@@ -259,6 +274,7 @@ export function CreateOrderScreen(props, message) {
               props.user.editUserFilter('subServiceFilter', item.subServiceId)
             }}/>)}
           </Group>
+          <Divider size="xs" color="gray.4" my="xs" />
           <Space h='lg'/>
           <Group justify='space-between'>
             <Group>
@@ -275,11 +291,13 @@ export function CreateOrderScreen(props, message) {
                   props.user.editUserFilter('dateFilter', [null, null])
                 }}
                 >
-                Skip date
+                {props.text.skipDate[props.leng]}
               </Button>
             </Group>
 
-            <NumberInput value={props.props.countLoadOrders[1]}
+            <Group>
+              {props.text.maxOrderCount[props.leng] + ': '}
+              <NumberInput value={props.props.countLoadOrders[1]}
               min={1}
               max={50}
               onChange={(event) => {
@@ -288,6 +306,9 @@ export function CreateOrderScreen(props, message) {
               }
             }
             />
+            </Group>
+
+            
 
             <Group>
               <Button variant='default'
@@ -295,19 +316,20 @@ export function CreateOrderScreen(props, message) {
                   props.user.editUserFilter('skip', 'skip')
                 }}
                 >
-                Skip all
+                {props.text.skipAll[props.leng]}
               </Button>
               <Button variant='default'
               onClick={() => {
                 props.props.upateOrdersFilter()
               }}>
-                Refresh
+                {props.text.use[props.leng]}
               </Button>
             </Group>
           </Group>
 
 
         </div>
+        </Box>
       )
     }
   }

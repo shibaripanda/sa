@@ -1,12 +1,15 @@
 import React from 'react'
-import { Anchor, Burger, Grid, Group, Modal } from '@mantine/core'
+import { Anchor, Burger, Grid, Group, Modal, useComputedColorScheme, useMantineColorScheme } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 // @ts-ignore
 import classes from './Header1.module.css'
+import { IconSun } from '@tabler/icons-react'
 
 export function Header1(props) {
   const [openedModal, { open, close }] = useDisclosure(false)
   const [opened, { toggle }] = useDisclosure(false, {onOpen: () => open()})
+  const { setColorScheme } = useMantineColorScheme()
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true })
   
   const topMenuArray = 
     [
@@ -25,7 +28,8 @@ export function Header1(props) {
         }
       },
       {name: `${props.service.name} (${props.service.subName})`, action: () => {}, class: classes.mainLink},
-      {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink}
+      {name: props.user.name ? props.user.name : props.user.email, action: () => {}, class: classes.mainLink},
+      {name: <IconSun stroke={1.5} style={{marginTop: '5px'}}/>, action: () => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
     ]
   const topMenuMobileArray = 
     [
