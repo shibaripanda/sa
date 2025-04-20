@@ -233,7 +233,7 @@ import mainPic from '../../../images/mainpic.png'
             {authBlok()} */}
             {usersBlock()}
             <Button
-              disabled={!agreement}
+              // disabled={!agreement}
               variant='default'
               fullWidth
               mt="xl"
