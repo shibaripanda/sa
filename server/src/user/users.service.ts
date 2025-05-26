@@ -68,7 +68,8 @@ export class UsersService {
         return await this.userMongo.updateOne({_id: userId}, {passwordToTelegram: passwordToTelegram})
     }
     async getNewOrderImages(_id: string){
-        return await this.userMongo.findOne({_id: _id}, {newOrderImages: 1, _id: 0})
+        // return await this.userMongo.findOne({_id: _id}, {newOrderImages: 1, _id: 0})
+        return await this.userMongo.findOne({_id: _id}).select({ newOrderImages: 1 })
     }
     async addNewOrderImages(telegramId: number, photo: object){
         return await this.userMongo.findOneAndUpdate({telegramId: telegramId}, {$push: {newOrderImages: {$each: [photo], $position: 0, $slice: 10}}}, {returnDocument: 'after'})
@@ -82,7 +83,8 @@ export class UsersService {
         return user.activCodeTelegram.code
     }
     async changeDataOrderList(serviceId: string, data: string, status: boolean, user: any, index1: number, index2: number, action: string){
-        const res = await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})
+        // const res = await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})
+        const res = await this.userMongo.findOne({_id: user._id}).select({ orderDataShowItems: 1 })
         if(!res.orderDataShowItems.find(item => item.serviceId === serviceId)){
             await this.userMongo.updateOne({_id: user._id}, {$addToSet: {orderDataShowItems: {serviceId: serviceId, data: []}}})
         }
@@ -93,7 +95,8 @@ export class UsersService {
             return await this.userMongo.findOneAndUpdate({_id: user._id}, {$pull: {'orderDataShowItems.$[el].data': data}}, {arrayFilters: [{'el.serviceId': serviceId}] ,returnDocument: 'after'})
         }
         else if(action === 'replace'){
-            const item = (await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})).orderDataShowItems.find(item => item.serviceId === serviceId).data[index1]
+            // const item = (await this.userMongo.findOne({_id: user._id}, {orderDataShowItems: 1, _id: 0})).orderDataShowItems.find(item => item.serviceId === serviceId).data[index1]
+            const item = (await this.userMongo.findOne({_id: user._id}).select({ orderDataShowItems: 1 })).orderDataShowItems.find(item => item.serviceId === serviceId).data[index1]
             console.log(item)
             if(item){
                 // await this.userMongo.updateOne({_id: user._id}, {$pull: {orderDataShowItems: item}})

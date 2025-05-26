@@ -1,4 +1,4 @@
-# Build Stage
+# Stage 1
 FROM node AS build
 WORKDIR /app
 COPY package*.json ./
@@ -14,14 +14,12 @@ ARG REACT_APP_MODE
 # ENV REACT_APP_WS=${REACT_APP_WS}
 # ENV REACT_APP_BOTLINK=${REACT_APP_BOTLINK}
 # ENV REACT_APP_CLIENT_ID_GOOGLE=${REACT_APP_CLIENT_ID_GOOGLE}
+# ENV REACT_APP_MODE=${REACT_APP_MODE}
 
 COPY . .
 RUN npm run build
 
-# Production Stage
-FROM nginx:stable-alpine AS production
-COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
-EXPOSE 443
-CMD ["nginx", "-g", "daemon off;"]
+# Stage 2
+FROM alpine AS artifact
+WORKDIR /build
+COPY --from=build /app/build ./
