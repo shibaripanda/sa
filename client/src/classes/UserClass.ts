@@ -23,6 +23,8 @@ export interface User {
     passwordToTelegram: boolean
     newOrderImages: []
     openSubServices: string[]
+    userDevices: string[]
+    userStatuses: string[]
 }
 
 const upUserDataLine = (data, sid, subsId) => {

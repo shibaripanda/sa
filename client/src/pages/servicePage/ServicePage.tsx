@@ -115,7 +115,6 @@ function ServicePage() {
     setAlertData(data)
     handlerAlertModal.open()
   }
-
   const addNewOrder = (data: any) => {
     setOrders([{...data, _updateTime_: Date.now()}, ...orders ? orders : []])
     setOrderAcord(data._id)
@@ -131,7 +130,8 @@ function ServicePage() {
   }
   const addNewOrderNoPrint = (data: any) => {
     setUser((exUser: User) => {
-      if(exUser.openSubServices.includes(data._subServiceId_)){
+      console.log(exUser)
+      if(exUser.openSubServices.includes(data._subServiceId_) && exUser.userDevices.includes(data.device) && exUser.userStatuses.includes(data.status)){
         setOrders((ex) => {
           return [{...data, _updateTime_: Date.now()}, ...ex ? ex : []]
         })

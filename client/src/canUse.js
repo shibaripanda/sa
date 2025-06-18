@@ -1,4 +1,4 @@
-const canUse = [
+const canUse: string[] = [
     'changeMyMainOrderDataLine',
     'getUserRolesByUserId',
     'getNewOrderImages',
