@@ -1,5 +1,11 @@
 node_modules
 Makefile
 nginx.conf
-compose.yml
-
+compose.test.yml
+compose.prod.yml
+compose.server.yml
+compose.dev.yml
+.env.dev
+.env.prod
+.env.test
+backups
