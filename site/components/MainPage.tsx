@@ -26,12 +26,14 @@ export function MainPage({t, setViewApp}: any) {
         </Container>
 
         <div className={classes.controls}>
-          <Button className={classes.control} variant="white" size="lg">
+          <Button className={classes.control} variant="white" size="lg"
+          onClick={() => {
+            window.open(process.env.NEXT_PUBLIC_LINK_DEMO_APP, '_blank');
+          }}>
           {t('buttonGetStarted')} 
           </Button>
           <Button className={cx(classes.control, classes.secondaryControl)} size="lg"
           onClick={() => {
-            console.log('sssssssssssssssssssssssssssssssssss')
             setViewApp(true)
             }}>
             {t('buttonTry')}

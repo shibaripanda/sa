@@ -82,7 +82,7 @@ const accountSchema = new mongoose.Schema({
 export const ServiceSchema = new mongoose.Schema({
     name: {
       type: String, 
-      default: 'New Service',
+      default: 'My New Service',
       require: true
     },
     owner: {
@@ -91,7 +91,7 @@ export const ServiceSchema = new mongoose.Schema({
     },
     devices: {
       type: Array,
-      default: ['Laptop', 'Mobile phone'],
+      default: ['Laptop', 'Smartphone', 'PC', 'Monitor', 'Headphones', 'Video card', 'PlayStation'],
       require: true
     },
     statuses: {
@@ -114,7 +114,8 @@ export const ServiceSchema = new mongoose.Schema({
     orderData: {
       type: Array,
       default: [
-        {item: '_DeviceBlocked_', 
+        {
+          item: '_DeviceBlocked_', 
           control: true, 
           number: false, 
           variant: true, 
@@ -124,7 +125,73 @@ export const ServiceSchema = new mongoose.Schema({
           multiVariants: false, 
           hidden: false, 
           hold: true,
-          blocked: true}
+          blocked: true
+        },
+        {
+          item: 'Serial number', 
+          control: true, 
+          number: false, 
+          variant: false, 
+          variants: [], 
+          saveNewVariants: false, 
+          onlyVariants: true, 
+          multiVariants: false, 
+          hidden: false, 
+          hold: true,
+          blocked: false
+        },
+        {
+          item: 'Malfunction', 
+          control: true, 
+          number: false, 
+          variant: false, 
+          variants: [], 
+          saveNewVariants: false, 
+          onlyVariants: true, 
+          multiVariants: false, 
+          hidden: false, 
+          hold: true,
+          blocked: false
+        },
+        {
+          item: 'Price', 
+          control: true, 
+          number: false, 
+          variant: false, 
+          variants: [], 
+          saveNewVariants: false, 
+          onlyVariants: true, 
+          multiVariants: false, 
+          hidden: false, 
+          hold: true,
+          blocked: false
+        },
+        {
+          item: 'Client', 
+          control: true, 
+          number: false, 
+          variant: false, 
+          variants: [], 
+          saveNewVariants: false, 
+          onlyVariants: true, 
+          multiVariants: false, 
+          hidden: false, 
+          hold: true,
+          blocked: false
+        },
+        {
+          item: 'Client`s phone number', 
+          control: true, 
+          number: false, 
+          variant: false, 
+          variants: [], 
+          saveNewVariants: false, 
+          onlyVariants: true, 
+          multiVariants: false, 
+          hidden: false, 
+          hold: true,
+          blocked: false
+        }
       ],
       require: true
     },
@@ -135,7 +202,7 @@ export const ServiceSchema = new mongoose.Schema({
     },
     subServices: {
       type: Array,
-      default: [{name: 'Local Service', subServiceId: 'subServiceId' + Date.now(), options: {address: '', workTime: '', contact: ''}}],
+      default: [{name: 'My Local Service', subServiceId: 'subServiceId' + Date.now(), options: {address: '', workTime: '', contact: ''}}],
       require: true
     },
     serviceInfo: {

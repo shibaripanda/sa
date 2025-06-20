@@ -16,7 +16,8 @@
     "next-intl": "^4.1.0",
     "openai": "^4.97.0",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
     "@types/node": "22.13.11",

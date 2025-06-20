@@ -45,7 +45,6 @@ export class ServicesService {
         }
         return false
     }
-
     async addNewBusinessAccount(serviceId: string, newBusinessAccountName: string){
         return await this.serviceMongo.findOneAndUpdate({_id: serviceId}, 
             {$push: {accounts: {name: newBusinessAccountName, value: 0, activ: true, color: 'green', accountHistory: [], enabledSubServices: []}}}, 
