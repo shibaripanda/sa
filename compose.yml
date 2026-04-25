@@ -1,0 +1,25 @@
+services:
+  client_prod:
+    image: pandadoker/app-${INDEX}-client:${VERSION}
+    build:
+      context: ./client
+      target: artifact
+      args:
+        REACT_APP_LINK: ${REACT_APP_LINK}
+        REACT_APP_WS: ${REACT_APP_WS}
+        REACT_APP_BOTLINK: ${REACT_APP_BOTLINK}
+        REACT_APP_CLIENT_ID_GOOGLE: ${REACT_APP_CLIENT_ID_GOOGLE}
+        REACT_APP_MODE: ${REACT_APP_MODE}
+
+  site:
+    image: pandadoker/app-site:${VERSION}
+    build:
+      context: ./site
+      args:
+        NEXT_PUBLIC_LINK: ${NEXT_PUBLIC_LINK}
+        NEXT_PUBLIC_LINK_DEMO_APP: ${NEXT_PUBLIC_LINK_DEMO_APP}
+
+  server_prod:
+    image: pandadoker/app-${INDEX}-server:${VERSION}
+    build:
+      context: ./server

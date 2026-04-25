@@ -1,5 +1,5 @@
 # Stage 1
-FROM node AS build
+FROM node:22 AS build
 
 WORKDIR /app
 
@@ -9,11 +9,14 @@ RUN npm install
 ARG NEXT_PUBLIC_LINK_DEMO_APP
 ARG NEXT_PUBLIC_LINK
 
+ENV NEXT_PUBLIC_LINK_DEMO_APP=${NEXT_PUBLIC_LINK_DEMO_APP}
+ENV NEXT_PUBLIC_LINK=${NEXT_PUBLIC_LINK}
+
 COPY . .
 RUN npm run build
 
 # Stage 2
-FROM node AS production
+FROM node:22 AS production
 
 WORKDIR /app
 

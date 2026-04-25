@@ -27,6 +27,9 @@ export class TextClass {
 
     async getTextPackFromServer(): Promise<Leng | false>{
 
+        // @ts-ignore
+        console.log(process.env.REACT_APP_LINK)
+
         return await axios({
             method: 'GET',
             url: this.link + '/auth/text',
