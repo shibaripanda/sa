@@ -26,9 +26,9 @@ export function MainPage({t, setViewApp}: any) {
         </Container>
 
         <div className={classes.controls}>
-          <Button className={classes.control} variant="white" size="lg">
+          {/* <Button className={classes.control} variant="white" size="lg">
           {t('buttonGetStarted')} 
-          </Button>
+          </Button> */}
           <Button className={cx(classes.control, classes.secondaryControl)} size="lg"
           onClick={() => {
             console.log('sssssssssssssssssssssssssssssssssss')
